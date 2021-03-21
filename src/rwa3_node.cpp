@@ -54,13 +54,20 @@ int main(int argc, char ** argv) {
     gantry.goToPresetLocation(gantry.start_);
 
     //--1-Read order
-    
+
+    comp.processOrder();
+    std::vector<Product> list_of_products = comp.get_product_list();
+    ROS_INFO_STREAM(list_of_products[0].type);
+    std::string current_agv = comp.get_agv();
+    ROS_INFO_STREAM(current_agv);
+
+
     //--2-Look for parts in this order
     //--We go to this bin because a camera above
     //--this bin found one of the parts in the order
     gantry.goToPresetLocation(gantry.bin3_);
 
-    std::vector<Product> list_of_products = comp.get_product_list();
+    
     //--TODO: Parse each product in list_of_products
     //--TODO: For each product in list_of_product find the part in the environment using cameras
     //--TODO: Choose one part and pick it up

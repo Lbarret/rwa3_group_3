@@ -83,6 +83,10 @@ public:
     std::vector<Product> get_product_list(){
         return product_list_;
     }
+    std::string get_agv(){
+        return current_agv;
+    }
+
 
 private:
     ros::NodeHandle node_;/*!< node handle for this class */
@@ -93,6 +97,7 @@ private:
     std::vector<nist_gear::Order> received_orders_;/*!< vector to store orders */
      std::vector<Order> order_list_;/*!< list of orders */
     std::vector<Product> product_list_;
+    std::string current_agv;
 
     ros::Subscriber current_score_subscriber_;/*!< subscriber to the topic /ariac/current_score */
     ros::Subscriber competition_state_subscriber_;/*!< subscriber to the topic /ariac/competition_state */
