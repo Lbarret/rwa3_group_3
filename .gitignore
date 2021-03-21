@@ -10,3 +10,5 @@ mycode.class
 # add an exception (using !) to the preceding rule to track a specific file
 !package.json
 
+# Visual Studio 2015/2017 cache/options directory
+.vs/
