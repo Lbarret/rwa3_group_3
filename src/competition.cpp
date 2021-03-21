@@ -98,11 +98,15 @@ void Competition::processOrder(){
   auto current_order = order_list_.front();
   auto current_shipment = current_order.shipments.front();//--change this line to handle multiple shipments
   auto product_list = current_shipment.products;
+  ROS_INFO_STREAM(product_list[0].type);
+  current_agv = current_shipment.agv_id;
 
   for (const auto &product: product_list)
   {
-    product_list.push_back(product);
+    product_list_.push_back(product);
+
   }
+  ROS_INFO_STREAM("order processed");
 }
 
 
