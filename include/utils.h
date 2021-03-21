@@ -58,7 +58,7 @@ typedef struct PresetLocation {
     std::vector<double> gantry;
     std::vector<double> left_arm;
     std::vector<double> right_arm;
-} start, bin3, agv2;
+} start, bin1, bin2, bin3, agv1, agv2;
 
 /**
  * @brief Struct to store part information

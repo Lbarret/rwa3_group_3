@@ -49,10 +49,25 @@ void GantryControl::init()
     start_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     start_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
+    // joint positions to go to bin1
+    bin1_.gantry = {2.12 -1.1, 0.};
+    bin1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin2
+    bin2_.gantry = {3.06, -1.1, 0.};
+    bin2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
     // joint positions to go to bin3
     bin3_.gantry = {4.0, -1.1, 0.};
     bin3_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin3_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to agv1
+    agv1_.gantry = {0.6, 6.9, PI};
+    agv1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    agv1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to agv2
     agv2_.gantry = {0.6, 6.9, PI};

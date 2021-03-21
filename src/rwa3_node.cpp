@@ -100,8 +100,8 @@ int main(int argc, char ** argv) {
 
     AGVControl agv_control(node);
     //--TODO: get the following arguments from the order
-    // agv_control.sendAGV("order_0_shipment_0", "kit_tray_2");
-    // comp.endCompetition();
+    agv_control.sendAGV("order_0_shipment_0", "kit_tray_2");
+    comp.endCompetition();
     spinner.stop();
     ros::shutdown();
     return 0;
