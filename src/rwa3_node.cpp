@@ -34,6 +34,7 @@
 #include "utils.h"
 #include "gantry_control.h"
 #include "agv_control.h"
+#include "sensor_read.h"
 
 #include <tf2/LinearMath/Quaternion.h>
 
@@ -57,14 +58,20 @@ int main(int argc, char ** argv) {
 
     comp.processOrder();
     std::vector<Product> list_of_products = comp.get_product_list();
-    ROS_INFO_STREAM(list_of_products[0].type);
+    //ROS_INFO_STREAM(list_of_products[0].type);
     std::string current_agv = comp.get_agv();
-    ROS_INFO_STREAM(current_agv);
+    //ROS_INFO_STREAM(current_agv);
 
 
     //--2-Look for parts in this order
+
+    sensor_read sensors(node);
+    sensors.init();
+    std::string part_loc = sensors.find_part(list_of_products[0].type);
     //--We go to this bin because a camera above
     //--this bin found one of the parts in the order
+    ROS_INFO_STREAM("part location: " << part_loc);
+
     gantry.goToPresetLocation(gantry.bin3_);
 
     
