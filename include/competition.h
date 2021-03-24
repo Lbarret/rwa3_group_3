@@ -83,6 +83,7 @@ public:
     std::vector<Product> get_product_list(){
         return product_list_;
     }
+    std::vector<order> get_order_list();
     std::string get_agv(){
         return current_agv;
     }

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <array>
 
 #include <ros/ros.h>
 
@@ -40,7 +41,10 @@ public:
      */
     void init();
     void logical_camera_callback(const nist_gear::LogicalCameraImage::ConstPtr &msg, int id);
-    std::string find_part(std::string part);
+    std::string find_part(std::string part_type);
+    // std::vector<std::vector<part>> get_part_info();
+    std::array<std::array<part, 36>, 17> get_part_info();
+    int get_logi_cam();
 
 
 private:
@@ -67,8 +71,15 @@ private:
     
     std::string part_location;
     std::vector<std::vector<std::string>> camera_info;
-    std::vector<std::vector<geometry_msgs::PoseStamped>> part_pose;
-    std::vector<std::vector<std::string>> camera_locations;
+    int logi_cam_id;
+    // std::vector<std::vector<part>> parts_info;
+    std::array<std::array<part, 36>, 17> part_info;
+    std::map<int, std::vector<std::string>> camera_locations{ 
+        {0, {"bin3_", "bin4_", "bin7_", "bin8_"}},
+        {1, {"bin11_", "bin12_","bin15_", "bin16_"}},
+        {2, {"bin1_", "bin2_", "bin5_", "bin6_"}},
+        {3, {"bin9_", "bin10_", "bin13_", "bin14_"}}
+    };
 };
 
 #endif

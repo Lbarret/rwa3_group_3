@@ -38,6 +38,22 @@
 
 #include <tf2/LinearMath/Quaternion.h>
 
+void pickandplace(int logi_cam_id, auto product, std::string part_loc, auto sensors_info, GantryControl& gantry) {
+    part part_to_pick;
+    for(int i=0;i<sensors_info[logi_cam_id].size();i++){
+        if(product.type==sensors_info[logi_cam_id][i].type){
+            part_to_pick.pose = sensors_info[logi_cam_id][i].pose;
+        }
+    }
+    if(part_loc=="bin3_") {
+        gantry.goToPresetLocation(gantry.bin3_);
+    }
+    gantry.pickPart(part_to_pick);
+    gantry.goToPresetLocation(gantry.agv2_);
+    gantry.goToPresetLocation(gantry.start_);
+
+}
+
 int main(int argc, char ** argv) {
     ros::init(argc, argv, "rwa3_node");
     ros::NodeHandle node;
@@ -56,21 +72,36 @@ int main(int argc, char ** argv) {
 
     //--1-Read order
 
-    comp.processOrder();
-    std::vector<Product> list_of_products = comp.get_product_list();
+    // comp.order_callback();
+    std::vector<order> list_of_orders = comp.get_order_list();
     //ROS_INFO_STREAM(list_of_products[0].type);
-    std::string current_agv = comp.get_agv();
+    // std::string current_agv = comp.get_agv();
     //ROS_INFO_STREAM(current_agv);
+    ROS_INFO_STREAM(list_of_orders[0].shipments[0].products[0].type);
 
 
     //--2-Look for parts in this order
 
     sensor_read sensors(node);
     sensors.init();
-    std::string part_loc = sensors.find_part(list_of_products[0].type);
-    //--We go to this bin because a camera above
-    //--this bin found one of the parts in the order
-    ROS_INFO_STREAM("part location: " << part_loc);
+    auto sensors_parts_info = sensors.get_part_info();
+    int logi_cam_id = sensors.get_logi_cam();
+    // ROS_INFO_STREAM("Part type: " << sensors_parts_info[5][5].pose.position.x);
+    for (int i=0; i < list_of_orders.size(); i++)
+    {
+        for (int j=0; j < list_of_orders[i].shipments.size(); j++)
+        {
+            for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
+            {
+                std::string part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type);
+                    // //--We go to this bin because a camera above
+                   //--this bin found one of the parts in the order
+                ROS_INFO_STREAM("part location: " << part_loc);
+
+                pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
+            }
+        }
+    }
 
     gantry.goToPresetLocation(gantry.bin3_);
 
