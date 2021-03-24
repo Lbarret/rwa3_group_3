@@ -85,6 +85,30 @@ sensors:
       xyz: [0, -7, 1.5]
       rpy: [0, 'pi/2', 'pi/2']
 
+  logical_camera_14: # over shelf
+    type: logical_camera
+    pose:
+      xyz: [3.23, 3.558, 2.49]
+      rpy: [0, 'pi/2', 'pi/2']
+
+  logical_camera_15: # over shelf
+    type: logical_camera
+    pose:
+      xyz: [4.988, 3.558, 2.49]
+      rpy: [0, 'pi/2', 'pi/2']
+
+  logical_camera_16: # over shelf
+    type: logical_camera
+    pose:
+      xyz: [3.23, -3.588, 2.49]
+      rpy: [0, 'pi/2', 'pi/2']
+
+  logical_camera_17: # over shelf
+    type: logical_camera
+    pose:
+      xyz: [4.988, -3.588, 2.49]
+      rpy: [0, 'pi/2', 'pi/2']
+
   breakbeam_0: # at beginning of conveyor
     type: break_beam
     pose:

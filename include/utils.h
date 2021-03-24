@@ -44,6 +44,7 @@ const int MAX_EXCHANGE_ATTEMPTS = 6; // Pulley flip
 
 extern std::string action_state_name[];
 extern std::unordered_map<std::string, double> model_height;
+extern std::unordered_map<std::string, std::vector<float>> bin_locations;
 
 enum PartStates {FREE, BOOKED, UNREACHABLE, ON_TRAY, GRIPPED, GOING_HOME,
   REMOVE_FROM_TRAY, LOST};

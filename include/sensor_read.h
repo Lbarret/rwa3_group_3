@@ -18,6 +18,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h> //--needed for tf2::Matrix3x3
 #include <boost/bind.hpp>
+#include "utils.h"
 
 
 /**
@@ -45,24 +46,29 @@ public:
 private:
     ros::NodeHandle node_;/*!< node handle for this class */
     
-    ros::Subscriber logical_camera_0_subscriber;/*!< subscriber to the topic /ariac/current_score */
-    ros::Subscriber logical_camera_1_subscriber;/*!< subscriber to the topic /ariac/competition_state */
-    ros::Subscriber logical_camera_2_subscriber;/*!< subscriber to the topic /clock */
-    ros::Subscriber logical_camera_3_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_4_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_5_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_6_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_7_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_8_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_9_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_10_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_11_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_12_subscriber;/*!< subscriber to the topic /ariac/orders */
-    ros::Subscriber logical_camera_13_subscriber;/*!< subscriber to the topic /ariac/orders */
+    ros::Subscriber logical_camera_0_subscriber;/*!< subscriber to the topic /logical_camera_0 */
+    ros::Subscriber logical_camera_1_subscriber;/*!< subscriber to the topic /logical_camera_1 */
+    ros::Subscriber logical_camera_2_subscriber;/*!< subscriber to the topic /logical_camera_2 */
+    ros::Subscriber logical_camera_3_subscriber;/*!< subscriber to the topic /logical_camera_3 */
+    ros::Subscriber logical_camera_4_subscriber;/*!< subscriber to the topic /logical_camera_4 */
+    ros::Subscriber logical_camera_5_subscriber;/*!< subscriber to the topic /logical_camera_5 */
+    ros::Subscriber logical_camera_6_subscriber;/*!< subscriber to the topic /logical_camera_6 */
+    ros::Subscriber logical_camera_7_subscriber;/*!< subscriber to the topic /logical_camera_7 */
+    ros::Subscriber logical_camera_8_subscriber;/*!< subscriber to the topic /logical_camera_8 */
+    ros::Subscriber logical_camera_9_subscriber;/*!< subscriber to the topic /logical_camera_9 */
+    ros::Subscriber logical_camera_10_subscriber;/*!< subscriber to the topic /logical_camera_10 */
+    ros::Subscriber logical_camera_11_subscriber;/*!< subscriber to the topic /logical_camera_11 */
+    ros::Subscriber logical_camera_12_subscriber;/*!< subscriber to the topic /logical_camera_12 */
+    ros::Subscriber logical_camera_13_subscriber;/*!< subscriber to the topic /logical_camera_13 */
+    ros::Subscriber logical_camera_14_subscriber;/*!< subscriber to the topic /logical_camera_14 */
+    ros::Subscriber logical_camera_15_subscriber;/*!< subscriber to the topic /logical_camera_15 */
+    ros::Subscriber logical_camera_16_subscriber;/*!< subscriber to the topic /logical_camera_16 */
+    ros::Subscriber logical_camera_17_subscriber;/*!< subscriber to the topic /logical_camera_17 */
     
     std::string part_location;
     std::vector<std::vector<std::string>> camera_info;
-    std::vector<std::string> camera_locations;
+    std::vector<std::vector<geometry_msgs::PoseStamped>> part_pose;
+    std::vector<std::vector<std::string>> camera_locations;
 };
 
 #endif

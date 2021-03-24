@@ -1,4 +1,5 @@
 #include "sensor_read.h"
+#include "utils.h"
 
 #include <std_srvs/Trigger.h>
 
@@ -83,6 +84,24 @@ void sensor_read::init() {
   logical_camera_13_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
       "/ariac/logical_camera_13", 1000,
       boost::bind(&sensor_read::logical_camera_callback, this, _1, 13));
+
+  logical_camera_14_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
+      "/ariac/logical_camera_14", 1000,
+      boost::bind(&sensor_read::logical_camera_callback, this, _1, 13));
+
+  logical_camera_15_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
+      "/ariac/logical_camera_15", 1000,
+      boost::bind(&sensor_read::logical_camera_callback, this, _1, 15));
+
+  logical_camera_16_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
+      "/ariac/logical_camera_16", 1000,
+      boost::bind(&sensor_read::logical_camera_callback, this, _1, 16));
+
+  logical_camera_17_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
+      "/ariac/logical_camera_17", 1000,
+      boost::bind(&sensor_read::logical_camera_callback, this, _1, 17));
+
+  
 }
 
 ////////////////////////
@@ -124,6 +143,7 @@ void sensor_read::logical_camera_callback(
         double roll, pitch, yaw;
         m.getRPY(roll, pitch, yaw);
         camera_info[id][i] = msg->models[i].type.c_str();
+        part_pose[id][i].pose = pose_in_world.pose;
         ROS_INFO_STREAM(camera_info[id][i]);
 
       }
@@ -133,15 +153,23 @@ void sensor_read::logical_camera_callback(
 
   std::string sensor_read::find_part(std::string part){
     ROS_INFO_STREAM("finding part");
-      camera_locations = {"bin3_", "bin1_", "bin1_", "bin1_", "bin1_", "bin1_",
-      "bin1_", "bin1_", "bin1_", "bin1_", "bin1_", "bin1_", "bin1_"};
-      for(int i = 0; i<camera_info.size(); i++){
-        for(int j=0; j<camera_info[i].size(); j++){
-          if (camera_info[i][j] == part){
-            return camera_locations[i];
-            break;
+    camera_locations[0] = {"bin3_", "bin4_", "bin7_", "bin8_"};
+    camera_locations[1] = {"bin11_", "bin12_","bin15_", "bin16_"};
+    camera_locations[2] = { "bin1_", "bin2_", "bin5_", "bin6_"};
+    camera_locations[3] = { "bin9_", "bin10_", "bin13_", "bin14_"};
+    for(int i = 0; i<camera_info.size(); i++){
+      for(int j=0; j<camera_info[i].size(); j++){
+        if (camera_info[i][j] == part){
+          for(int k=0; k<3; k+2) {
+            std::vector<float> bin_pose = bin_locations[camera_locations[i][k]];
+            if (part_pose[i][j].pose.position.x >= bin_pose[0] 
+            && part_pose[i][j].pose.position.y <= bin_pose[1]
+            && part_pose[i][j].pose.position.x <= bin_pose[2]
+            && part_pose[i][j].pose.position.y >= bin_pose[3])
+              return camera_locations[i][k];
           }
         }
       }
+    }
           
   }
