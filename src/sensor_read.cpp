@@ -109,7 +109,7 @@ void sensor_read::init() {
 void sensor_read::logical_camera_callback(
       const nist_gear::LogicalCameraImage::ConstPtr &msg, int id)
   {
-
+    //ROS_INFO("SUCCESS");
     if(msg->models.size() > 0) {
       tf2_ros::Buffer tfBuffer;
       tf2_ros::TransformListener tfListener(tfBuffer);
@@ -135,9 +135,14 @@ void sensor_read::logical_camera_callback(
         pose_in_reference.pose = msg->models[i].pose;
         tf2::doTransform(pose_in_reference, pose_in_world, transformStamped);
 
-        part_info[id][i].type = msg->models[i].type.c_str();
+
+
+        part_info[id][i].type = msg->models[i].type;
         part_info[id][i].pose = pose_in_world.pose;
+        
+
       }
+
     }
   }
 
@@ -146,18 +151,37 @@ void sensor_read::logical_camera_callback(
   }
 
   std::string sensor_read::find_part(std::string part_type){
-    ROS_INFO_STREAM("Finding part");
+    ROS_INFO_STREAM(part_info[0][0].type);
+    
     for(int i = 0; i<part_info.size(); i++){
+     // ROS_INFO_STREAM("FOUND1");
       for(int j=0; j<part_info[i].size(); j++){
+        //ROS_INFO_STREAM("FOUND2");
+        //ROS_INFO_STREAM(part_info[i][j].type);
+
         if (part_info[i][j].type == part_type){
-          for(int k=0; k<3; k+2) {
-            std::vector<float> bin_pose = bin_locations[camera_locations[i][k]];
-            if (part_info[i][j].pose.position.x >= bin_pose[0] 
-            && part_info[i][j].pose.position.y <= bin_pose[1]
-            && part_info[i][j].pose.position.x <= bin_pose[2]
-            && part_info[i][j].pose.position.y >= bin_pose[3])
-              logi_cam_id = i;
-              return camera_locations[i][k];
+          ROS_INFO_STREAM("FOUND3");
+          for(int k=0; k<3; k++) {
+            for(int l=0; l<4; l++){
+              std::vector<float> bin_pose = bin_locations[camera_locations[k][l]];
+              //ROS_INFO_STREAM(bin_pose[0]);
+              ROS_INFO_STREAM("x= " << part_info[i][j].pose.position.x);
+              ROS_INFO_STREAM("y= " << part_info[i][j].pose.position.y);
+              ROS_INFO_STREAM("z= " << part_info[i][j].pose.position.z);
+              ROS_INFO_STREAM("checking x> " << bin_pose[0] << "checking x< " << bin_pose[2] <<"checking y< " << bin_pose[1] << "checking y> " << bin_pose[3]);
+              if (part_info[i][j].pose.position.x >= bin_pose[0] 
+              && part_info[i][j].pose.position.y <= bin_pose[1]
+              && part_info[i][j].pose.position.x <= bin_pose[2]
+              && part_info[i][j].pose.position.y >= bin_pose[3]){
+                logi_cam_id = i;
+                ROS_INFO_STREAM(part_info[i][j].type);
+                found_part = part_info[i][j];
+                return camera_locations[k][l];
+
+            }
+            
+            }
+
           }
         }
       }

@@ -44,7 +44,11 @@ public:
     std::string find_part(std::string part_type);
     // std::vector<std::vector<part>> get_part_info();
     std::array<std::array<part, 36>, 17> get_part_info();
+
     int get_logi_cam();
+    std::array<std::array<part, 36>, 17> part_info;
+    part found_part;
+
 
 
 private:
@@ -73,7 +77,6 @@ private:
     std::vector<std::vector<std::string>> camera_info;
     int logi_cam_id;
     // std::vector<std::vector<part>> parts_info;
-    std::array<std::array<part, 36>, 17> part_info;
     std::map<int, std::vector<std::string>> camera_locations{ 
         {0, {"bin3_", "bin4_", "bin7_", "bin8_"}},
         {1, {"bin11_", "bin12_","bin15_", "bin16_"}},

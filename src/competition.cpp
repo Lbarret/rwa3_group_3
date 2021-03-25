@@ -31,8 +31,6 @@ void Competition::init() {
             "/ariac/orders", 10, &Competition::order_callback, this);
 
   startCompetition();
-
- 
 }
 
 ////////////////////////
