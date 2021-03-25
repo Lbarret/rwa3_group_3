@@ -82,6 +82,8 @@ int main(int argc, char ** argv) {
     //ROS_INFO_STREAM(current_agv);
     //ROS_INFO_STREAM(current_agv);
     //ROS_INFO_STREAM(list_of_orders[0].shipments[0].products[0].type);
+    bool check_faulty;
+    part faulty_part;
 
 
     //--2-Look for parts in this order
@@ -122,7 +124,8 @@ int main(int argc, char ** argv) {
 			    if (part_loc == "bin3_"){
 			    	gantry.goToPresetLocation(gantry.bin3_);
 			    }
-			        //--Go pick the part
+			    
+                //--Go pick the part
 			    if (!gantry.pickPart(sensors.found_part)){
 			        gantry.goToPresetLocation(gantry.start_);
 			        spinner.stop();
@@ -133,6 +136,29 @@ int main(int argc, char ** argv) {
 			    //--TODO: agv2 should be retrieved from /ariac/orders (list_of_products in this case)
 			    gantry.placePart(part_in_tray, current_agv);
                 //pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
+
+                check_faulty = sensors.get_is_faulty(current_agv);
+                if(check_faulty) {
+                    ROS_INFO_STREAM("Found faulty part");
+                    sensors.reset_faulty();
+                    faulty_part.pose = sensors.get_faulty_pose(current_agv);
+                    if(current_agv=="agv2") {
+                        gantry.goToPresetLocation(gantry.agv2_);
+                        gantry.pickPart(faulty_part);
+                        gantry.goToPresetLocation(gantry.agv2_);
+                        gantry.goToPresetLocation(gantry.agv2_faulty);
+                        gantry.deactivateGripper("left_arm");
+                    }
+                    else {
+                        gantry.goToPresetLocation(gantry.agv1_);
+                        gantry.pickPart(faulty_part);
+                        gantry.goToPresetLocation(gantry.agv1_);
+                        gantry.goToPresetLocation(gantry.agv1_faulty);
+                        gantry.deactivateGripper("left_arm");
+                    }
+                    continue;
+
+                }
             }
             //--TODO: get the following arguments from the order
             if(current_agv == "agv1"){

@@ -41,9 +41,14 @@ public:
      */
     void init();
     void logical_camera_callback(const nist_gear::LogicalCameraImage::ConstPtr &msg, int id);
+    void quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg);
+    void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     std::string find_part(std::string part_type);
     // std::vector<std::vector<part>> get_part_info();
     std::array<std::array<part, 36>, 17> get_part_info();
+    void reset_faulty();
+    bool get_is_faulty(std::string agv);
+    geometry_msgs::Pose get_faulty_pose(std::string agv);
 
     int get_logi_cam();
     std::array<std::array<part, 36>, 17> part_info;
@@ -72,7 +77,10 @@ private:
     ros::Subscriber logical_camera_15_subscriber;/*!< subscriber to the topic /logical_camera_15 */
     ros::Subscriber logical_camera_16_subscriber;/*!< subscriber to the topic /logical_camera_16 */
     ros::Subscriber logical_camera_17_subscriber;/*!< subscriber to the topic /logical_camera_17 */
-    
+    ros::Subscriber quality_sensor_subscriber_1;
+    ros::Subscriber quality_sensor_subscriber_2;
+
+
     std::string part_location;
     std::vector<std::vector<std::string>> camera_info;
     int logi_cam_id;
@@ -83,6 +91,8 @@ private:
         {2, {"bin1_", "bin2_", "bin5_", "bin6_"}},
         {3, {"bin9_", "bin10_", "bin13_", "bin14_"}}
     };
+    bool is_faulty1, is_faulty2;
+    geometry_msgs::Pose faulty_pose1, faulty_pose2;
 };
 
 #endif

@@ -68,6 +68,8 @@ class GantryControl {
     bin bin3_;
     agv agv1_;
     agv agv2_;
+    agv agv1_faulty;
+    agv agv2_faulty;
 
   private:
     std::vector<double> joint_group_positions_;

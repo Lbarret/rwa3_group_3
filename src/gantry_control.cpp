@@ -74,6 +74,16 @@ void GantryControl::init()
     agv2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     agv2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
+    // joint positions to discard to faulty part
+    agv1_faulty.gantry = {0, -2.0, PI};
+    agv1_faulty.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    agv1_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    // joint positions to discard to faulty part
+    agv2_faulty.gantry = {0, 2.0, PI};
+    agv2_faulty.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
     const moveit::core::JointModelGroup *joint_model_group =
