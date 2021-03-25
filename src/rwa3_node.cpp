@@ -117,20 +117,40 @@ int main(int argc, char ** argv) {
 
     			if (part_loc == "bin1_"){
 			    	gantry.goToPresetLocation(gantry.bin1_);
+                    //--Go pick the part
+                    if (!gantry.pickPart(sensors.found_part)){
+                        gantry.goToPresetLocation(gantry.start_);
+                        spinner.stop();
+                        ros::shutdown();
+			        }
 			    }
 			    if (part_loc == "bin2_"){
 			    	gantry.goToPresetLocation(gantry.bin2_);
+                    //--Go pick the part
+                    if (!gantry.pickPart(sensors.found_part)){
+                        gantry.goToPresetLocation(gantry.start_);
+                        spinner.stop();
+                        ros::shutdown();
+                    }
 			    }
 			    if (part_loc == "bin3_"){
 			    	gantry.goToPresetLocation(gantry.bin3_);
+                    //--Go pick the part
+                    if (!gantry.pickPart(sensors.found_part)){
+                        gantry.goToPresetLocation(gantry.start_);
+                        spinner.stop();
+                        ros::shutdown();
+                    }
 			    }
-			    
-                //--Go pick the part
-			    if (!gantry.pickPart(sensors.found_part)){
-			        gantry.goToPresetLocation(gantry.start_);
-			        spinner.stop();
-			        ros::shutdown();
-			    }
+                if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
+                    gantry.goToPresetLocation(gantry.shelf5a_);
+                    gantry.goToPresetLocation(gantry.shelf5b_);
+                    gantry.goToPresetLocation(gantry.shelf5d_);
+                    gantry.pickPart(sensors.found_part);
+                    gantry.goToPresetLocation(gantry.shelf5e_);
+                    gantry.goToPresetLocation(gantry.shelf5b_);
+                    gantry.goToPresetLocation(gantry.shelf5a_);
+                }
 			    
 			    //--Go place the part
 			    //--TODO: agv2 should be retrieved from /ariac/orders (list_of_products in this case)
@@ -172,11 +192,6 @@ int main(int argc, char ** argv) {
         }
 		    
     }
-
-    
-
-   
-
     
     //--TODO: Parse each product in list_of_products
     //--TODO: For each product in list_of_product find the part in the environment using cameras
@@ -186,10 +201,6 @@ int main(int argc, char ** argv) {
     //--Where to place the part in the tray?
     //--TODO: Get this information from /ariac/orders (list_of_products in this case)
     
-
-
-
-
     comp.endCompetition();
     spinner.stop();
     ros::shutdown();

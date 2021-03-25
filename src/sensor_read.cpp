@@ -247,6 +247,17 @@ std::string sensor_read::find_part(std::string part_type){
           }
         
         }
+        for(int m=4;m<6;m++) {
+          std::vector<float> shelf_pose = bin_locations[camera_locations[m][0]];
+          if (part_info[i][j].pose.position.x >= shelf_pose[0] 
+            && part_info[i][j].pose.position.y <= shelf_pose[1]
+            && part_info[i][j].pose.position.x <= shelf_pose[2]
+            && part_info[i][j].pose.position.y >= shelf_pose[3]){
+              found_part = part_info[i][j];
+              return camera_locations[m][0];
+          
+          }
+        }
 
       }
     }

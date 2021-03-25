@@ -84,6 +84,32 @@ void GantryControl::init()
     agv2_faulty.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    shelf5a_.gantry = {0, -4.5, 0};
+    shelf5a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf5b_.gantry = {-14.5, -5.46, 0};//Reaching shelf5
+    shelf5b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf5b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf5c_.gantry = {-14.23, -4.25, 0};//Closer to shelf5
+
+    shelf5c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf5c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf5d_.gantry = {-14.5, -4.25, 0};//Moving inbetween two pulley_red
+    shelf5d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf5d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf5e_.gantry = {-14.5, -4.25, 0};//Picking and lifting pulley up
+
+    shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf5f_.gantry = {-15.19, -5, 0};//Going back then go back to conveyor belt
+    shelf5f_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf5f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
     const moveit::core::JointModelGroup *joint_model_group =

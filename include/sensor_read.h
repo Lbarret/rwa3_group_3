@@ -85,11 +85,13 @@ private:
     std::vector<std::vector<std::string>> camera_info;
     int logi_cam_id;
     // std::vector<std::vector<part>> parts_info;
-    std::map<int, std::vector<std::string>> camera_locations{ 
+    std::map<int, std::vector<std::string>> camera_locations = { 
         {0, {"bin3_", "bin4_", "bin7_", "bin8_"}},
         {1, {"bin11_", "bin12_","bin15_", "bin16_"}},
         {2, {"bin1_", "bin2_", "bin5_", "bin6_"}},
-        {3, {"bin9_", "bin10_", "bin13_", "bin14_"}}
+        {3, {"bin9_", "bin10_", "bin13_", "bin14_"}},
+        {4, {"shelf5a_"}},
+        {5, {"shelf5b_"}}
     };
     bool is_faulty1, is_faulty2;
     geometry_msgs::Pose faulty_pose1, faulty_pose2;
