@@ -50,17 +50,17 @@ void GantryControl::init()
     start_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to bin1
-    bin1_.gantry = {2.12 -1.1, 0.};
+    bin1_.gantry = {2.12, -1.3, 0.};
     bin1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to bin2
-    bin2_.gantry = {3.06, -1.1, 0.};
+    bin2_.gantry = {3, -1.3, 0.};
     bin2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to bin3
-    bin3_.gantry = {4.0, -1.1, 0.};
+    bin3_.gantry = {4.0, -1.3, 0.};
     bin3_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin3_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
@@ -102,7 +102,6 @@ void GantryControl::init()
     shelf5d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     shelf5e_.gantry = {-14.5, -4.25, 0};//Picking and lifting pulley up
-
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -278,12 +277,12 @@ bool GantryControl::pickPart(part part)
     activateGripper("left_arm");
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
-    part.pose.position.z = part.pose.position.z + model_height.at(part.type) + GRIPPER_HEIGHT - EPSILON + .005; //added calibration factor
+    part.pose.position.z = part.pose.position.z + model_height.at(part.type) + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
     part.pose.orientation.x = currentPose.orientation.x;
     part.pose.orientation.y = currentPose.orientation.y;
     part.pose.orientation.z = currentPose.orientation.z;
     part.pose.orientation.w = currentPose.orientation.w;
-    //    ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
+    ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
 
     auto state = getGripperState("left_arm");
     if (state.enabled)
