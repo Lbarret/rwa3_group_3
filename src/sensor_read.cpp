@@ -102,13 +102,13 @@ void sensor_read::init() {
       "/ariac/logical_camera_17", 1,
       boost::bind(&sensor_read::logical_camera_callback, this, _1, 17));
 
-  quality_sensor_subscriber_1 = node_.subscribe(
-       "/ariac/quality_control_sensor_1", 1, &sensor_read::quality_control_sensor_callback1,this
-       );
+  // quality_sensor_subscriber_1 = node_.subscribe(
+  //      "/ariac/quality_control_sensor_1", 1, &sensor_read::quality_control_sensor_callback1,this
+  //      );
   
-  quality_sensor_subscriber_2 = node_.subscribe(
-       "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
-       );
+  // quality_sensor_subscriber_2 = node_.subscribe(
+  //      "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
+  //      );
 
   
 }
@@ -216,20 +216,24 @@ std::array<std::array<part, 36>, 17> sensor_read::get_part_info(){
 }
 
 std::string sensor_read::find_part(std::string part_type){
-  ROS_INFO_STREAM(part_info[0][0].type);
+  ROS_INFO_STREAM("Sensors finding part");
+  ROS_INFO_STREAM("Part to find" << part_type);
   
   for(int i = 0; i<part_info.size(); i++){
     // ROS_INFO_STREAM("FOUND1");
     for(int j=0; j<part_info[i].size(); j++){
       //ROS_INFO_STREAM("FOUND2");
       //ROS_INFO_STREAM(part_info[i][j].type);
-
+      // ros::Duration(1.0).sleep();
       if (part_info[i][j].type == part_type){
         ROS_INFO_STREAM("FOUND3");
+        ROS_INFO_STREAM(part_info[i][j].type);
+        ROS_INFO_STREAM(part_type);
         for(int k=0; k<3; k++) {
           for(int l=0; l<4; l++){
             std::vector<float> bin_pose = bin_locations[camera_locations[k][l]];
-            //ROS_INFO_STREAM(bin_pose[0]);
+            // ros::Duration(1.0).sleep();
+            // ROS_INFO_STREAM(bin_pose[0]);
             ROS_INFO_STREAM("x= " << part_info[i][j].pose.position.x);
             ROS_INFO_STREAM("y= " << part_info[i][j].pose.position.y);
             ROS_INFO_STREAM("z= " << part_info[i][j].pose.position.z);
@@ -241,6 +245,7 @@ std::string sensor_read::find_part(std::string part_type){
               logi_cam_id = i;
               ROS_INFO_STREAM(part_info[i][j].type);
               found_part = part_info[i][j];
+              part_info[i][j].type = "";
               return camera_locations[k][l];
             }
             

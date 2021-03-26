@@ -93,7 +93,7 @@ int main(int argc, char ** argv) {
     while(sensors.part_info[0][0].type == ""){
     	ROS_INFO_STREAM_THROTTLE(10,"waiting for cameras");
     }
-    
+    part found_part;
     //ROS_INFO_STREAM(sensors.part_info_type[0][0]);
     auto sensors_parts_info = sensors.get_part_info();
     int logi_cam_id = sensors.get_logi_cam();
@@ -105,11 +105,17 @@ int main(int argc, char ** argv) {
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
+                if (j>0){
+                    sensors.init();
+                    while(sensors.part_info[0][0].type == ""){
+                        ROS_INFO_STREAM_THROTTLE(10,"waiting for cameras");
+                    }
+                }
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type);
                     // //--We go to this bin because a camera above
                    //--this bin found one of the parts in the order
                 ROS_INFO_STREAM("part location: " << part_loc);
-                
+                found_part = sensors.found_part;
     			part_in_tray.type = list_of_orders[i].shipments[j].products[k].type;
     			part_in_tray.pose = list_of_orders[i].shipments[j].products[k].pose;
     			current_agv = list_of_orders[i].shipments[j].agv_id;
@@ -118,67 +124,84 @@ int main(int argc, char ** argv) {
     			if (part_loc == "bin1_"){
 			    	gantry.goToPresetLocation(gantry.bin1_);
                     //--Go pick the part
-                    if (!gantry.pickPart(sensors.found_part)){
-                        gantry.goToPresetLocation(gantry.start_);
-                        spinner.stop();
-                        ros::shutdown();
-			        }
+                    ROS_INFO_STREAM("In bin 3");
+                    gantry.pickPart(found_part);
+                    gantry.goToPresetLocation(gantry.start_);
+                    // if (!gantry.pickPart(found_part)){
+                    //     ROS_INFO_STREAM("Picking part");
+                    //     gantry.goToPresetLocation(gantry.start_);
+                    //     ros::Duration(1.0).sleep();
+			        // }
+                    gantry.placePart(part_in_tray, current_agv);
+                    // ros::Duration(3.0).sleep();
 			    }
 			    if (part_loc == "bin2_"){
 			    	gantry.goToPresetLocation(gantry.bin2_);
                     //--Go pick the part
-                    if (!gantry.pickPart(sensors.found_part)){
-                        gantry.goToPresetLocation(gantry.start_);
-                        spinner.stop();
-                        ros::shutdown();
-                    }
+                    ROS_INFO_STREAM("In bin 2");
+                    gantry.pickPart(found_part);
+                    gantry.goToPresetLocation(gantry.start_);
+                    // if (!gantry.pickPart(found_part)){
+                    //     ROS_INFO_STREAM("Picking part");
+                    //     gantry.goToPresetLocation(gantry.start_);
+                    //     ros::Duration(1.0).sleep();
+                    // }
+                    gantry.placePart(part_in_tray, current_agv);
+                    // ros::Duration(3.0).sleep();
 			    }
 			    if (part_loc == "bin3_"){
 			    	gantry.goToPresetLocation(gantry.bin3_);
+                    gantry.pickPart(found_part);
+                    gantry.goToPresetLocation(gantry.start_);
                     //--Go pick the part
-                    if (!gantry.pickPart(sensors.found_part)){
-                        gantry.goToPresetLocation(gantry.start_);
-                        spinner.stop();
-                        ros::shutdown();
-                    }
+                    // if (!gantry.pickPart(found_part)){
+                    //     gantry.goToPresetLocation(gantry.start_);
+                    //     ros::Duration(1.0).sleep();
+         
+                    // }
+                    gantry.placePart(part_in_tray, current_agv);
+                    // ros::Duration(3.0).sleep();
 			    }
                 if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
                     gantry.goToPresetLocation(gantry.shelf5a_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
                     gantry.goToPresetLocation(gantry.shelf5d_);
-                    gantry.pickPart(sensors.found_part);
+                    gantry.pickPart(found_part);
                     gantry.goToPresetLocation(gantry.shelf5e_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
                     gantry.goToPresetLocation(gantry.shelf5a_);
+                    // ros::Duration(1.0).sleep();
+                    gantry.placePart(part_in_tray, current_agv);
+                    // ros::Duration(3.0).sleep();
                 }
 			    
 			    //--Go place the part
 			    //--TODO: agv2 should be retrieved from /ariac/orders (list_of_products in this case)
-			    gantry.placePart(part_in_tray, current_agv);
+			    
                 //pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
 
-                check_faulty = sensors.get_is_faulty(current_agv);
-                if(check_faulty) {
-                    ROS_INFO_STREAM("Found faulty part");
-                    sensors.reset_faulty();
-                    faulty_part.pose = sensors.get_faulty_pose(current_agv);
-                    if(current_agv=="agv2") {
-                        gantry.goToPresetLocation(gantry.agv2_);
-                        gantry.pickPart(faulty_part);
-                        gantry.goToPresetLocation(gantry.agv2_);
-                        gantry.goToPresetLocation(gantry.agv2_faulty);
-                        gantry.deactivateGripper("left_arm");
-                    }
-                    else {
-                        gantry.goToPresetLocation(gantry.agv1_);
-                        gantry.pickPart(faulty_part);
-                        gantry.goToPresetLocation(gantry.agv1_);
-                        gantry.goToPresetLocation(gantry.agv1_faulty);
-                        gantry.deactivateGripper("left_arm");
-                    }
-                    continue;
+                // check_faulty = sensors.get_is_faulty(current_agv);
+                // if(check_faulty) {
+                //     ROS_INFO_STREAM("Found faulty part");
+                //     sensors.reset_faulty();
+                //     faulty_part.pose = sensors.get_faulty_pose(current_agv);
+                //     if(current_agv=="agv2") {
+                //         gantry.goToPresetLocation(gantry.agv2_);
+                //         gantry.pickPart(faulty_part);
+                //         gantry.goToPresetLocation(gantry.agv2_);
+                //         gantry.goToPresetLocation(gantry.agv2_faulty);
+                //         gantry.deactivateGripper("left_arm");
+                //     }
+                //     else {
+                //         gantry.goToPresetLocation(gantry.agv1_);
+                //         gantry.pickPart(faulty_part);
+                //         gantry.goToPresetLocation(gantry.agv1_);
+                //         gantry.goToPresetLocation(gantry.agv1_faulty);
+                //         gantry.deactivateGripper("left_arm");
+                //     }
+                //     continue;
 
-                }
+                // }
             }
             //--TODO: get the following arguments from the order
             if(current_agv == "agv1"){
