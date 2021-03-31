@@ -88,7 +88,7 @@ void sensor_read::init() {
 
   logical_camera_14_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
       "/ariac/logical_camera_14", 1,
-      boost::bind(&sensor_read::logical_camera_callback, this, _1, 13));
+      boost::bind(&sensor_read::logical_camera_callback, this, _1, 14));
 
   logical_camera_15_subscriber = node_.subscribe<nist_gear::LogicalCameraImage>(
       "/ariac/logical_camera_15", 1,
@@ -102,13 +102,13 @@ void sensor_read::init() {
       "/ariac/logical_camera_17", 1,
       boost::bind(&sensor_read::logical_camera_callback, this, _1, 17));
 
-  // quality_sensor_subscriber_1 = node_.subscribe(
-  //      "/ariac/quality_control_sensor_1", 1, &sensor_read::quality_control_sensor_callback1,this
-  //      );
+  quality_sensor_subscriber_1 = node_.subscribe(
+       "/ariac/quality_control_sensor_1", 1, &sensor_read::quality_control_sensor_callback1,this
+       );
   
-  // quality_sensor_subscriber_2 = node_.subscribe(
-  //      "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
-  //      );
+  quality_sensor_subscriber_2 = node_.subscribe(
+       "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
+       );
 
   
 }
@@ -116,40 +116,40 @@ void sensor_read::init() {
 ////////////////////////
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {
   if(msg->models.size() > 0) {
-        is_faulty1 = true;
-   
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);
-        ros::Duration timeout(5.0);
+    is_faulty1 = true;
 
-        geometry_msgs::TransformStamped transformStamped1;
-        geometry_msgs::PoseStamped pose_in_world, pose_in_reference;
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
+    ros::Duration timeout(5.0);
 
-        pose_in_reference.pose = msg->models[0].pose;
-        transformStamped1 = tfBuffer.lookupTransform("world", "quality_control_sensor_1_frame", ros::Time(0), timeout);
-        tf2::doTransform(pose_in_reference, pose_in_world, transformStamped1);
+    geometry_msgs::TransformStamped transformStamped1;
+    geometry_msgs::PoseStamped pose_in_world, pose_in_reference;
 
-        faulty_pose1 = pose_in_world.pose;
+    pose_in_reference.pose = msg->models[0].pose;
+    transformStamped1 = tfBuffer.lookupTransform("world", "quality_control_sensor_1_frame", ros::Time(0), timeout);
+    tf2::doTransform(pose_in_reference, pose_in_world, transformStamped1);
+
+    faulty_pose1.pose = pose_in_world.pose;
   }
 }
 
 ////////////////////////
 void sensor_read::quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg){
   if(msg->models.size() > 0) {
-        is_faulty2 = true;
-   
-        tf2_ros::Buffer tfBuffer;
-        tf2_ros::TransformListener tfListener(tfBuffer);
-        ros::Duration timeout(5.0);
+    is_faulty2 = true;
 
-        geometry_msgs::TransformStamped transformStamped2;
-        geometry_msgs::PoseStamped pose_in_world, pose_in_reference;
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
+    ros::Duration timeout(5.0);
 
-        pose_in_reference.pose = msg->models[0].pose;
-        transformStamped2 = tfBuffer.lookupTransform("world", "quality_control_sensor_2_frame", ros::Time(0), timeout);
-        tf2::doTransform(pose_in_reference, pose_in_world, transformStamped2);
+    geometry_msgs::TransformStamped transformStamped2;
+    geometry_msgs::PoseStamped pose_in_world, pose_in_reference;
 
-        faulty_pose2 = pose_in_world.pose;
+    pose_in_reference.pose = msg->models[0].pose;
+    transformStamped2 = tfBuffer.lookupTransform("world", "quality_control_sensor_2_frame", ros::Time(0), timeout);
+    tf2::doTransform(pose_in_reference, pose_in_world, transformStamped2);
+
+    faulty_pose2.pose = pose_in_world.pose;
   }
 }
 
@@ -179,16 +179,16 @@ void sensor_read::logical_camera_callback(
         ros::Duration(1.0).sleep();
       }
 
-      for(int i=0; i<msg->models.size(); i++) {
-        pose_in_reference.pose = msg->models[i].pose;
-        tf2::doTransform(pose_in_reference, pose_in_world, transformStamped);
+      if(logicam_update[id]==0) {
+        for(int i=0; i<msg->models.size(); i++) {
+          pose_in_reference.pose = msg->models[i].pose;
+          tf2::doTransform(pose_in_reference, pose_in_world, transformStamped);
 
-
-
-        part_info[id][i].type = msg->models[i].type;
-        part_info[id][i].pose = pose_in_world.pose;
-        
-
+          part_info[id][i].type = msg->models[i].type;
+          part_info[id][i].pose = pose_in_world.pose;  
+          part_info[id][i].is_picked = false;
+        }
+        logicam_update[id]=1;
       }
 
     }
@@ -205,7 +205,7 @@ bool sensor_read::get_is_faulty(std::string agv) {
     return is_faulty2;
 }
 
-geometry_msgs::Pose sensor_read::get_faulty_pose(std::string agv) {
+part sensor_read::get_faulty_pose(std::string agv) {
     if(agv == "agv2")
         return faulty_pose1;
     return faulty_pose2;
@@ -219,51 +219,51 @@ std::string sensor_read::find_part(std::string part_type){
   ROS_INFO_STREAM("Sensors finding part");
   ROS_INFO_STREAM("Part to find" << part_type);
   
-  for(int i = 0; i<part_info.size(); i++){
+  for(int i = 0; i<=9; i++){
     // ROS_INFO_STREAM("FOUND1");
-    for(int j=0; j<part_info[i].size(); j++){
+    for(int j=0; j<this->part_info[i].size(); j++){
       //ROS_INFO_STREAM("FOUND2");
       //ROS_INFO_STREAM(part_info[i][j].type);
       // ros::Duration(1.0).sleep();
-      if (part_info[i][j].type == part_type){
-        ROS_INFO_STREAM("FOUND3");
-        ROS_INFO_STREAM(part_info[i][j].type);
-        ROS_INFO_STREAM(part_type);
-        for(int k=0; k<3; k++) {
-          for(int l=0; l<4; l++){
-            std::vector<float> bin_pose = bin_locations[camera_locations[k][l]];
-            // ros::Duration(1.0).sleep();
-            // ROS_INFO_STREAM(bin_pose[0]);
-            ROS_INFO_STREAM("x= " << part_info[i][j].pose.position.x);
-            ROS_INFO_STREAM("y= " << part_info[i][j].pose.position.y);
-            ROS_INFO_STREAM("z= " << part_info[i][j].pose.position.z);
-            ROS_INFO_STREAM("checking x> " << bin_pose[0] << "checking x< " << bin_pose[2] <<"checking y< " << bin_pose[1] << "checking y> " << bin_pose[3]);
-            if (part_info[i][j].pose.position.x >= bin_pose[0] 
-            && part_info[i][j].pose.position.y <= bin_pose[1]
-            && part_info[i][j].pose.position.x <= bin_pose[2]
-            && part_info[i][j].pose.position.y >= bin_pose[3]){
-              logi_cam_id = i;
-              ROS_INFO_STREAM(part_info[i][j].type);
-              found_part = part_info[i][j];
-              part_info[i][j].type = "";
-              return camera_locations[k][l];
+      if (this->part_info[i][j].type == part_type){
+        if (this->part_info[i][j].is_picked == false){
+          ROS_INFO_STREAM("FOUND");
+          ROS_INFO_STREAM(this->part_info[i][j].is_picked);
+          // ROS_INFO_STREAM(this->part_info[i][j].type);
+          // ROS_INFO_STREAM(part_type);
+          int camera_coverage = camera_locations[i].size();
+          if(camera_coverage==4){
+            for(auto bin: camera_locations[i]) {
+              std::vector<float> bin_pose = bin_locations[bin];
+              if (this->part_info[i][j].pose.position.x >= bin_pose[0] 
+                && this->part_info[i][j].pose.position.y <= bin_pose[1]
+                && this->part_info[i][j].pose.position.x <= bin_pose[2]
+                && this->part_info[i][j].pose.position.y >= bin_pose[3]){
+                  logi_cam_id = i;
+                  ROS_INFO_STREAM(this->part_info[i][j].type);
+                  found_part = part_info[i][j];
+                  // part empty_part;
+                  this->part_info[i][j].is_picked = true;
+                  ROS_INFO_STREAM(this->part_info[i][j].type);
+                  return bin;
+                }
             }
-            
-          }
-        
-        }
-        for(int m=4;m<6;m++) {
-          std::vector<float> shelf_pose = bin_locations[camera_locations[m][0]];
-          if (part_info[i][j].pose.position.x >= shelf_pose[0] 
-            && part_info[i][j].pose.position.y <= shelf_pose[1]
-            && part_info[i][j].pose.position.x <= shelf_pose[2]
-            && part_info[i][j].pose.position.y >= shelf_pose[3]){
-              found_part = part_info[i][j];
-              return camera_locations[m][0];
-          
-          }
-        }
 
+          } 
+          else {
+            for(auto bin: camera_locations[i]) {
+              std::vector<float> shelf_pose = bin_locations[bin];
+              if (this->part_info[i][j].pose.position.x >= shelf_pose[0] 
+                && this->part_info[i][j].pose.position.y <= shelf_pose[1]
+                && this->part_info[i][j].pose.position.x <= shelf_pose[2]
+                && this->part_info[i][j].pose.position.y >= shelf_pose[3]){
+                  found_part = part_info[i][j];
+                  this->part_info[i][j].is_picked = true;
+                  return bin;
+                }
+            }
+          }
+        }
       }
     }
   }

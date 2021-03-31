@@ -73,6 +73,7 @@ typedef struct Part {
   ros::Time time_stamp;
   std::string id;
   bool faulty;
+  bool is_picked;
 } part;
 
 /**

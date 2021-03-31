@@ -48,7 +48,7 @@ public:
     std::array<std::array<part, 36>, 17> get_part_info();
     void reset_faulty();
     bool get_is_faulty(std::string agv);
-    geometry_msgs::Pose get_faulty_pose(std::string agv);
+    part get_faulty_pose(std::string agv);
 
     int get_logi_cam();
     std::array<std::array<part, 36>, 17> part_info;
@@ -82,6 +82,7 @@ private:
 
 
     std::string part_location;
+    std::array<int, 17> logicam_update = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::vector<std::vector<std::string>> camera_info;
     int logi_cam_id;
     // std::vector<std::vector<part>> parts_info;
@@ -91,10 +92,22 @@ private:
         {2, {"bin1_", "bin2_", "bin5_", "bin6_"}},
         {3, {"bin9_", "bin10_", "bin13_", "bin14_"}},
         {4, {"shelf5a_"}},
-        {5, {"shelf5b_"}}
+        {5, {"shelf5b_"}},
+        {6, {"shelf7a_"}},
+        {7, {"shelf7b_"}},
+        {8, {"shelf6a_"}},
+        {9, {"shelf6b_"}},
+        {10, {"beltm_"}},
+        {11, {"beltf_"}},
+        {12, {"agv2_"}},
+        {13, {"agv1_"}},
+        {14, {"shelf1a_"}},
+        {15, {"shelf1b_"}},
+        {16, {"shelf2a_"}},
+        {17, {"shelf2b_"}}
     };
     bool is_faulty1, is_faulty2;
-    geometry_msgs::Pose faulty_pose1, faulty_pose2;
+    part faulty_pose1, faulty_pose2;
 };
 
 #endif
