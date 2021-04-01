@@ -96,8 +96,8 @@ int main(int argc, char ** argv) {
     ros::Duration(10.0).sleep();
     part found_part;
     //ROS_INFO_STREAM(sensors.part_info_type[0][0]);
-    auto sensors_parts_info = sensors.get_part_info();
-    int logi_cam_id = sensors.get_logi_cam();
+    // auto sensors_parts_info = sensors.get_part_info();
+    // int logi_cam_id = sensors.get_logi_cam();
     // ROS_INFO_STREAM("Part type: " << sensors_parts_info[5][5].pose.position.x);
     std::string part_loc = "";
     for (int i=0; i < list_of_orders.size(); i++)
@@ -171,6 +171,7 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.shelf5e_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
                     gantry.goToPresetLocation(gantry.shelf5a_);
+                    // gantry.goToPresetLocation(gantry.start_);
                     // ros::Duration(1.0).sleep();
                     gantry.placePart(part_in_tray, current_agv);
                     // ros::Duration(3.0).sleep();

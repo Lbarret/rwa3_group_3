@@ -93,7 +93,6 @@ void GantryControl::init()
     shelf5b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     shelf5c_.gantry = {-14.23, -4.25, 0};//Closer to shelf5
-
     shelf5c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf5c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -101,13 +100,9 @@ void GantryControl::init()
     shelf5d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf5d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5e_.gantry = {-14.5, -4.25, 0};//Picking and lifting pulley up
+    shelf5e_.gantry = {-15.5, -5.5, 0};//Picking and lifting pulley up
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
-
-    shelf5f_.gantry = {-15.19, -5, 0};//Going back then go back to conveyor belt
-    shelf5f_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
-    shelf5f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.

@@ -219,32 +219,38 @@ std::string sensor_read::find_part(std::string part_type){
   ROS_INFO_STREAM("Sensors finding part");
   ROS_INFO_STREAM("Part to find" << part_type);
   
-  for(int i = 0; i<=9; i++){
+  for(int i = 0; i<10; i++){
     // ROS_INFO_STREAM("FOUND1");
-    for(int j=0; j<this->part_info[i].size(); j++){
+    for(int j=0; j<part_info[i].size(); j++){
       //ROS_INFO_STREAM("FOUND2");
       //ROS_INFO_STREAM(part_info[i][j].type);
       // ros::Duration(1.0).sleep();
-      if (this->part_info[i][j].type == part_type){
-        if (this->part_info[i][j].is_picked == false){
+      if (part_info[i][j].type == part_type){
+        if (part_info[i][j].is_picked == false){
           ROS_INFO_STREAM("FOUND");
-          ROS_INFO_STREAM(this->part_info[i][j].is_picked);
+          ROS_INFO_STREAM(part_info[i][j].is_picked);
           // ROS_INFO_STREAM(this->part_info[i][j].type);
           // ROS_INFO_STREAM(part_type);
           int camera_coverage = camera_locations[i].size();
           if(camera_coverage==4){
+            ROS_INFO_STREAM("coverage");
             for(auto bin: camera_locations[i]) {
+              ROS_INFO_STREAM(bin);
+              ROS_INFO_STREAM("comparing to find part, loop 1");
               std::vector<float> bin_pose = bin_locations[bin];
-              if (this->part_info[i][j].pose.position.x >= bin_pose[0] 
-                && this->part_info[i][j].pose.position.y <= bin_pose[1]
-                && this->part_info[i][j].pose.position.x <= bin_pose[2]
-                && this->part_info[i][j].pose.position.y >= bin_pose[3]){
+              if (part_info[i][j].pose.position.x >= bin_pose[0] 
+                && part_info[i][j].pose.position.y <= bin_pose[1]
+                && part_info[i][j].pose.position.x <= bin_pose[2]
+                && part_info[i][j].pose.position.y >= bin_pose[3]){
                   logi_cam_id = i;
-                  ROS_INFO_STREAM(this->part_info[i][j].type);
+                  //ROS_INFO_STREAM(this->part_info[i][j].type);
+                  ROS_INFO_STREAM("found the bin");
                   found_part = part_info[i][j];
+                  ROS_INFO_STREAM("seg check-1");
                   // part empty_part;
-                  this->part_info[i][j].is_picked = true;
-                  ROS_INFO_STREAM(this->part_info[i][j].type);
+                  part_info[i][j].is_picked = true;
+                  ROS_INFO_STREAM("seg check-2");
+                  // ROS_INFO_STREAM(this->part_info[i][j].type);
                   return bin;
                 }
             }
@@ -252,13 +258,18 @@ std::string sensor_read::find_part(std::string part_type){
           } 
           else {
             for(auto bin: camera_locations[i]) {
+              ROS_INFO_STREAM(bin);
+              ROS_INFO_STREAM("comparing to find part, loop 2");
               std::vector<float> shelf_pose = bin_locations[bin];
-              if (this->part_info[i][j].pose.position.x >= shelf_pose[0] 
-                && this->part_info[i][j].pose.position.y <= shelf_pose[1]
-                && this->part_info[i][j].pose.position.x <= shelf_pose[2]
-                && this->part_info[i][j].pose.position.y >= shelf_pose[3]){
+              ROS_INFO_STREAM("checking x> " << shelf_pose[0] << "checking x< " << shelf_pose[2] <<"checking y< " << shelf_pose[1] << "checking y> " << shelf_pose[3]);
+              ROS_INFO_STREAM("checking x " << part_info[i][j].pose.position.x  <<"checking y< " << part_info[i][j].pose.position.y);
+              if (part_info[i][j].pose.position.x <= shelf_pose[0] 
+                && part_info[i][j].pose.position.y <= shelf_pose[1]
+                && part_info[i][j].pose.position.x >= shelf_pose[2]
+                && part_info[i][j].pose.position.y >= shelf_pose[3]){
                   found_part = part_info[i][j];
-                  this->part_info[i][j].is_picked = true;
+                  ROS_INFO_STREAM("found the bin");
+                  part_info[i][j].is_picked = true;
                   return bin;
                 }
             }
