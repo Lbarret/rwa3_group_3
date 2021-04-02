@@ -100,7 +100,7 @@ int main(int argc, char ** argv) {
     //  		}
     //  	}
     // }
-    ros::Duration(5.0).sleep();
+    ros::Duration(2.0).sleep();
     part found_part;
     //ROS_INFO_STREAM(sensors.part_info_type[0][0]);
     // auto sensors_parts_info = sensors.get_part_info();
@@ -180,20 +180,22 @@ int main(int argc, char ** argv) {
                     // gantry.goToPresetLocation(gantry.start_);
                     // ros::Duration(1.0).sleep();
                     gantry.placePart(part_in_tray, current_agv);
-                    gantry.goToPresetLocation(gantry.start_);
-                    // ros::Duration(3.0).sleep();
-                }
-			    
-			    //--Go place the part
-			    //--TODO: agv2 should be retrieved from /ariac/orders (list_of_products in this case)
-			    
-                //pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
 
-                check_faulty = sensors.get_is_faulty(current_agv);
+                    }
+                    
+                    // ros::Duration(3.0).sleep();
+                
+			    ros::Duration(2.0).sleep();
+			    check_faulty = sensors.get_is_faulty(current_agv);
                 if(check_faulty) {
                     ROS_INFO_STREAM("Found faulty part");
                     sensors.reset_faulty();
                     faulty_p = sensors.get_faulty_pose(current_agv);
+                    faulty_p.type = part_in_tray.type;
+                    faulty_p.pose.position.z +=.015;
+                    ROS_INFO_STREAM(faulty_p.pose.position.x);
+                    ROS_INFO_STREAM(faulty_p.pose.position.y);
+                    ROS_INFO_STREAM(faulty_p.pose.position.z);
                     if(current_agv=="agv2") {
                         gantry.goToPresetLocation(gantry.agv2_);
                         gantry.pickPart(faulty_p);
@@ -208,9 +210,16 @@ int main(int argc, char ** argv) {
                         gantry.goToPresetLocation(gantry.agv1_faulty);
                         gantry.deactivateGripper("left_arm");
                     }
+                    k--;
                     continue;
-
                 }
+                gantry.goToPresetLocation(gantry.start_);
+			    //--Go place the part
+			    //--TODO: agv2 should be retrieved from /ariac/orders (list_of_products in this case)
+			    
+                //pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
+
+
             }
             //--TODO: get the following arguments from the order
             if(current_agv == "agv1"){

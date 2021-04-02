@@ -212,9 +212,17 @@ bool sensor_read::get_is_faulty(std::string agv) {
 }
 
 part sensor_read::get_faulty_pose(std::string agv) {
-    if(agv == "agv2")
-        return faulty_pose1;
-    return faulty_pose2;
+    if(agv == "agv2"){
+      ROS_INFO_STREAM("faulty pose 1");
+      return faulty_pose1;
+      
+    }
+    else{
+      ROS_INFO_STREAM("faulty pose 2");
+      return faulty_pose2;
+      
+    }    
+    
 }
 
 std::array<std::array<part, 36>, 18> sensor_read::get_part_info(){

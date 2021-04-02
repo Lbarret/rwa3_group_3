@@ -340,26 +340,34 @@ bool GantryControl::pickPart(part part)
     }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
-    part.pose.position.z = part.pose.position.z + model_height.at(part.type) + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
+
+    part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
     part.pose.orientation.x = currentPose.orientation.x;
     part.pose.orientation.y = currentPose.orientation.y;
     part.pose.orientation.z = currentPose.orientation.z;
     part.pose.orientation.w = currentPose.orientation.w;
     ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
-
+    geometry_msgs::Pose abovePartPose = part.pose;
+    abovePartPose.position.z = part.pose.position.z + .1;
     
     if (state.enabled)
     {
         ROS_INFO_STREAM("[Gripper] = enabled");
         //--Move arm to part
+        left_arm_group_.setPoseTarget(abovePartPose);
+        left_arm_group_.move();
+        ros::Duration(0.5).sleep();
         left_arm_group_.setPoseTarget(part.pose);
         left_arm_group_.move();
         auto state = getGripperState("left_arm");
-        ros::Duration(1.0).sleep();
+        ros::Duration(1.5).sleep();
         if (state.attached)
         {
             ROS_INFO_STREAM("[Gripper] = object attached");
             //--Move arm to previous position
+            left_arm_group_.setPoseTarget(abovePartPose);
+            left_arm_group_.move();
+            ros::Duration(0.5).sleep();
             left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
             return true;
@@ -372,14 +380,24 @@ bool GantryControl::pickPart(part part)
             //--try to pick up the part 5 times
             while (current_attempt<max_attempts)
             {
-                left_arm_group_.setPoseTarget(currentPose);
+                left_arm_group_.setPoseTarget(abovePartPose);
                 left_arm_group_.move();
                 ros::Duration(0.5).sleep();
+
                 left_arm_group_.setPoseTarget(part.pose);
                 left_arm_group_.move();
                 activateGripper("left_arm");
+                ros::Duration(1.0).sleep();
+                state = getGripperState("left_arm");
+                ros::Duration(0.5).sleep();
+                if (state.attached){
+                    break;
+                }
                 current_attempt++;
             }
+            left_arm_group_.setPoseTarget(abovePartPose);
+            left_arm_group_.move();
+            ros::Duration(0.5).sleep();
             left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
         }
@@ -408,9 +426,7 @@ void GantryControl::placePart(part part, std::string agv)
     left_arm_group_.move();
 
     deactivateGripper("left_arm");
-    auto state = getGripperState("left_arm");
-    if (state.attached)
-        goToPresetLocation(start_);
+    
 }
 
 ////////////////////////////
