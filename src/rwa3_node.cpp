@@ -189,28 +189,28 @@ int main(int argc, char ** argv) {
 			    
                 //pickandplace(logi_cam_id,list_of_orders[i].shipments[j].products[k], part_loc, sensors_parts_info, gantry);
 
-                // check_faulty = sensors.get_is_faulty(current_agv);
-                // if(check_faulty) {
-                //     ROS_INFO_STREAM("Found faulty part");
-                //     sensors.reset_faulty();
-                //     faulty_p = sensors.get_faulty_pose(current_agv);
-                //     if(current_agv=="agv2") {
-                //         gantry.goToPresetLocation(gantry.agv2_);
-                //         gantry.pickPart(faulty_p);
-                //         gantry.goToPresetLocation(gantry.agv2_);
-                //         gantry.goToPresetLocation(gantry.agv2_faulty);
-                //         gantry.deactivateGripper("left_arm");
-                //     }
-                //     else {
-                //         gantry.goToPresetLocation(gantry.agv1_);
-                //         gantry.pickPart(faulty_p);
-                //         gantry.goToPresetLocation(gantry.agv1_);
-                //         gantry.goToPresetLocation(gantry.agv1_faulty);
-                //         gantry.deactivateGripper("left_arm");
-                //     }
-                //     continue;
+                check_faulty = sensors.get_is_faulty(current_agv);
+                if(check_faulty) {
+                    ROS_INFO_STREAM("Found faulty part");
+                    sensors.reset_faulty();
+                    faulty_p = sensors.get_faulty_pose(current_agv);
+                    if(current_agv=="agv2") {
+                        gantry.goToPresetLocation(gantry.agv2_);
+                        gantry.pickPart(faulty_p);
+                        gantry.goToPresetLocation(gantry.agv2_);
+                        gantry.goToPresetLocation(gantry.agv2_faulty);
+                        gantry.deactivateGripper("left_arm");
+                    }
+                    else {
+                        gantry.goToPresetLocation(gantry.agv1_);
+                        gantry.pickPart(faulty_p);
+                        gantry.goToPresetLocation(gantry.agv1_);
+                        gantry.goToPresetLocation(gantry.agv1_faulty);
+                        gantry.deactivateGripper("left_arm");
+                    }
+                    continue;
 
-                // }
+                }
             }
             //--TODO: get the following arguments from the order
             if(current_agv == "agv1"){

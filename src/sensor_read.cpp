@@ -131,6 +131,9 @@ void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCamer
 
     faulty_pose1.pose = pose_in_world.pose;
   }
+  else{
+    is_faulty1 = false;
+  }
 }
 
 ////////////////////////
@@ -150,6 +153,9 @@ void sensor_read::quality_control_sensor_callback2(const nist_gear::LogicalCamer
     tf2::doTransform(pose_in_reference, pose_in_world, transformStamped2);
 
     faulty_pose2.pose = pose_in_world.pose;
+  }
+  else{
+    is_faulty2 = false;
   }
 }
 
@@ -219,7 +225,7 @@ std::string sensor_read::find_part(std::string part_type){
   ROS_INFO_STREAM("Sensors finding part");
   ROS_INFO_STREAM("Part to find" << part_type);
   
-  for(int i = 0; i<18; i++){
+  for(int i = 0; i<10; i++){
     // ROS_INFO_STREAM("FOUND1");
     for(int j=0; j<part_info[i].size(); j++){
       //ROS_INFO_STREAM("FOUND2");

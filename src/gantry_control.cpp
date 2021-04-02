@@ -355,6 +355,7 @@ bool GantryControl::pickPart(part part)
         left_arm_group_.setPoseTarget(part.pose);
         left_arm_group_.move();
         auto state = getGripperState("left_arm");
+        ros::Duration(1.0).sleep();
         if (state.attached)
         {
             ROS_INFO_STREAM("[Gripper] = object attached");
