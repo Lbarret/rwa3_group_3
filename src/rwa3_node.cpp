@@ -90,10 +90,17 @@ int main(int argc, char ** argv) {
 
     sensor_read sensors(node);
     sensors.init();
-    // while(sensors.part_info[0][0].type == ""){
-    // 	ROS_INFO_STREAM_THROTTLE(10,"waiting for cameras");
+    // bool flag = true;
+    // while(flag){
+    //  	ROS_INFO_STREAM_THROTTLE(10,"waiting for cameras");
+    //  	for(int i = 0; i<18; i++){
+    //  		if (sensors.part_info[i][0].type != ""){
+    //  			flag=false;
+    //  			break;
+    //  		}
+    //  	}
     // }
-    ros::Duration(10.0).sleep();
+    ros::Duration(5.0).sleep();
     part found_part;
     //ROS_INFO_STREAM(sensors.part_info_type[0][0]);
     // auto sensors_parts_info = sensors.get_part_info();
@@ -168,12 +175,12 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.shelf5b_);
                     gantry.goToPresetLocation(gantry.shelf5d_);
                     gantry.pickPart(found_part);
-                    gantry.goToPresetLocation(gantry.shelf5e_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
                     gantry.goToPresetLocation(gantry.shelf5a_);
                     // gantry.goToPresetLocation(gantry.start_);
                     // ros::Duration(1.0).sleep();
                     gantry.placePart(part_in_tray, current_agv);
+                    gantry.goToPresetLocation(gantry.start_);
                     // ros::Duration(3.0).sleep();
                 }
 			    

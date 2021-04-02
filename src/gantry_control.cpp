@@ -269,7 +269,11 @@ geometry_msgs::Pose GantryControl::getTargetWorldPose(geometry_msgs::Pose target
 bool GantryControl::pickPart(part part)
 {
     //--Activate gripper
-    activateGripper("left_arm");
+    auto state = getGripperState("left_arm");
+    while(!state.enabled){
+        activateGripper("left_arm");
+        state = getGripperState("left_arm");
+    }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
     part.pose.position.z = part.pose.position.z + model_height.at(part.type) + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
@@ -279,7 +283,7 @@ bool GantryControl::pickPart(part part)
     part.pose.orientation.w = currentPose.orientation.w;
     ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
 
-    auto state = getGripperState("left_arm");
+    
     if (state.enabled)
     {
         ROS_INFO_STREAM("[Gripper] = enabled");
@@ -293,7 +297,6 @@ bool GantryControl::pickPart(part part)
             //--Move arm to previous position
             left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
-            goToPresetLocation(start_);
             return true;
         }
         else

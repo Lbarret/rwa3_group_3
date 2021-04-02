@@ -211,7 +211,7 @@ part sensor_read::get_faulty_pose(std::string agv) {
     return faulty_pose2;
 }
 
-std::array<std::array<part, 36>, 17> sensor_read::get_part_info(){
+std::array<std::array<part, 36>, 18> sensor_read::get_part_info(){
   return part_info;
 }
 
@@ -219,7 +219,7 @@ std::string sensor_read::find_part(std::string part_type){
   ROS_INFO_STREAM("Sensors finding part");
   ROS_INFO_STREAM("Part to find" << part_type);
   
-  for(int i = 0; i<10; i++){
+  for(int i = 0; i<18; i++){
     // ROS_INFO_STREAM("FOUND1");
     for(int j=0; j<part_info[i].size(); j++){
       //ROS_INFO_STREAM("FOUND2");
