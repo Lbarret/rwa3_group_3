@@ -63,11 +63,35 @@ class GantryControl {
     geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
     //--preset locations;
     start start_;
-    bin1 bin1_;
-    bin2 bin2_;
-    bin3 bin3_;
-    agv1 agv1_;
-    agv2 agv2_;
+    bin bin1_;
+    bin bin2_;
+    bin bin3_;
+    agv agv1_;
+    agv agv2_;
+    agv agv1_faulty;
+    agv agv2_faulty;
+    shelf shelf5a_;
+    shelf shelf5b_;
+    shelf shelf5c_;
+    shelf shelf5d_;
+    shelf shelf5e_;
+    shelf shelf5f_;
+    shelf shelf58a_;
+    shelf shelf58b_;
+    shelf shelf58c_;
+    shelf shelf58d_;
+    shelf shelf58e_;
+    shelf shelf811a_;
+    shelf shelf811b_;
+    shelf shelf811c_;
+    shelf shelf811d_;
+    shelf shelf811e_;
+    shelf shelf11a_;
+    shelf shelf11b_;
+    shelf shelf11c_;
+    shelf shelf11d_;
+    shelf shelf11e_;
+
 
   private:
     std::vector<double> joint_group_positions_;

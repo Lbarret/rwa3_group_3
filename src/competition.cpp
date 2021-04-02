@@ -31,8 +31,6 @@ void Competition::init() {
             "/ariac/orders", 10, &Competition::order_callback, this);
 
   startCompetition();
-
- 
 }
 
 ////////////////////////
@@ -87,7 +85,9 @@ void Competition::order_callback(const nist_gear::Order::ConstPtr &order_msg)
   }
   order_list_.push_back(new_order);
 }
-
+std::vector<order> Competition::get_order_list(){
+  return order_list_;
+}
 ////////////////////////
 void Competition::competition_clock_callback(const rosgraph_msgs::Clock::ConstPtr & msg) {
   competition_clock_ = msg->clock;
