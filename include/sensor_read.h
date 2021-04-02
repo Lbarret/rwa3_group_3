@@ -45,13 +45,13 @@ public:
     void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     std::string find_part(std::string part_type);
     // std::vector<std::vector<part>> get_part_info();
-    std::array<std::array<part, 36>, 18> get_part_info();
+    std::array<std::array<part, 36>, 17> get_part_info();
     void reset_faulty();
     bool get_is_faulty(std::string agv);
     part get_faulty_pose(std::string agv);
 
     int get_logi_cam();
-    std::array<std::array<part, 36>, 18> part_info;
+    std::array<std::array<part, 36>, 17> part_info;
     part found_part;
 
 
@@ -93,10 +93,10 @@ private:
         {3, {"bin9_", "bin10_", "bin13_", "bin14_"}},
         {4, {"shelf5a_"}},
         {5, {"shelf5b_"}},
-        {6, {"shelf7a_"}},
-        {7, {"shelf7b_"}},
-        {8, {"shelf6a_"}},
-        {9, {"shelf6b_"}},
+        {6, {"shelf8a_"}},
+        {7, {"shelf8b_"}},
+        {8, {"shelf11a_"}},
+        {9, {"shelf11b_"}},
         {10, {"beltm_"}},
         {11, {"beltf_"}},
         {12, {"agv2_"}},
