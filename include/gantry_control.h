@@ -76,6 +76,22 @@ class GantryControl {
     shelf shelf5d_;
     shelf shelf5e_;
     shelf shelf5f_;
+    shelf shelf58a_;
+    shelf shelf58b_;
+    shelf shelf58c_;
+    shelf shelf58d_;
+    shelf shelf58e_;
+    shelf shelf811a_;
+    shelf shelf811b_;
+    shelf shelf811c_;
+    shelf shelf811d_;
+    shelf shelf811e_;
+    shelf shelf11a_;
+    shelf shelf11b_;
+    shelf shelf11c_;
+    shelf shelf11d_;
+    shelf shelf11e_;
+
 
   private:
     std::vector<double> joint_group_positions_;
