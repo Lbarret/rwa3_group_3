@@ -84,6 +84,7 @@ void GantryControl::init()
     agv2_faulty.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    // joint positions to go to shelf 5
     shelf5a_.gantry = {0, -4.5, 0};
     shelf5a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf5a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
@@ -103,6 +104,69 @@ void GantryControl::init()
     shelf5e_.gantry = {-15.5, -5.5, 0};//Picking and lifting pulley up
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    // joint positions to go to between shelves 5 and 8
+    shelf58a_.gantry = {0, -1.5, 0};
+    shelf58a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf58a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf58b_.gantry = {-14.5, -2.46, 0};//Reaching shelf5/8
+    shelf58b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf58b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf58c_.gantry = {-14.23, -1.25, 0};//Closer to shelf5/8
+    shelf58c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf58c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf58d_.gantry = {-14.5, -1.25, 0};//Moving inbetween two pulley_red
+    shelf58d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf58d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf58e_.gantry = {-15.5, -2.5, 0};//Picking and lifting pulley up
+    shelf58e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    // joint positions to go between shelves 8 and 11
+    shelf811a_.gantry = {0, 1.5, 0};
+    shelf811a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf811a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf811b_.gantry = {-14.5, 0.54, 0};//Reaching shelf11
+    shelf811b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf811b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf811c_.gantry = {-14.23, 1.75, 0};//Closer to shelf11
+    shelf811c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf811c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf811d_.gantry = {-14.5, 1.75, 0};//Moving inbetween two pulley_red
+    shelf811d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf811d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf811e_.gantry = {-15.5, 0.5, 0};//Picking and lifting pulley up
+    shelf811e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf811e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    // joint positions to go to shelf 11
+    shelf11a_.gantry = {0, 4.5, 0};
+    shelf11a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf11a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf11b_.gantry = {-14.5, 3.54, 0};//Reaching shelf11
+    shelf11b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf11b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf11c_.gantry = {-14.23, 3.35, 0};//Closer to shelf11
+    shelf11c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf11c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf11d_.gantry = {-14.5, 3.35, 0};//Moving inbetween two pulley_red
+    shelf11d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf11d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf11e_.gantry = {-15.5, 3.5, 0};//Picking and lifting pulley up
+    shelf11e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf11e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
