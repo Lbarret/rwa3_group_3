@@ -168,6 +168,15 @@ void GantryControl::init()
     shelf11e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf11e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    right_arm_agv1_.gantry = {0.6, -6.9, 0};
+    right_arm_agv1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    right_arm_agv1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    right_arm_agv2_.gantry = {0.6, 6.9, 0};
+    right_arm_agv2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    right_arm_agv2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
     const moveit::core::JointModelGroup *joint_model_group =
@@ -416,16 +425,29 @@ void GantryControl::placePart(part part, std::string agv)
 
     ros::Duration(2.0).sleep();
     //--TODO: Consider agv1 too
-    if (agv == "agv1")
-        goToPresetLocation(agv1_);
-    if (agv == "agv2")
-        goToPresetLocation(agv2_);
+    
     target_pose_in_tray.position.z += (ABOVE_TARGET + 1.5 * model_height[part.type]);
 
-    left_arm_group_.setPoseTarget(target_pose_in_tray);
-    left_arm_group_.move();
-
-    deactivateGripper("left_arm");
+    auto state_left = getGripperState("left_arm");
+    auto state_right = getGripperState("right_arm");
+    ROS_INFO_STREAM("left:" << state_left.attached << "right: " << state_right.attached);
+    if (state_left.attached) {
+        if (agv == "agv1")
+            goToPresetLocation(agv1_);
+        if (agv == "agv2")
+            goToPresetLocation(agv2_);
+        left_arm_group_.setPoseTarget(target_pose_in_tray);
+        left_arm_group_.move();
+        deactivateGripper("left_arm");
+    } else if(state_right.attached) {
+        if (agv == "agv1")
+            goToPresetLocation(right_arm_agv1_);
+        if (agv == "agv2")
+            goToPresetLocation(right_arm_agv2_);
+        right_arm_group_.setPoseTarget(target_pose_in_tray);
+        right_arm_group_.move();
+        deactivateGripper("right_arm");
+    }
     
 }
 
@@ -594,4 +616,17 @@ bool GantryControl::sendJointPosition(trajectory_msgs::JointTrajectory command_m
     {
         return false;
     }
+}
+
+void GantryControl::flipPart(anytype for_gantry) {
+
+    flippart_.gantry = for_gantry.gantry;
+    flippart_.left_arm = {1.84, -2.73, -1.88, -0.2, 1.63, 0};
+    flippart_.right_arm = {1.75, -3.35, -1.4, 0.13, 1.51, 0};
+    goToPresetLocation(flippart_);
+    activateGripper("right_arm");
+    deactivateGripper("left_arm");
+    ros::Duration(1.0).sleep();
+    ROS_INFO_STREAM("Flipped the part");
+
 }
