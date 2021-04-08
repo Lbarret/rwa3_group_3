@@ -233,6 +233,10 @@ void GantryControl::init()
     shelf11e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf11e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    conveyor_.gantry = {0.158, 2, PI/2};// move closer for b
+    conveyor_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    conveyor_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
     const moveit::core::JointModelGroup *joint_model_group =
@@ -473,6 +477,84 @@ bool GantryControl::pickPart(part part)
     }
     return false;
 }
+
+bool GantryControl::pickPartConveyor(part part)
+{
+    //--Activate gripper
+    auto state = getGripperState("left_arm");
+    while(!state.enabled){
+        activateGripper("left_arm");
+        state = getGripperState("left_arm");
+    }
+    geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
+
+    part.pose.position.x = currentPose.position.x;
+    part.pose.position.y = currentPose.position.y;
+    part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON + 0.018; //added calibration factor
+
+    part.pose.orientation.x = currentPose.orientation.x;
+    part.pose.orientation.y = currentPose.orientation.y;
+    part.pose.orientation.z = currentPose.orientation.z;
+    part.pose.orientation.w = currentPose.orientation.w;
+    ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
+    
+    if (state.enabled)
+    {
+        ROS_INFO_STREAM("[Gripper] = enabled");
+        //--Move arm to part
+        left_arm_group_.setPoseTarget(part.pose);
+        left_arm_group_.move();
+        auto state = getGripperState("left_arm");
+        ros::Duration(1.5).sleep();
+        while (!state.attached){
+            if (state.attached)
+            {
+                ROS_INFO_STREAM("[Gripper] = object attached");
+                //--Move arm to previous position
+                left_arm_group_.setPoseTarget(currentPose);
+                left_arm_group_.move();
+                return true;
+            }
+            ros::Duration(.1).sleep();
+        }
+        
+        // else
+        // {
+        //     ROS_INFO_STREAM("[Gripper] = object not attached");
+        //     int max_attempts{5};
+        //     int current_attempt{0};
+        //     //--try to pick up the part 5 times
+        //     while (current_attempt<max_attempts)
+        //     {
+        //         left_arm_group_.setPoseTarget(abovePartPose);
+        //         left_arm_group_.move();
+        //         ros::Duration(0.5).sleep();
+
+        //         left_arm_group_.setPoseTarget(part.pose);
+        //         left_arm_group_.move();
+        //         activateGripper("left_arm");
+        //         ros::Duration(1.0).sleep();
+        //         state = getGripperState("left_arm");
+        //         ros::Duration(0.5).sleep();
+        //         if (state.attached){
+        //             break;
+        //         }
+        //         current_attempt++;
+        //     }
+        //     left_arm_group_.setPoseTarget(abovePartPose);
+        //     left_arm_group_.move();
+        //     ros::Duration(0.5).sleep();
+        //     left_arm_group_.setPoseTarget(currentPose);
+        //     left_arm_group_.move();
+        // }
+    }
+    else
+    {
+        ROS_INFO_STREAM("[Gripper] = not enabled");
+    }
+    return false;
+}
+
 
 ////////////////////////////
 void GantryControl::placePart(part part, std::string agv)

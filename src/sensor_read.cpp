@@ -235,7 +235,6 @@ std::string sensor_read::find_part(std::string part_type){
   std::string found_location = "";
   // check every camera
   for(int i = 0; i<camera_locations.size(); i++){
-    ROS_INFO_STREAM("check");
     // in every camera, check every part
     for(int j=0; j<part_info[i].size(); j++){
       // if the part is the right type
@@ -252,7 +251,8 @@ std::string sensor_read::find_part(std::string part_type){
             if (part_info[i][j].pose.position.x >= bin_pose[0] 
               && part_info[i][j].pose.position.y <= bin_pose[1]
               && part_info[i][j].pose.position.x <= bin_pose[2]
-              && part_info[i][j].pose.position.y >= bin_pose[3]){
+              && part_info[i][j].pose.position.y >= bin_pose[3]
+              || camera_locations[i].size() ==1){
                 logi_cam_id = i;
                 ROS_INFO_STREAM("found the bin");
                 found_part = part_info[i][j];

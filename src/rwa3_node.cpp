@@ -192,6 +192,12 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.shelf811a_);
                     gantry.placePart(part_in_tray, current_agv);
                     }
+
+                    if(part_loc == "beltm_" || part_loc == "beltf_"){
+                    gantry.goToPresetLocation(gantry.conveyor_);
+                    gantry.pickPartConveyor(found_part);
+                    gantry.placePart(part_in_tray, current_agv);
+                    }
                 
 			    ros::Duration(2.0).sleep();
 			    check_faulty = sensors.get_is_faulty(current_agv);
