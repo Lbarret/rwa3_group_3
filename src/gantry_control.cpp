@@ -50,7 +50,7 @@ void GantryControl::init()
     start_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to bin1
-    bin1_.gantry = {2.12, -1.3, 0.};
+    bin1_.gantry = {2, -1.3, 0.};
     bin1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
@@ -63,6 +63,71 @@ void GantryControl::init()
     bin3_.gantry = {4.0, -1.3, 0.};
     bin3_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin3_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin4
+    bin4_.gantry = {5.0, -1.3, 0.};
+    bin4_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin4_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin5
+    bin5_.gantry = {2, -2.16, 0.};
+    bin5_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin5_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin6
+    bin6_.gantry = {3, -2.16, 0.};
+    bin6_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin6_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin7
+    bin7_.gantry = {4.0, -2.16, 0.};
+    bin7_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin7_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin8
+    bin8_.gantry = {5.0, -2.16, 0.};
+    bin8_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin8_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin9
+    bin9_.gantry = {2, 1.3, 0.};
+    bin9_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin9_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin10
+    bin10_.gantry = {3, 1.3, 0.};
+    bin10_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin10_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin11
+    bin11_.gantry = {4.0, 1.3, 0.};
+    bin11_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin11_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin12
+    bin12_.gantry = {5.0, 1.3, 0.};
+    bin12_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin12_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin13
+    bin13_.gantry = {2, 2.16, 0.};
+    bin13_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin13_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin14
+    bin14_.gantry = {3, 2.16, 0.};
+    bin14_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin14_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin15
+    bin15_.gantry = {4.0, 2.16, 0.};
+    bin15_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin15_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    // joint positions to go to bin16
+    bin16_.gantry = {5.0, 2.16, 0.};
+    bin16_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    bin16_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to agv1
     agv1_.gantry = {0.6, -6.9, PI};
@@ -85,86 +150,86 @@ void GantryControl::init()
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to shelf 5
-    shelf5a_.gantry = {0, -4.5, 0};
+    shelf5a_.gantry = {0, -4.5, 0}; // go to aisle
     shelf5a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf5a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5b_.gantry = {-14.5, -5.46, 0};//Reaching shelf5
-    shelf5b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf5b_.gantry = {-14.5, -4.5, 0}; // go to shelf
+    shelf5b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf5b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5c_.gantry = {-14.23, -4.25, 0};//Closer to shelf5
+    shelf5c_.gantry = {-14.5, -4.5, 0};// move arm
     shelf5c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf5c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5d_.gantry = {-14.5, -4.25, 0};//Moving inbetween two pulley_red
+    shelf5d_.gantry = {-14.5, -4.25, 0};// move closer for a
     shelf5d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf5d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5e_.gantry = {-15.5, -5.5, 0};//Picking and lifting pulley up
+    shelf5e_.gantry = {-15.5, -5.5, 0};// move closer for b
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to between shelves 5 and 8
-    shelf58a_.gantry = {0, -1.5, 0};
+    shelf58a_.gantry = {0, -1.5, 0};// go to aisle
     shelf58a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf58a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58b_.gantry = {-14.5, -2.46, 0};//Reaching shelf5/8
-    shelf58b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf58b_.gantry = {-14.5, -1.5, 0};// go to shelf
+    shelf58b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf58b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58c_.gantry = {-14.23, -1.25, 0};//Closer to shelf5/8
+    shelf58c_.gantry = {-14.5, -1.5, 0}; //move arm
     shelf58c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf58c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58d_.gantry = {-14.5, -1.25, 0};//Moving inbetween two pulley_red
+    shelf58d_.gantry = {-14.5, -1.25, 0};// move closer for a
     shelf58d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf58d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58e_.gantry = {-15.5, -2.5, 0};//Picking and lifting pulley up
+    shelf58e_.gantry = {-15.5, -1.5, 0};// move closer for b
     shelf58e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go between shelves 8 and 11
-    shelf811a_.gantry = {0, 1.5, 0};
+    shelf811a_.gantry = {0, 1.5, 0};// go to aisle
     shelf811a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf811a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf811b_.gantry = {-14.5, 0.54, 0};//Reaching shelf11
-    shelf811b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf811b_.gantry = {-14.5, 1.5, 0};// go to shelf
+    shelf811b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf811b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf811c_.gantry = {-14.23, 1.75, 0};//Closer to shelf11
+    shelf811c_.gantry = {-14.5, 1.5, 0};//move arm
     shelf811c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf811c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf811d_.gantry = {-14.5, 1.75, 0};//Moving inbetween two pulley_red
+    shelf811d_.gantry = {-14.5, 1.75, 0};// move closer for a
     shelf811d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf811d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf811e_.gantry = {-15.5, 0.5, 0};//Picking and lifting pulley up
+    shelf811e_.gantry = {-15.5, 0.5, 0};// move closer for b
     shelf811e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf811e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to shelf 11
-    shelf11a_.gantry = {0, 4.5, 0};
+    shelf11a_.gantry = {0, 4.5, 0};// go to aisle
     shelf11a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf11a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf11b_.gantry = {-14.5, 3.54, 0};//Reaching shelf11
-    shelf11b_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf11b_.gantry = {-14.5, 4.5, 0};// go to shelf
+    shelf11b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf11b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf11c_.gantry = {-14.23, 3.35, 0};//Closer to shelf11
+    shelf11c_.gantry = {-14.5, 4.5, 0};//move arm
     shelf11c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf11c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf11d_.gantry = {-14.5, 3.35, 0};//Moving inbetween two pulley_red
+    shelf11d_.gantry = {-14.5, 3.35, 0};// move closer for a
     shelf11d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf11d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf11e_.gantry = {-15.5, 3.5, 0};//Picking and lifting pulley up
+    shelf11e_.gantry = {-15.5, 3.5, 0};// move closer for b
     shelf11e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf11e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
