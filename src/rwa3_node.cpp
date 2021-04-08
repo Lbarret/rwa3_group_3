@@ -102,7 +102,17 @@ int main(int argc, char ** argv) {
                     // //--We go to this bin because a camera above
                    //--this bin found one of the parts in the order
                 ROS_INFO_STREAM("part location: " << part_loc);
+                // if part isn't found, move onto next part but come back to it
                 if (part_loc == "part not found"){
+                	if(k != list_of_orders[i].shipments[j].products.size()-1){
+                		auto temp = list_of_orders[i].shipments[j].products[k];
+                		list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
+                		list_of_orders[i].shipments[j].products[k+1]=temp;
+                		k-=1;
+                	}
+                	else{
+                		k-=1;
+                	}
                 	continue;
                 }
                 	
