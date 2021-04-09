@@ -98,11 +98,24 @@ int main(int argc, char ** argv) {
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
+                sensors.reset_logicam_update();
+                ros::Duration(1.0).sleep();
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type);
                     // //--We go to this bin because a camera above
                    //--this bin found one of the parts in the order
-                ROS_INFO_STREAM("part location: " << part_loc);
+                ROS_INFO_STREAM_THROTTLE(10,"part location: " << part_loc);
+                // if part isn't found, move onto next part but come back to it
                 if (part_loc == "part not found"){
+                	if(k != list_of_orders[i].shipments[j].products.size()-1){
+                		// auto temp = list_of_orders[i].shipments[j].products[k];
+                		// list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
+                		// list_of_orders[i].shipments[j].products[k+1]=temp;
+                        ROS_INFO_STREAM_THROTTLE(10,"waiting for first part");
+                		k-=1;
+                	}
+                	else{
+                		k-=1;
+                	}
                 	continue;
                 }
                 	
@@ -110,7 +123,7 @@ int main(int argc, char ** argv) {
     			part_in_tray.type = list_of_orders[i].shipments[j].products[k].type;
     			part_in_tray.pose = list_of_orders[i].shipments[j].products[k].pose;
     			current_agv = list_of_orders[i].shipments[j].agv_id;
-    			ROS_INFO_STREAM(current_agv);
+    			//ROS_INFO_STREAM(current_agv);
 
     			if (part_loc == "bin1_"){
 			    	gantry.goToPresetLocation(gantry.bin1_);
@@ -182,6 +195,18 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.shelf811a_);
                     gantry.placePart(part_in_tray, current_agv);
                     }
+
+                    if(part_loc == "beltm_" || part_loc == "beltf_"){
+                    gantry.goToPresetLocation(gantry.conveyor_);
+                    gantry.pickPartConveyor(found_part);
+                    gantry.goToPresetLocation(gantry.conveyor_bin1_);
+                    gantry.deactivateGripper("left_arm");
+                    ros::Duration(2.0).sleep();
+                    
+
+                    k--;
+                    continue;
+                    }
                 
 			    ros::Duration(2.0).sleep();
 			    check_faulty = sensors.get_is_faulty(current_agv);
@@ -211,9 +236,6 @@ int main(int argc, char ** argv) {
                     k--;
                     continue;
                 }
-                gantry.goToPresetLocation(gantry.start_);
-
-
             }
 
             if(current_agv == "agv1"){
@@ -222,8 +244,8 @@ int main(int argc, char ** argv) {
             }
             else{
             	agv_control.sendAGV(list_of_orders[i].shipments[j].shipment_type, "kit_tray_2");
-
             }
+            gantry.goToPresetLocation(gantry.start_);
         }
 		    
     }

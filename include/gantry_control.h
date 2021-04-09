@@ -51,7 +51,7 @@ class GantryControl {
 //    bool pickPart(part part, std::string arm_name);
     bool pickPart(part part);
     void placePart(part part, std::string agv);
-
+    bool pickPartConveyor(part part);
     
     /// Send command message to robot controller
     bool sendJointPosition(trajectory_msgs::JointTrajectory command_msg);
@@ -104,6 +104,8 @@ class GantryControl {
     shelf shelf11c_;
     shelf shelf11d_;
     shelf shelf11e_;
+    conveyor conveyor_;
+    conveyor conveyor_bin1_;
 
 
   private:
