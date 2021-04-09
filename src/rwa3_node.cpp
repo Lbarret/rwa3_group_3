@@ -42,7 +42,6 @@
 int main(int argc, char ** argv) {
 	part part_in_tray;
 
-
     ros::init(argc, argv, "rwa3_node");
     ros::NodeHandle node;
     ros::AsyncSpinner spinner(8);
@@ -60,37 +59,18 @@ int main(int argc, char ** argv) {
 
     //--1-Read order
 
-    // comp.order_callback();
     std::vector<order> list_of_orders = comp.get_order_list();
-    //ROS_INFO_STREAM(list_of_products[0].type);
     std::string current_agv = "";
-    //ROS_INFO_STREAM(current_agv);
-    //ROS_INFO_STREAM(current_agv);
-    //ROS_INFO_STREAM(list_of_orders[0].shipments[0].products[0].type);
     bool check_faulty;
     part faulty_p;
 
 
     //--2-Look for parts in this order
-
     sensor_read sensors(node);
     sensors.init();
-    // bool flag = true;
-    // while(flag){
-    //  	ROS_INFO_STREAM_THROTTLE(10,"waiting for cameras");
-    //  	for(int i = 0; i<18; i++){
-    //  		if (sensors.part_info[i][0].type != ""){
-    //  			flag=false;
-    //  			break;
-    //  		}
-    //  	}
-    // }
     ros::Duration(2.0).sleep();
     part found_part;
-    //ROS_INFO_STREAM(sensors.part_info_type[0][0]);
-    // auto sensors_parts_info = sensors.get_part_info();
-    // int logi_cam_id = sensors.get_logi_cam();
-    // ROS_INFO_STREAM("Part type: " << sensors_parts_info[5][5].pose.position.x);
+
     std::string part_loc = "";
     for (int i=0; i < list_of_orders.size(); i++)
     {
@@ -127,26 +107,115 @@ int main(int argc, char ** argv) {
 
     			if (part_loc == "bin1_"){
 			    	gantry.goToPresetLocation(gantry.bin1_);
+
                     //--Go pick the part
                     ROS_INFO_STREAM("In bin 1");
                     gantry.pickPart(found_part);
+
+                    // Flipping Part(if condition satisfies)
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin1_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
+                    // PLacing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+
 			    }
+
 			    if (part_loc == "bin2_"){
+                    // Go to bin
 			    	gantry.goToPresetLocation(gantry.bin2_);
+
                     //--Go pick the part
                     ROS_INFO_STREAM("In bin 2");
                     gantry.pickPart(found_part);
+                    
+                    // Flipping Part(if condition satisfies)
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin2_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
+                    // Placing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+
 			    }
+
 			    if (part_loc == "bin3_"){
+
 			    	gantry.goToPresetLocation(gantry.bin3_);
+
                     gantry.pickPart(found_part);
+
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin3_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
 			    }
+
+                if (part_loc == "bin4_"){
+
+                    gantry.goToPresetLocation(gantry.bin4_);
+
+                    gantry.pickPart(found_part);
+
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin4_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
+                    gantry.goToPresetLocation(gantry.start_);
+                    gantry.placePart(part_in_tray, current_agv);
+                }
+
+                if (part_loc == "bin5_"){
+
+                    gantry.goToPresetLocation(gantry.bin5_);
+
+                    gantry.pickPart(found_part);
+
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin5_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
+                    gantry.goToPresetLocation(gantry.start_);
+                    gantry.placePart(part_in_tray, current_agv);
+                }
+
+                if (part_loc == "bin6_"){
+
+                    gantry.goToPresetLocation(gantry.bin6_);
+
+                    gantry.pickPart(found_part);
+
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.bin6_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
+                    gantry.goToPresetLocation(gantry.start_);
+                    gantry.placePart(part_in_tray, current_agv);
+                }
+
                 if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
                     gantry.goToPresetLocation(gantry.shelf5a_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
@@ -160,9 +229,18 @@ int main(int argc, char ** argv) {
                     gantry.pickPart(found_part);
                     gantry.goToPresetLocation(gantry.shelf5c_);
                     gantry.goToPresetLocation(gantry.shelf5b_);
+
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.shelf5b_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
+
                     gantry.goToPresetLocation(gantry.shelf5a_);
                     gantry.placePart(part_in_tray, current_agv);
                     }
+
                  if(part_loc == "shelf8a_" || part_loc == "shelf8b_"){
                     gantry.goToPresetLocation(gantry.shelf58a_);
                     gantry.goToPresetLocation(gantry.shelf58b_);
@@ -176,9 +254,16 @@ int main(int argc, char ** argv) {
                     gantry.pickPart(found_part);
                     gantry.goToPresetLocation(gantry.shelf58c_);
                     gantry.goToPresetLocation(gantry.shelf58b_);
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.shelf58b_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
                     gantry.goToPresetLocation(gantry.shelf58a_);
                     gantry.placePart(part_in_tray, current_agv);
                     }
+
                 if(part_loc == "shelf11a_" || part_loc == "shelf11b_"){
                     gantry.goToPresetLocation(gantry.shelf811a_);
                     gantry.goToPresetLocation(gantry.shelf811b_);
@@ -192,6 +277,12 @@ int main(int argc, char ** argv) {
                     gantry.pickPart(found_part);
                     gantry.goToPresetLocation(gantry.shelf811c_);
                     gantry.goToPresetLocation(gantry.shelf811b_);
+                    if(part_in_tray.pose.orientation.x==1) {
+                        ROS_INFO_STREAM("Part needs to be flipped");
+                        gantry.flipPart(gantry.shelf811b_);
+                        part_in_tray.pose.orientation.x = 0;
+                        part_in_tray.pose.orientation.w = 1;
+                    }
                     gantry.goToPresetLocation(gantry.shelf811a_);
                     gantry.placePart(part_in_tray, current_agv);
                     }
@@ -202,8 +293,6 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.conveyor_bin1_);
                     gantry.deactivateGripper("left_arm");
                     ros::Duration(2.0).sleep();
-                    
-
                     k--;
                     continue;
                     }
@@ -236,6 +325,7 @@ int main(int argc, char ** argv) {
                     k--;
                     continue;
                 }
+
             }
 
             if(current_agv == "agv1"){
