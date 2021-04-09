@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
+/** \file rwa3_node.cpp
+ * Code for rwa4 which helps the robot navigate the ARIAC world and complete the agility challenges
+ */
 #include <algorithm>
 #include <vector>
 
@@ -38,9 +40,15 @@
 
 #include <tf2/LinearMath/Quaternion.h>
 
-
+/**
+ * Main function for running the ARIAC simulation. It will do the picking and placing of the parts, checking for faulty
+ * parts as well as other agility challenges
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char ** argv) {
-	part part_in_tray;
+	part part_in_tray; // Create a variable which holds all the data for the given part in the kit tray
 
     ros::init(argc, argv, "rwa3_node");
     ros::NodeHandle node;
@@ -75,12 +83,14 @@ int main(int argc, char ** argv) {
     int order_left_at;
 
     std::string part_loc = "";
+    /*! Continue to loop through all of the different products in the order until the order has been completed*/
     for (int i=0; i < list_of_orders.size(); i++)
     {
         for (int j=0; j < list_of_orders[i].shipments.size(); j++)
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
+                /*! If there is a new order, then get the products in that order */
                 if(!new_order_triggered){
                     list_of_orders = comp.get_order_list();
                 }
@@ -93,6 +103,7 @@ int main(int argc, char ** argv) {
                             agv_cleared = true;
                         }
                     }
+                    // Depending on the situation, might be necessary to swap which order is being filled
                     auto temp = list_of_orders[0];
                     list_of_orders[0] = list_of_orders[1];
                     list_of_orders[1] = temp;
@@ -126,7 +137,8 @@ int main(int argc, char ** argv) {
                 	}
                 	continue;
                 }
-                	
+                /*! If part has been found, find exactly where that part is and go to find that part */
+
                 found_part = sensors.found_part;
     			part_in_tray.type = list_of_orders[i].shipments[j].products[k].type;
     			part_in_tray.pose = list_of_orders[i].shipments[j].products[k].pose;
@@ -151,6 +163,7 @@ int main(int argc, char ** argv) {
                     // PLacing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    // Check to see if the robot dropped the part at the wrong location
                     while(gantry.part_dropped){
                         sensors.reset_logicam_update();
                         ros::Duration(1.0).sleep();
@@ -170,7 +183,7 @@ int main(int argc, char ** argv) {
                         gantry.placePart(part_in_tray, current_agv);
                     }
                 }
-
+                // Rest of the locations will be the same as bin1
 			    if (part_loc == "bin2_"){
                     // Go to bin
 			    	gantry.goToPresetLocation(gantry.bin2_);
@@ -836,8 +849,8 @@ int main(int argc, char ** argv) {
                     continue;
                     }
 
-                    
-                
+
+                /*! Check to see if the part is faulty */
 			    ros::Duration(2.0).sleep();
 			    check_faulty = sensors.get_is_faulty(current_agv);
                 if(check_faulty) {
@@ -868,7 +881,7 @@ int main(int argc, char ** argv) {
                 }
 
             }
-
+            /*! If agv is done, then send the agv */
             if(current_agv == "agv1"){
             	agv_control.sendAGV(list_of_orders[i].shipments[j].shipment_type, "kit_tray_1");
 

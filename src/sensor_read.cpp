@@ -4,7 +4,9 @@
 
 #include <std_srvs/Trigger.h>
 
-
+/** \file sensor_read.cpp
+ * Code for rwa4 which details all the functions needed for sensing different things throughout filling an ARIAC order
+ */
 ////////////////////////
 sensor_read::sensor_read(ros::NodeHandle & node)
 {
@@ -12,6 +14,9 @@ sensor_read::sensor_read(ros::NodeHandle & node)
 }
 
 ////////////////////////
+/**
+ * Initialize the logical cameras over each of the bins
+ */
 void sensor_read::init() {
 
   // Subscribe to the '/ariac/competition_state' topic.
@@ -209,18 +214,28 @@ void sensor_read::logical_camera_callback(
 
     }
   }
-
+/**
+ * Check to see if the part is faulty
+ */
 void sensor_read::reset_faulty(){
   is_faulty1 = false;
   is_faulty2 = false;
 }
-
+/**
+ * get if the part is faulty or not
+ * @param The current agv
+ * @return if the part is faulty
+ */
 bool sensor_read::get_is_faulty(std::string agv) {
     if(agv == "agv2")
         return is_faulty1;
     return is_faulty2;
 }
-
+/**
+ * Get the pose of the faulty part
+ * @param current agv
+ * @return pose of the faulty part
+ */
 part sensor_read::get_faulty_pose(std::string agv) {
     if(agv == "agv2"){
       ROS_INFO_STREAM("faulty pose 1");
@@ -234,11 +249,19 @@ part sensor_read::get_faulty_pose(std::string agv) {
     }    
     
 }
-
+/**
+ * Get all the info for the current part
+ * @return info for the current part
+ */
 std::array<std::array<part, 36>, 18> sensor_read::get_part_info(){
   return part_info;
 }
-
+/**
+ * Find where the part is
+ * @param part_type: check to see what type the current part in the order is
+ * @param the current agv
+ * @return
+ */
 std::string sensor_read::find_part(std::string part_type, int agv){
   ROS_INFO_STREAM("Sensors finding part");
   ROS_INFO_STREAM("Part to find: " << part_type);
@@ -281,7 +304,10 @@ std::string sensor_read::find_part(std::string part_type, int agv){
   }
   return "part not found";
 }
-
+/**
+ * Get the current camera that is over the part
+ * @return the id of the camera
+ */
 int sensor_read::get_logi_cam(){
   return logi_cam_id;
 }

@@ -3,6 +3,9 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <geometry_msgs/TransformStamped.h>
+/** \file gantry_control.cpp
+ * Code for rwa4 which details the different moves the robot should make throughout filling an order
+ */
 
 /**
  * @brief Construct a new Gantry Control:: Gantry Control object
@@ -752,7 +755,10 @@ bool GantryControl::sendJointPosition(trajectory_msgs::JointTrajectory command_m
         return false;
     }
 }
-
+/**
+ * If part needs to be flipped, the moves required to flip the part
+ * @param for_gantry
+ */
 void GantryControl::flipPart(anytype for_gantry) {
 
     flippart_.gantry = for_gantry.gantry;
