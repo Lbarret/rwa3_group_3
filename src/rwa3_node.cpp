@@ -70,7 +70,9 @@ int main(int argc, char ** argv) {
     sensors.init();
     ros::Duration(2.0).sleep();
     part found_part;
-    bool new_order_triggered;
+    bool new_order_triggered = false;
+    bool agv_cleared = false;
+    int order_left_at;
 
     std::string part_loc = "";
     for (int i=0; i < list_of_orders.size(); i++)
@@ -79,7 +81,35 @@ int main(int argc, char ** argv) {
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
-                list_of_orders = comp.get_order_list();
+                ROS_INFO_STREAM("Order number " << i);
+                ROS_INFO_STREAM("order 0" << list_of_orders[0].shipments[0].products[0].type);
+                if(!new_order_triggered){
+                    list_of_orders = comp.get_order_list();
+                }
+                if (list_of_orders.size() > 1 && !new_order_triggered){
+                    new_order_triggered = true;
+                    // Check to see if current AGV is needed for the next shipments
+                    for (int m = 0; m<list_of_orders[1].shipments.size(); m++){
+                        if (list_of_orders[1].shipments[m].agv_id == current_agv){
+                            ROS_INFO_STREAM("Clear AGV");
+                            agv_cleared = true;
+                        }
+                    }
+                    auto temp = list_of_orders[0];
+                    list_of_orders[0] = list_of_orders[1];
+                    list_of_orders[1] = temp;
+                    ROS_INFO_STREAM("order 0" << list_of_orders[0].shipments[0].products[0].type);
+                    ROS_INFO_STREAM("order 1" << list_of_orders[1].shipments[0].products[0].type);
+                    order_left_at = k;
+                    k = -1;
+                    ROS_INFO_STREAM("Order swapped");
+                    continue;
+                }
+                if(new_order_triggered && i == 1 && !agv_cleared && k==0){
+                    k = order_left_at -1;
+                    ROS_INFO_STREAM("pick back up");
+                    continue;
+                }
                 sensors.reset_logicam_update();
                 ros::Duration(1.0).sleep();
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type);
@@ -468,6 +498,8 @@ int main(int argc, char ** argv) {
                     k--;
                     continue;
                     }
+
+                    
                 
 			    ros::Duration(2.0).sleep();
 			    check_faulty = sensors.get_is_faulty(current_agv);
