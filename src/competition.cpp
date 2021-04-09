@@ -110,36 +110,6 @@ void Competition::processOrder(){
 }
 
 
-// static void fillOrderMsg()
-// {
-//   nist_gear::Order _msgOrder = received_orders_.front();
-
-//   _msgOrder.order_id = _order.orderID;
-//   for (const auto &shipment : _order.shipments)
-//   {
-//     nist_gear::Shipment msgShipment;
-//     msgShipment.shipment_type = shipment.shipmentType;
-//     msgShipment.agv_id = shipment.agv_id;
-//     for (const auto &obj : shipment.products)
-//     {
-//       nist_gear::Product msgObj;
-//       msgObj.type = obj.type;
-//       msgObj.pose.position.x = obj.pose.Pos().X();
-//       msgObj.pose.position.y = obj.pose.Pos().Y();
-//       msgObj.pose.position.z = obj.pose.Pos().Z();
-//       msgObj.pose.orientation.x = obj.pose.Rot().X();
-//       msgObj.pose.orientation.y = obj.pose.Rot().Y();
-//       msgObj.pose.orientation.z = obj.pose.Rot().Z();
-//       msgObj.pose.orientation.w = obj.pose.Rot().W();
-
-//       // Add the product to the shipment.
-//       msgShipment.products.push_back(msgObj);
-//     }
-//     _msgOrder.shipments.push_back(msgShipment);
-//   }
-// }
-
-
 
 ////////////////////////
 void Competition::startCompetition() {
