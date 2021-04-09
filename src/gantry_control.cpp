@@ -552,7 +552,7 @@ void GantryControl::placePart(part part, std::string agv)
 
     ros::Duration(2.0).sleep();
     //--TODO: Consider agv1 too
-    
+    part_dropped = false;
     target_pose_in_tray.position.z += (ABOVE_TARGET + 1.5 * model_height[part.type]);
 
     auto state_left = getGripperState("left_arm");
@@ -565,6 +565,10 @@ void GantryControl::placePart(part part, std::string agv)
             goToPresetLocation(agv2_);
         left_arm_group_.setPoseTarget(target_pose_in_tray);
         left_arm_group_.move();
+        state_left = getGripperState("left_arm");
+        if(!state_left.attached){
+            part_dropped = true;
+        }
         deactivateGripper("left_arm");
     } else if(state_right.attached) {
         if (agv == "agv1")
@@ -573,6 +577,10 @@ void GantryControl::placePart(part part, std::string agv)
             goToPresetLocation(right_arm_agv2_);
         right_arm_group_.setPoseTarget(target_pose_in_tray);
         right_arm_group_.move();
+        state_right = getGripperState("right_arm");
+        if(!state_right.attached){
+            part_dropped = true;
+        }
         deactivateGripper("right_arm");
     }
     

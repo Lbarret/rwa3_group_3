@@ -81,8 +81,6 @@ int main(int argc, char ** argv) {
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
-                ROS_INFO_STREAM("Order number " << i);
-                ROS_INFO_STREAM("order 0" << list_of_orders[0].shipments[0].products[0].type);
                 if(!new_order_triggered){
                     list_of_orders = comp.get_order_list();
                 }
@@ -98,8 +96,6 @@ int main(int argc, char ** argv) {
                     auto temp = list_of_orders[0];
                     list_of_orders[0] = list_of_orders[1];
                     list_of_orders[1] = temp;
-                    ROS_INFO_STREAM("order 0" << list_of_orders[0].shipments[0].products[0].type);
-                    ROS_INFO_STREAM("order 1" << list_of_orders[1].shipments[0].products[0].type);
                     order_left_at = k;
                     k = -1;
                     ROS_INFO_STREAM("Order swapped");
@@ -112,7 +108,7 @@ int main(int argc, char ** argv) {
                 }
                 sensors.reset_logicam_update();
                 ros::Duration(1.0).sleep();
-                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type);
+                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,0);
                     // //--We go to this bin because a camera above
                    //--this bin found one of the parts in the order
                 ROS_INFO_STREAM_THROTTLE(10,"part location: " << part_loc);
@@ -155,6 +151,19 @@ int main(int argc, char ** argv) {
                     // PLacing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
 
 			    }
 
@@ -177,6 +186,19 @@ int main(int argc, char ** argv) {
                     // Placing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
 
 			    }
 
@@ -195,6 +217,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
 			    }
 
                 if (part_loc == "bin4_"){
@@ -212,6 +247,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin5_"){
@@ -229,6 +277,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin6_"){
@@ -246,6 +307,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin7_"){
@@ -263,6 +337,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin8_"){
@@ -280,6 +367,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin9_"){
@@ -297,6 +397,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin10_"){
@@ -314,6 +427,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin11_"){
@@ -331,6 +457,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin12_"){
@@ -348,6 +487,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin13_"){
@@ -364,7 +516,22 @@ int main(int argc, char ** argv) {
                     }
 
                     gantry.goToPresetLocation(gantry.start_);
+
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
+                    }
                 }
 
                 if (part_loc == "bin14_"){
@@ -382,6 +549,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin15_"){
@@ -399,6 +579,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if (part_loc == "bin16_"){
@@ -416,6 +609,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                 }
 
                 if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
@@ -441,6 +647,19 @@ int main(int argc, char ** argv) {
 
                     gantry.goToPresetLocation(gantry.shelf5a_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                     }
 
                  if(part_loc == "shelf8a_" || part_loc == "shelf8b_"){
@@ -464,6 +683,19 @@ int main(int argc, char ** argv) {
                     }
                     gantry.goToPresetLocation(gantry.shelf58a_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                     }
 
                 if(part_loc == "shelf11a_" || part_loc == "shelf11b_"){
@@ -487,6 +719,19 @@ int main(int argc, char ** argv) {
                     }
                     gantry.goToPresetLocation(gantry.shelf811a_);
                     gantry.placePart(part_in_tray, current_agv);
+                    while(gantry.part_dropped){
+                        sensors.reset_logicam_update();
+                        ros::Duration(1.0).sleep();
+                        if(current_agv == "agv1"){
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                        }
+                        else{
+                            sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                        }
+                        
+                        found_part = sensors.found_part;
+                        gantry.pickPart(found_part);
+                        gantry.placePart(part_in_tray, current_agv);
                     }
 
                     if(part_loc == "beltm_" || part_loc == "beltf_"){

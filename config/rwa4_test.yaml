@@ -40,12 +40,12 @@ orders:
     destinations: [agv1]
     products:
       part_0:
-        type: pulley_part_red
+        type: disk_part_green
         pose:
           xyz: [0.12, 0.2, 0]
-          rpy: ['pi', 0, 0]
+          rpy: [0, 0, 0]
       part_1:
-        type: pulley_part_red
+        type: disk_part_green
         pose:
           xyz: [0.0, 0.0, 0]
           rpy: [0, 0, '-pi/4']
@@ -123,7 +123,7 @@ drops:
       destination:
         xyz: [0.2, 0.3, 0.05]
         rpy: [0, 0, 0.2]
-      product_type_to_drop: gasket_part_green
+      product_type_to_drop: disk_part_green
     shipping_box_1_impeding:
       frame: agv2::kit_tray_2
       min:

@@ -44,7 +44,7 @@ public:
     void quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     void breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg);
-    std::string find_part(std::string part_type);
+    std::string find_part(std::string part_type, int agv);
     // std::vector<std::vector<part>> get_part_info();
     std::array<std::array<part, 36>, 18> get_part_info();
     void reset_faulty();
