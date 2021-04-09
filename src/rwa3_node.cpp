@@ -236,9 +236,6 @@ int main(int argc, char ** argv) {
                     k--;
                     continue;
                 }
-                gantry.goToPresetLocation(gantry.start_);
-
-
             }
 
             if(current_agv == "agv1"){
@@ -247,8 +244,8 @@ int main(int argc, char ** argv) {
             }
             else{
             	agv_control.sendAGV(list_of_orders[i].shipments[j].shipment_type, "kit_tray_2");
-
             }
+            gantry.goToPresetLocation(gantry.start_);
         }
 		    
     }
