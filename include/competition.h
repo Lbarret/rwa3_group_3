@@ -10,7 +10,9 @@
 
 #include "utils.h"
 
-
+/** \file competition.h
+ * Header file for competition.cpp
+ */
 /**
  * @brief Competition class
  * 

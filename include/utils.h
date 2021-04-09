@@ -13,6 +13,9 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+/** \file utils.h
+ * Header file for utils.cpp
+ */
 
 typedef struct Shipment shipment; // forward declarations
 typedef struct Order order;

@@ -8,7 +8,9 @@
 #include <ros/console.h>
 
 #include "utils.h"
-
+/** \file agv_control.h
+ * Header file for agv_control.cpp
+ */
 class AGVControl {
 
 public:

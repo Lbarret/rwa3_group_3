@@ -38,7 +38,9 @@
 
 #include "utils.h"
 
-
+/** \file gantry_control.h
+ * Header file for gantry_control.cpp
+ */
 class GantryControl {
 
   public:

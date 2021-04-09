@@ -20,7 +20,9 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h> //--needed for tf2::Matrix3x3
 #include <boost/bind.hpp>
 #include "utils.h"
-
+/** \file sensor_read.h
+ * Header file for sensor_read.cpp
+ */
 
 /**
  * @brief Competition class
@@ -91,6 +93,9 @@ private:
     std::vector<std::vector<std::string>> camera_info;
     int logi_cam_id;
     // std::vector<std::vector<part>> parts_info;
+    /**
+     * The different parts of the world which fall under which camera
+     */
     std::map<int, std::vector<std::string>> camera_locations = { 
         {0, {"bin3_", "bin4_", "bin7_", "bin8_"}},
         {1, {"bin11_", "bin12_","bin15_", "bin16_"}},
