@@ -109,11 +109,21 @@ void sensor_read::init() {
   quality_sensor_subscriber_2 = node_.subscribe(
        "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
        );
+  breakbeam_subscriber = node_.subscribe(
+       "/ariac/breakbeam_0_change", 1, &sensor_read::breakbeam_sensor_callback,this
+       );
 
   
 }
 
 ////////////////////////
+
+void sensor_read::breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected) // If there is an object in proximity.      
+    ROS_WARN("Break beam triggered.");
+
+}
+
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {
   if(msg->models.size() > 0) {
     is_faulty1 = true;
@@ -230,11 +240,12 @@ std::array<std::array<part, 36>, 18> sensor_read::get_part_info(){
 }
 
 std::string sensor_read::find_part(std::string part_type){
-  ROS_INFO_STREAM("Sensors finding part");
-  ROS_INFO_STREAM("Part to find: " << part_type);
+  //ROS_INFO_STREAM("Sensors finding part");
+  //ROS_INFO_STREAM("Part to find: " << part_type);
   std::string found_location = "";
   // check every camera
   for(int i = 0; i<camera_locations.size(); i++){
+    
     // in every camera, check every part
     for(int j=0; j<part_info[i].size(); j++){
       // if the part is the right type

@@ -105,6 +105,7 @@ class GantryControl {
     shelf shelf11d_;
     shelf shelf11e_;
     conveyor conveyor_;
+    conveyor conveyor_bin1_;
 
 
   private:

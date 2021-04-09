@@ -43,6 +43,7 @@ public:
     void logical_camera_callback(const nist_gear::LogicalCameraImage::ConstPtr &msg, int id);
     void quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
+    void breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg);
     std::string find_part(std::string part_type);
     // std::vector<std::vector<part>> get_part_info();
     std::array<std::array<part, 36>, 18> get_part_info();
@@ -53,6 +54,9 @@ public:
     int get_logi_cam();
     std::array<std::array<part, 36>, 18> part_info;
     part found_part;
+    void reset_logicam_update(){
+        std::fill(std::begin(logicam_update), std::end(logicam_update), 0);
+    }
 
 
 
@@ -79,6 +83,7 @@ private:
     ros::Subscriber logical_camera_17_subscriber;/*!< subscriber to the topic /logical_camera_17 */
     ros::Subscriber quality_sensor_subscriber_1;
     ros::Subscriber quality_sensor_subscriber_2;
+    ros::Subscriber breakbeam_subscriber;
 
 
     std::string part_location;

@@ -19,7 +19,7 @@ std::unordered_map<std::string, double> model_height = {
 };
 
 std::unordered_map<std::string, std::vector<float>> bin_locations = {
-        {"bin1_", {2.33,1.62,2.93,1.02}},
+        {"bin1_", {2.2,1.62,4.0,1.02}},
         {"bin2_", {3.27,1.62,3.87,1.02}},
         {"bin3_", {4.21,1.62,4.81,1.02}},
         {"bin4_", {5.15,1.62,5.75,1.02}},
