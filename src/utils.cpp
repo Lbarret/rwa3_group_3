@@ -47,4 +47,6 @@ std::unordered_map<std::string, std::vector<float>> bin_locations = {
         {"shelf11b_", {-16.7,-2.0,-14.6,-5.0}},
         {"beltm_", {0,1.5,2.0,-1.5}},
         {"beltf_", {0,4.0,2.0,2.0}},
+        {"agv1_", {0,9.0,2.0,5.0}},
+        {"agv2_", {0,-5.0,2.0,-9.0}},
 };

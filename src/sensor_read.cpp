@@ -239,13 +239,15 @@ std::array<std::array<part, 36>, 18> sensor_read::get_part_info(){
   return part_info;
 }
 
-std::string sensor_read::find_part(std::string part_type){
-  //ROS_INFO_STREAM("Sensors finding part");
-  //ROS_INFO_STREAM("Part to find: " << part_type);
+std::string sensor_read::find_part(std::string part_type, int agv){
+  ROS_INFO_STREAM("Sensors finding part");
+  ROS_INFO_STREAM("Part to find: " << part_type);
   std::string found_location = "";
   // check every camera
   for(int i = 0; i<camera_locations.size(); i++){
-    
+    if(agv!=0){
+      i = 11+agv;
+    }
     // in every camera, check every part
     for(int j=0; j<part_info[i].size(); j++){
       // if the part is the right type

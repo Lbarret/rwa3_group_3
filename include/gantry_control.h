@@ -52,6 +52,7 @@ class GantryControl {
     bool pickPart(part part);
     void placePart(part part, std::string agv);
     bool pickPartConveyor(part part);
+    bool part_dropped = false;
     
     /// Send command message to robot controller
     bool sendJointPosition(trajectory_msgs::JointTrajectory command_msg);
