@@ -173,6 +173,11 @@ void GantryControl::init()
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    shelf5f_.gantry = {-11.4, -4.5, 0}; // go to between shelves
+    shelf5f_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    
+
     // joint positions to go to between shelves 5 and 8
     shelf58a_.gantry = {0, -1.5, 0};// go to aisle
     shelf58a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
@@ -193,6 +198,10 @@ void GantryControl::init()
     shelf58e_.gantry = {-15.5, -1.5, 0};// move closer for b
     shelf58e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf58f_.gantry = {-11.4, -1.5, 0}; // go to shelf
+    shelf58f_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go between shelves 8 and 11
     shelf811a_.gantry = {0, 1.5, 0};// go to aisle

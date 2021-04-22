@@ -117,6 +117,21 @@ void sensor_read::init() {
   breakbeam_subscriber = node_.subscribe(
        "/ariac/breakbeam_0_change", 1, &sensor_read::breakbeam_sensor_callback,this
        );
+  breakbeam2_subscriber = node_.subscribe(
+       "/ariac/breakbeam_2_change", 1, &sensor_read::breakbeam_sensor2_callback,this
+       );
+  breakbeam3_subscriber = node_.subscribe(
+       "/ariac/breakbeam_3_change", 1, &sensor_read::breakbeam_sensor3_callback,this
+       );
+  breakbeam4_subscriber = node_.subscribe(
+       "/ariac/breakbeam_4_change", 1, &sensor_read::breakbeam_sensor4_callback,this
+       );
+  breakbeam5_subscriber = node_.subscribe(
+       "/ariac/breakbeam_5_change", 1, &sensor_read::breakbeam_sensor5_callback,this
+       );
+  breakbeam6_subscriber = node_.subscribe(
+       "/ariac/breakbeam_6_change", 1, &sensor_read::breakbeam_sensor6_callback,this
+       );
 
   
 }
@@ -128,7 +143,50 @@ void sensor_read::breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr
     ROS_WARN("Break beam triggered.");
 
 }
+void sensor_read::breakbeam_sensor2_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected)
+    human_aisle_one = 1;
+}
 
+void sensor_read::breakbeam_sensor3_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected)
+    human_aisle_two = 1;
+}
+
+void sensor_read::breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected)
+    human_aisle_three = 1;
+}
+
+void sensor_read::breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected)
+    human_aisle_four = 1;
+}
+
+void sensor_read::breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg){
+  if (msg->object_detected)
+    human_hole_one = 1;
+}
+
+int sensor_read::check_human_aisle_one(){
+  return human_aisle_one;
+}
+
+int sensor_read::check_human_aisle_two(){
+  return human_aisle_two;
+}
+
+int sensor_read::check_human_aisle_three(){
+  return human_aisle_three;
+}
+
+int sensor_read::check_human_aisle_four(){
+  return human_aisle_four;
+}
+
+int sensor_read::check_human_hole_one(){
+  return human_hole_one;
+}
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {
   if(msg->models.size() > 0) {
     is_faulty1 = true;
