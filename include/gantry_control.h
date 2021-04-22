@@ -101,6 +101,7 @@ class GantryControl {
     shelf shelf58c_;
     shelf shelf58d_;
     shelf shelf58e_;
+    shelf shelf58f_;
     shelf shelf811a_;
     shelf shelf811b_;
     shelf shelf811c_;
