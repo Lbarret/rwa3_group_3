@@ -65,6 +65,38 @@ int main(int argc, char ** argv) {
     gantry.init();
     gantry.goToPresetLocation(gantry.start_);
 
+    std::unordered_map<std::string, bin> bins = {
+        {"bin1_", gantry.bin1_},
+        {"bin2_", gantry.bin2_},
+        {"bin3_", gantry.bin3_},
+        {"bin4_", gantry.bin4_},
+        {"bin5_", gantry.bin5_},
+        {"bin6_", gantry.bin6_},
+        {"bin7_", gantry.bin7_},
+        {"bin8_", gantry.bin8_},
+        {"bin9_", gantry.bin9_},
+        {"bin10_", gantry.bin10_},
+        {"bin11_", gantry.bin11_},
+        {"bin12_", gantry.bin12_},
+        {"bin13_", gantry.bin13_},
+        {"bin14_", gantry.bin14_},
+        {"bin15_", gantry.bin15_},
+        {"bin16_", gantry.bin16_},
+        // {"shelf1a_", gantry.bin1_},
+        // {"shelf1b_", gantry.bin1_},
+        // {"shelf2a_", gantry.bin1_},
+        // {"shelf2b_", gantry.bin1_},
+        // {"shelf5a_", gantry.bin1_},
+        // {"shelf5b_", gantry.bin1_},
+        // {"shelf8a_", gantry.bin1_},
+        // {"shelf8b_", gantry.bin1_},
+        // {"shelf11a_", gantry.bin1_},
+        // {"shelf11b_", gantry.bin1_},
+        // {"beltm_", gantry.bin1_},
+        // {"beltf_", gantry.bin1_},
+        // {"agv1_", gantry.bin1_},
+        // {"agv2_", gantry.bin1_},
+};
     //--1-Read order
 
     std::vector<order> list_of_orders = comp.get_order_list();
@@ -176,17 +208,18 @@ int main(int argc, char ** argv) {
     			current_agv = list_of_orders[i].shipments[j].agv_id;
     			//ROS_INFO_STREAM(current_agv);
 
-    			if (part_loc == "bin1_"){
-			    	gantry.goToPresetLocation(gantry.bin1_);
+                if (part_loc.find("bin") != std::string::npos) {
+                    std::cout << "bin was found in string!!" << '\n';
+                    gantry.goToPresetLocation(bins[part_loc]);
 
                     //--Go pick the part
-                    ROS_INFO_STREAM("In bin 1");
+                    ROS_INFO_STREAM("In bin " << part_loc);
                     gantry.pickPart(found_part);
 
                     // Flipping Part(if condition satisfies)
                     if(part_in_tray.pose.orientation.x==1) {
                         ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin1_);
+                        gantry.flipPart(bins[part_loc]);
                         part_in_tray.pose.orientation.x = 0;
                         part_in_tray.pose.orientation.w = 1;
                     }
@@ -195,536 +228,6 @@ int main(int argc, char ** argv) {
                     gantry.goToPresetLocation(gantry.start_);
                     gantry.placePart(part_in_tray, current_agv);
                     // Check to see if the robot dropped the part at the wrong location
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-                // Rest of the locations will be the same as bin1
-			    if (part_loc == "bin2_"){
-                    // Go to bin
-			    	gantry.goToPresetLocation(gantry.bin2_);
-
-                    //--Go pick the part
-                    ROS_INFO_STREAM("In bin 2");
-                    gantry.pickPart(found_part);
-                    
-                    // Flipping Part(if condition satisfies)
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin2_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    // Placing the part in the agv
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-			    if (part_loc == "bin3_"){
-
-			    	gantry.goToPresetLocation(gantry.bin3_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin3_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin4_"){
-
-                    gantry.goToPresetLocation(gantry.bin4_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin4_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin5_"){
-
-                    gantry.goToPresetLocation(gantry.bin5_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin5_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin6_"){
-
-                    gantry.goToPresetLocation(gantry.bin6_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin6_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin7_"){
-
-                    gantry.goToPresetLocation(gantry.bin7_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin7_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin8_"){
-
-                    gantry.goToPresetLocation(gantry.bin8_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin8_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin9_"){
-
-                    gantry.goToPresetLocation(gantry.bin9_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin9_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin10_"){
-
-                    gantry.goToPresetLocation(gantry.bin10_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin10_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin11_"){
-
-                    gantry.goToPresetLocation(gantry.bin11_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin11_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin12_"){
-
-                    gantry.goToPresetLocation(gantry.bin12_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin12_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin13_"){
-
-                    gantry.goToPresetLocation(gantry.bin13_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin13_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin14_"){
-
-                    gantry.goToPresetLocation(gantry.bin14_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin14_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin15_"){
-
-                    gantry.goToPresetLocation(gantry.bin15_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin15_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
-                        
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
-
-                if (part_loc == "bin16_"){
-
-                    gantry.goToPresetLocation(gantry.bin16_);
-
-                    gantry.pickPart(found_part);
-
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.bin16_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-
-                    gantry.goToPresetLocation(gantry.start_);
-                    gantry.placePart(part_in_tray, current_agv);
                     while(gantry.part_dropped){
                         sensors.reset_logicam_update();
                         ros::Duration(1.0).sleep();

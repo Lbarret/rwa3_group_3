@@ -50,3 +50,4 @@ std::unordered_map<std::string, std::vector<float>> bin_locations = {
         {"agv1_", {0,9.0,2.0,5.0}},
         {"agv2_", {0,-5.0,2.0,-9.0}},
 };
+

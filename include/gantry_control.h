@@ -65,7 +65,7 @@ class GantryControl {
     nist_gear::VacuumGripperState getGripperState(std::string arm_name);
     geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
     void flipPart(anytype for_gantry);
-
+    
     //--preset locations;
     start start_;
     bin bin1_;
