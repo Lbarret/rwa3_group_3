@@ -82,21 +82,17 @@ int main(int argc, char ** argv) {
         {"bin14_", gantry.bin14_},
         {"bin15_", gantry.bin15_},
         {"bin16_", gantry.bin16_},
-        // {"shelf1a_", gantry.bin1_},
-        // {"shelf1b_", gantry.bin1_},
-        // {"shelf2a_", gantry.bin1_},
-        // {"shelf2b_", gantry.bin1_},
-        // {"shelf5a_", gantry.bin1_},
-        // {"shelf5b_", gantry.bin1_},
-        // {"shelf8a_", gantry.bin1_},
-        // {"shelf8b_", gantry.bin1_},
-        // {"shelf11a_", gantry.bin1_},
-        // {"shelf11b_", gantry.bin1_},
-        // {"beltm_", gantry.bin1_},
-        // {"beltf_", gantry.bin1_},
-        // {"agv1_", gantry.bin1_},
-        // {"agv2_", gantry.bin1_},
-};
+    };
+
+    std::unordered_map<std::string, std::vector<shelf>> shelves = {
+        {"shelf5a_", {gantry.shelf5a_, gantry.shelf5b_, gantry.shelf5c_, gantry.shelf5d_, gantry.shelf5f_}},
+        {"shelf5b_", {gantry.shelf5a_, gantry.shelf5b_, gantry.shelf5c_, gantry.shelf5e_, gantry.shelf5f_}},
+        {"shelf8a_", {gantry.shelf58a_, gantry.shelf58b_, gantry.shelf58c_, gantry.shelf58d_, gantry.shelf5f_}},
+        {"shelf8b_", {gantry.shelf58a_, gantry.shelf58b_, gantry.shelf58c_, gantry.shelf58e_, gantry.shelf5f_}},
+        {"shelf11a_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811d_, gantry.shelf5f_}},
+        {"shelf11b_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811e_, gantry.shelf5f_}},
+    };
+
     //--1-Read order
 
     std::vector<order> list_of_orders = comp.get_order_list();
@@ -153,6 +149,7 @@ int main(int argc, char ** argv) {
         {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
+                gantry.goToPresetLocation(gantry.start_);
                 /*! If there is a new order, then get the products in that order */
                 if(!new_order_triggered){
                     list_of_orders = comp.get_order_list();
@@ -248,33 +245,29 @@ int main(int argc, char ** argv) {
                     }
                 }
 
-                if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
+                if (part_loc.find("shelf") != std::string::npos) {
+
                     human_aisle_four = sensors.check_human_aisle_one();
                     if (human_aisle_four == 1){
                         ROS_INFO_STREAM("Human in aisle four");
                         ros::Duration(4.0).sleep();
                     }
-                    gantry.goToPresetLocation(gantry.shelf5a_);
-                    gantry.goToPresetLocation(gantry.shelf5b_);
-                    gantry.goToPresetLocation(gantry.shelf5c_);
-                    if (part_loc == "shelf5a_"){
-                    	gantry.goToPresetLocation(gantry.shelf5d_);
-                    }
-                    else{
-                    	gantry.goToPresetLocation(gantry.shelf5e_);
-                    }
+                    gantry.goToPresetLocation(shelves[part_loc][0]);
+                    gantry.goToPresetLocation(shelves[part_loc][1]);
+                    gantry.goToPresetLocation(shelves[part_loc][2]);
+                    gantry.goToPresetLocation(shelves[part_loc][3]);
                     gantry.pickPart(found_part);
-                    gantry.goToPresetLocation(gantry.shelf5c_);
-                    gantry.goToPresetLocation(gantry.shelf5b_);
+                    gantry.goToPresetLocation(shelves[part_loc][2]);
+                    gantry.goToPresetLocation(shelves[part_loc][1]);
 
                     if(part_in_tray.pose.orientation.x==1) {
                         ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.shelf5b_);
+                        gantry.flipPart(shelves[part_loc][1]);
                         part_in_tray.pose.orientation.x = 0;
                         part_in_tray.pose.orientation.w = 1;
                     }
 
-                    gantry.goToPresetLocation(gantry.shelf5a_);
+                    gantry.goToPresetLocation(shelves[part_loc][0]);
                     gantry.placePart(part_in_tray, current_agv);
                     while(gantry.part_dropped){
                         sensors.reset_logicam_update();
@@ -296,150 +289,150 @@ int main(int argc, char ** argv) {
                     }
                 }
 
-                 if(part_loc == "shelf8a_" || part_loc == "shelf8b_"){
-                    gantry.goToPresetLocation(gantry.shelf58a_);
-                    human_aisle_three = sensors.check_human_aisle_three();
-                    if (human_aisle_three == 1){
-                        ROS_INFO_STREAM("Human in aisle three");
-                        gantry.goToPresetLocation(gantry.shelf5a_);
-                        gantry.goToPresetLocation(gantry.shelf5f_); // go around to the outer aisle
-                        human_aisle_three = sensors.check_human_aisle_three();
-                        human_hole_one = sensors.check_human_hole_one();
-                        while (human_aisle_three == 0 && human_hole_one == 0){ // wait until the area by part is clear
-                            ros::Duration(2.0).sleep();
-                            human_aisle_three = sensors.check_human_aisle_three();
-                            human_hole_one = sensors.check_human_hole_one();
-                        }
-                        if (human_aisle_three == 1 && human_hole_one == 0){ // once area by aisle is clear, go pick up part
-                            gantry.goToPresetLocation(gantry.shelf58f_);
-                        }
-                        gantry.goToPresetLocation(gantry.shelf58b_);
-                        // gantry.goToPresetLocation(gantry.shelf58c_);
-                        if (part_loc == "shelf8a_"){
-                            gantry.goToPresetLocation(gantry.shelf58d_);
-                        }
-                        else{
-                            gantry.goToPresetLocation(gantry.shelf58e_);
-                        }
-                        gantry.pickPart(found_part);
-                        // gantry.goToPresetLocation(gantry.shelf58c_);
-                        gantry.goToPresetLocation(gantry.shelf58b_);
-                        gantry.goToPresetLocation(gantry.shelf58f_);
-                        gantry.goToPresetLocation(gantry.shelf5f_);
-                        if(part_in_tray.pose.orientation.x==1) {  // wait to flip part, until robot is safe from human
-                            ROS_INFO_STREAM("Part needs to be flipped");
-                            gantry.flipPart(gantry.shelf5f_);
-                            part_in_tray.pose.orientation.x = 0;
-                            part_in_tray.pose.orientation.w = 1;
-                        }
-                        gantry.goToPresetLocation(gantry.shelf5a_);
-                        gantry.placePart(part_in_tray, current_agv);
-                        while(gantry.part_dropped){
-                            sensors.reset_logicam_update();
-                            ros::Duration(1.0).sleep();
-                            if(current_agv == "agv1"){
-                                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                            }
-                            else{
-                                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                            }
+                //  if(part_loc == "shelf8a_" || part_loc == "shelf8b_"){
+                //     gantry.goToPresetLocation(gantry.shelf58a_);
+                //     human_aisle_three = sensors.check_human_aisle_three();
+                //     if (human_aisle_three == 1){
+                //         ROS_INFO_STREAM("Human in aisle three");
+                //         gantry.goToPresetLocation(gantry.shelf5a_);
+                //         gantry.goToPresetLocation(gantry.shelf5f_); // go around to the outer aisle
+                //         human_aisle_three = sensors.check_human_aisle_three();
+                //         human_hole_one = sensors.check_human_hole_one();
+                //         while (human_aisle_three == 0 && human_hole_one == 0){ // wait until the area by part is clear
+                //             ros::Duration(2.0).sleep();
+                //             human_aisle_three = sensors.check_human_aisle_three();
+                //             human_hole_one = sensors.check_human_hole_one();
+                //         }
+                //         if (human_aisle_three == 1 && human_hole_one == 0){ // once area by aisle is clear, go pick up part
+                //             gantry.goToPresetLocation(gantry.shelf58f_);
+                //         }
+                //         gantry.goToPresetLocation(gantry.shelf58b_);
+                //         // gantry.goToPresetLocation(gantry.shelf58c_);
+                //         if (part_loc == "shelf8a_"){
+                //             gantry.goToPresetLocation(gantry.shelf58d_);
+                //         }
+                //         else{
+                //             gantry.goToPresetLocation(gantry.shelf58e_);
+                //         }
+                //         gantry.pickPart(found_part);
+                //         // gantry.goToPresetLocation(gantry.shelf58c_);
+                //         gantry.goToPresetLocation(gantry.shelf58b_);
+                //         gantry.goToPresetLocation(gantry.shelf58f_);
+                //         gantry.goToPresetLocation(gantry.shelf5f_);
+                //         if(part_in_tray.pose.orientation.x==1) {  // wait to flip part, until robot is safe from human
+                //             ROS_INFO_STREAM("Part needs to be flipped");
+                //             gantry.flipPart(gantry.shelf5f_);
+                //             part_in_tray.pose.orientation.x = 0;
+                //             part_in_tray.pose.orientation.w = 1;
+                //         }
+                //         gantry.goToPresetLocation(gantry.shelf5a_);
+                //         gantry.placePart(part_in_tray, current_agv);
+                //         while(gantry.part_dropped){
+                //             sensors.reset_logicam_update();
+                //             ros::Duration(1.0).sleep();
+                //             if(current_agv == "agv1"){
+                //                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                //             }
+                //             else{
+                //                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                //             }
                             
-                            found_part = sensors.found_part;
-                            gantry.pickPart(found_part);
-                            if(part_loc == "part not found"){
-                                k--;
-                                continue;
-                            }
-                            gantry.placePart(part_in_tray, current_agv);
-                        }
-                    } else {
-                        gantry.goToPresetLocation(gantry.shelf58b_);
-                        gantry.goToPresetLocation(gantry.shelf58c_);
-                        if (part_loc == "shelf8a_"){
-                            gantry.goToPresetLocation(gantry.shelf58d_);
-                        }
-                        else{
-                            gantry.goToPresetLocation(gantry.shelf58e_);
-                        }
-                        gantry.pickPart(found_part);
-                        gantry.goToPresetLocation(gantry.shelf58c_);
-                        gantry.goToPresetLocation(gantry.shelf58b_);
-                        if(part_in_tray.pose.orientation.x==1) {
-                            ROS_INFO_STREAM("Part needs to be flipped");
-                            gantry.flipPart(gantry.shelf58b_);
-                            part_in_tray.pose.orientation.x = 0;
-                            part_in_tray.pose.orientation.w = 1;
-                        }
-                        gantry.goToPresetLocation(gantry.shelf58a_);
-                        gantry.placePart(part_in_tray, current_agv);
-                        while(gantry.part_dropped){
-                            sensors.reset_logicam_update();
-                            ros::Duration(1.0).sleep();
-                            if(current_agv == "agv1"){
-                                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                            }
-                            else{
-                                part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                            }
+                //             found_part = sensors.found_part;
+                //             gantry.pickPart(found_part);
+                //             if(part_loc == "part not found"){
+                //                 k--;
+                //                 continue;
+                //             }
+                //             gantry.placePart(part_in_tray, current_agv);
+                //         }
+                //     } else {
+                //         gantry.goToPresetLocation(gantry.shelf58b_);
+                //         gantry.goToPresetLocation(gantry.shelf58c_);
+                //         if (part_loc == "shelf8a_"){
+                //             gantry.goToPresetLocation(gantry.shelf58d_);
+                //         }
+                //         else{
+                //             gantry.goToPresetLocation(gantry.shelf58e_);
+                //         }
+                //         gantry.pickPart(found_part);
+                //         gantry.goToPresetLocation(gantry.shelf58c_);
+                //         gantry.goToPresetLocation(gantry.shelf58b_);
+                //         if(part_in_tray.pose.orientation.x==1) {
+                //             ROS_INFO_STREAM("Part needs to be flipped");
+                //             gantry.flipPart(gantry.shelf58b_);
+                //             part_in_tray.pose.orientation.x = 0;
+                //             part_in_tray.pose.orientation.w = 1;
+                //         }
+                //         gantry.goToPresetLocation(gantry.shelf58a_);
+                //         gantry.placePart(part_in_tray, current_agv);
+                //         while(gantry.part_dropped){
+                //             sensors.reset_logicam_update();
+                //             ros::Duration(1.0).sleep();
+                //             if(current_agv == "agv1"){
+                //                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                //             }
+                //             else{
+                //                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                //             }
                             
-                            found_part = sensors.found_part;
-                            gantry.pickPart(found_part);
-                            if(part_loc == "part not found"){
-                                k--;
-                                continue;
-                            }
-                            gantry.placePart(part_in_tray, current_agv);
-                        }
-                    }
-                 }
+                //             found_part = sensors.found_part;
+                //             gantry.pickPart(found_part);
+                //             if(part_loc == "part not found"){
+                //                 k--;
+                //                 continue;
+                //             }
+                //             gantry.placePart(part_in_tray, current_agv);
+                //         }
+                //     }
+                //  }
 
-                if(part_loc == "shelf11a_" || part_loc == "shelf11b_"){
-                    human_aisle_two = sensors.check_human_aisle_two();
-                    if (human_aisle_two == 1){
-                        ROS_INFO_STREAM("Human in aisle two");
-                        ros::Duration(4.0).sleep();
-                    }
-                    gantry.goToPresetLocation(gantry.shelf811a_);
-                    gantry.goToPresetLocation(gantry.shelf811b_);
-                    gantry.goToPresetLocation(gantry.shelf811c_);
-                    if (part_loc == "shelf11a_"){
-                    	gantry.goToPresetLocation(gantry.shelf811d_);
-                    }
-                    else{
-                    	gantry.goToPresetLocation(gantry.shelf811e_);
-                    }
-                    gantry.pickPart(found_part);
-                    gantry.goToPresetLocation(gantry.shelf811c_);
-                    gantry.goToPresetLocation(gantry.shelf811b_);
-                    if(part_in_tray.pose.orientation.x==1) {
-                        ROS_INFO_STREAM("Part needs to be flipped");
-                        gantry.flipPart(gantry.shelf811b_);
-                        part_in_tray.pose.orientation.x = 0;
-                        part_in_tray.pose.orientation.w = 1;
-                    }
-                    gantry.goToPresetLocation(gantry.shelf811a_);
-                    gantry.placePart(part_in_tray, current_agv);
-                    while(gantry.part_dropped){
-                        sensors.reset_logicam_update();
-                        ros::Duration(1.0).sleep();
-                        if(current_agv == "agv1"){
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
-                        }
-                        else{
-                            part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
-                        }
+                // if(part_loc == "shelf11a_" || part_loc == "shelf11b_"){
+                //     human_aisle_two = sensors.check_human_aisle_two();
+                //     if (human_aisle_two == 1){
+                //         ROS_INFO_STREAM("Human in aisle two");
+                //         ros::Duration(4.0).sleep();
+                //     }
+                //     gantry.goToPresetLocation(gantry.shelf811a_);
+                //     gantry.goToPresetLocation(gantry.shelf811b_);
+                //     gantry.goToPresetLocation(gantry.shelf811c_);
+                //     if (part_loc == "shelf11a_"){
+                //     	gantry.goToPresetLocation(gantry.shelf811d_);
+                //     }
+                //     else{
+                //     	gantry.goToPresetLocation(gantry.shelf811e_);
+                //     }
+                //     gantry.pickPart(found_part);
+                //     gantry.goToPresetLocation(gantry.shelf811c_);
+                //     gantry.goToPresetLocation(gantry.shelf811b_);
+                //     if(part_in_tray.pose.orientation.x==1) {
+                //         ROS_INFO_STREAM("Part needs to be flipped");
+                //         gantry.flipPart(gantry.shelf811b_);
+                //         part_in_tray.pose.orientation.x = 0;
+                //         part_in_tray.pose.orientation.w = 1;
+                //     }
+                //     gantry.goToPresetLocation(gantry.shelf811a_);
+                //     gantry.placePart(part_in_tray, current_agv);
+                //     while(gantry.part_dropped){
+                //         sensors.reset_logicam_update();
+                //         ros::Duration(1.0).sleep();
+                //         if(current_agv == "agv1"){
+                //             part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,1);
+                //         }
+                //         else{
+                //             part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,2);
+                //         }
                         
-                        found_part = sensors.found_part;
-                        gantry.pickPart(found_part);
-                        if(part_loc == "part not found"){
-                            k--;
-                            continue;
-                        }
-                        gantry.placePart(part_in_tray, current_agv);
-                    }
-                }
+                //         found_part = sensors.found_part;
+                //         gantry.pickPart(found_part);
+                //         if(part_loc == "part not found"){
+                //             k--;
+                //             continue;
+                //         }
+                //         gantry.placePart(part_in_tray, current_agv);
+                //     }
+                // }
 
-                    if(part_loc == "beltm_" || part_loc == "beltf_"){
+                if(part_loc == "beltm_" || part_loc == "beltf_"){
                     gantry.goToPresetLocation(gantry.conveyor_);
                     gantry.pickPartConveyor(found_part);
                     gantry.goToPresetLocation(gantry.conveyor_bin1_);
@@ -447,7 +440,7 @@ int main(int argc, char ** argv) {
                     ros::Duration(2.0).sleep();
                     k--;
                     continue;
-                    }
+                }
 
 
                 /*! Check to see if the part is faulty */
