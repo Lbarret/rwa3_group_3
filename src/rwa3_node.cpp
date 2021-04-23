@@ -249,6 +249,7 @@ int main(int argc, char ** argv) {
                         }
                         gantry.placePart(part_in_tray, current_agv);
                     }
+                    gantry.goToPresetLocation(gantry.start_);
                 }
 
                 if(part_loc == "shelf5a_" || part_loc == "shelf5b_"){
@@ -456,15 +457,23 @@ int main(int argc, char ** argv) {
                 /*! Check to see if the part is faulty */
 			    ros::Duration(2.0).sleep();
                 now_time = ros::Time::now().toSec();
+                ROS_INFO_STREAM("Checking for blackout");
                 blackout = sensors.checkBlackout(now_time);
-                if(blackout) {
-                    parts_in_blackout.emplace_back(list_of_orders[i].shipments[j].products[k])
-                }
                 if((k == list_of_orders[i].shipments[j].products.size()) && blackout) {
-                    ros::Duration(10.0).sleep();
+                    ROS_INFO_STREAM("Checking for blackout");
+                    ros::Duration(20.0).sleep();
+                    blackout = sensors.checkBlackout(now_time); 
                 }
+                if(blackout) {
+                    ROS_INFO_STREAM("In blackout");
+                    parts_in_blackout.emplace_back(list_of_orders[i].shipments[j].products[k]);
+                }
+                else {
+                    ROS_INFO_STREAM("Not Blackout");
+                }
+                ros::Duration(2.0).sleep();
 			    check_faulty = sensors.get_is_faulty(current_agv);
-                if(check_faulty && !blackout) {
+                if(check_faulty) {
                     if(parts_in_blackout.size() == 0) {
                         ROS_INFO_STREAM("Found faulty part");
                         sensors.reset_faulty();

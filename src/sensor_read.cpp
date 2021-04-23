@@ -134,7 +134,7 @@ void sensor_read::init() {
        );
 
   laser_subscriber_1 = node_.subscribe(
-       "/ariac/laser_profile_0", 1, &sensor_read::laser_profile_callback1,this)
+       "/ariac/laser_profile_0", 1, &sensor_read::laser_profiler_callback,this);
   
 }
 
@@ -239,6 +239,8 @@ void sensor_read::logical_camera_callback(
       const nist_gear::LogicalCameraImage::ConstPtr &msg, int id)
   {
     //ROS_INFO("SUCCESS");
+    sensor_ping_time = ros::Time::now().toSec();
+
     if(msg->models.size() > 0) {
       tf2_ros::Buffer tfBuffer;
       tf2_ros::TransformListener tfListener(tfBuffer);
@@ -311,18 +313,18 @@ part sensor_read::get_faulty_pose(std::string agv) {
 }
 
 void sensor_read::laser_profiler_callback(const sensor_msgs::LaserScan::ConstPtr & msg) {
-    // size_t number_of_valid_ranges = std::count_if(
-    // msg->ranges.begin(), msg->ranges.end(), [](const float f) {return std::isfinite(f);});
-    sensor_ping_time = ros::Time::now().toSec();
-    ROS_INFO_STREAM("Laser sensor pinged" << msg->ranges.begin());
+    // sensor_ping_time = ros::Time::now().toSec();
+    ROS_INFO_STREAM("Laser sensor pinged" << msg->ranges[0]);
 }
 
 bool sensor_read::checkBlackout(double current_time) {
+  ROS_INFO_STREAM("Time difference, blackout" << current_time - sensor_ping_time);
   
   if (current_time - sensor_ping_time < 5) {
-      ROS_INFO_THROTTLE(1, "Laser is ON");
+      ROS_INFO_THROTTLE(1, "Cams are ON");
       sensor_blackout = false;
-  }else{
+  } else{
+    ROS_INFO_THROTTLE(1, "Cams are OFF");
     sensor_blackout = true;
   }
 
