@@ -145,34 +145,56 @@ void sensor_read::init() {
 
 void sensor_read::breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[0] = msg->object_detected;
-
+  if(msg->object_detected){
+    human_in_isle[0] = true;
+  }
 }
 void sensor_read::breakbeam_sensor1_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[1] = msg->object_detected;
-
+  if(msg->object_detected){
+    human_in_isle[0] = true;
+  }
 }
 void sensor_read::breakbeam_sensor2_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[2] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[1] = true;
+  }
 }
 
 void sensor_read::breakbeam_sensor3_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[3] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[1] = true;
+  }
 }
 
 void sensor_read::breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[4] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[2] = true;
+  }
 }
 
 void sensor_read::breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[5] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[2] = true;
+  }
 }
 
 void sensor_read::breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[6] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[3] = true;
+  }
 }
 
 void sensor_read::breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[7] = msg->object_detected;
+  if(msg->object_detected){
+    human_in_isle[3] = true;
+  }
 }
 
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {

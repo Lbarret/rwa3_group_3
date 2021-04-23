@@ -217,6 +217,33 @@ int main(int argc, char ** argv) {
                 if (part_loc.find("shelf") != std::string::npos) {
 
                     gantry.goToPresetLocation(shelves[part_loc][0]);
+                    if(part_loc.find("shelf5") != std::string::npos && sensors.human_in_isle[0]){
+                        while(!sensors.human_check[0]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human");
+                        }
+                        while(sensors.human_check[0]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human to move");
+                        }
+                        ros::Duration(1.0).sleep();
+                    }
+                    if(part_loc.find("shelf8") != std::string::npos && sensors.human_in_isle[1]){
+                        while(!sensors.human_check[2]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human");
+                        }
+                        while(sensors.human_check[2]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human to move");
+                        }
+                        ros::Duration(1.0).sleep();
+                    }
+                    if(part_loc.find("shelf11") != std::string::npos && sensors.human_in_isle[2]){
+                        while(!sensors.human_check[4]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human");
+                        }
+                        while(sensors.human_check[4]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human to move");
+                        }
+                        ros::Duration(1.0).sleep();
+                    }
                     gantry.goToPresetLocation(shelves[part_loc][1]);
                     gantry.goToPresetLocation(shelves[part_loc][2]);
                     gantry.goToPresetLocation(shelves[part_loc][3]);

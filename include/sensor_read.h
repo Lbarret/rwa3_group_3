@@ -54,6 +54,7 @@ public:
     void breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg);
     std::array<bool,8> human_check = {false,false,false,false,false,false,false,false};
+    std::array<bool,4> human_in_isle = {false,false,false,false};
 
     std::string find_part(std::string part_type, int agv);
     // std::vector<std::vector<part>> get_part_info();
