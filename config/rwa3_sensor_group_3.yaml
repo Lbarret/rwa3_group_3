@@ -109,44 +109,50 @@ sensors:
       xyz: [4.988, -3.588, 2.49]
       rpy: [0, 'pi/2', 'pi/2']
 
-  breakbeam_0: # at beginning of conveyor
+  breakbeam_0: 
     type: break_beam
     pose:
-      xyz: [-0.004795, 4.492549, 0.879306]
-      rpy: [0, 0, -1.557900]
+      xyz: [-0.874795, 4.71, 0.879306]
+      rpy: [0, 0, 'pi']
 
-  breakbeam_1: # at end of conveyor
+  breakbeam_1: 
     type: break_beam
     pose:
-      xyz: [-0.004795, -4.492549, 0.879306]
-      rpy: [0, 0, 'pi/2']
-
-  breakbeam_2:
+      xyz: [-17, 4.71, 0.879306]
+      rpy: [0, 0, '0']
+  
+  breakbeam_2: 
     type: break_beam
     pose:
-      xyz: [-0.874795, -4.492549, 0.879306]
+      xyz: [-0.874795, 1.57, 0.879306]
       rpy: [0, 0, 'pi']
 
   breakbeam_3: 
     type: break_beam
     pose:
-      xyz: [-0.874795, 4.492549, 0.879306]
-      rpy: [0, 0, 'pi']
-  
+      xyz: [-17, 1.57, 0.879306]
+      rpy: [0, 0, '0']
+
   breakbeam_4: 
     type: break_beam
     pose:
-      xyz: [-0.874795, 1.5, 0.879306]
+      xyz: [-0.874795, -1.57, 0.879306]
       rpy: [0, 0, 'pi']
 
   breakbeam_5: 
     type: break_beam
     pose:
-      xyz: [-0.874795, -1.35, 0.879306]
-      rpy: [0, 0, 'pi']
+      xyz: [-17, -1.57, 0.879306]
+      rpy: [0, 0, '0']
 
-  breakbeam_6: 
+  breakbeam_6:
     type: break_beam
     pose:
-      xyz: [-11.25, 4.492549, 0.879306]
-      rpy: [0, 0, -1.557900]      
+      xyz: [-0.874795, -4.71, 0.879306]
+      rpy: [0, 0, 'pi']
+
+  breakbeam_7:
+    type: break_beam
+    pose:
+      xyz: [-17, -4.71, 0.879306]
+      rpy: [0, 0, '0']

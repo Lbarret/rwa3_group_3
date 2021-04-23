@@ -114,79 +114,67 @@ void sensor_read::init() {
   quality_sensor_subscriber_2 = node_.subscribe(
        "/ariac/quality_control_sensor_2", 1, &sensor_read::quality_control_sensor_callback2,this
        );
-  breakbeam_subscriber = node_.subscribe(
-       "/ariac/breakbeam_0_change", 1, &sensor_read::breakbeam_sensor_callback,this
+
+  breakbeam0_subscriber = node_.subscribe(
+       "/ariac/breakbeam_0", 1, &sensor_read::breakbeam_sensor0_callback,this
+       );
+  breakbeam1_subscriber = node_.subscribe(
+       "/ariac/breakbeam_1", 1, &sensor_read::breakbeam_sensor1_callback,this
        );
   breakbeam2_subscriber = node_.subscribe(
-       "/ariac/breakbeam_2_change", 1, &sensor_read::breakbeam_sensor2_callback,this
+       "/ariac/breakbeam_2", 1, &sensor_read::breakbeam_sensor2_callback,this
        );
   breakbeam3_subscriber = node_.subscribe(
-       "/ariac/breakbeam_3_change", 1, &sensor_read::breakbeam_sensor3_callback,this
+       "/ariac/breakbeam_3", 1, &sensor_read::breakbeam_sensor3_callback,this
        );
   breakbeam4_subscriber = node_.subscribe(
-       "/ariac/breakbeam_4_change", 1, &sensor_read::breakbeam_sensor4_callback,this
+       "/ariac/breakbeam_4", 1, &sensor_read::breakbeam_sensor4_callback,this
        );
   breakbeam5_subscriber = node_.subscribe(
-       "/ariac/breakbeam_5_change", 1, &sensor_read::breakbeam_sensor5_callback,this
+       "/ariac/breakbeam_5", 1, &sensor_read::breakbeam_sensor5_callback,this
        );
   breakbeam6_subscriber = node_.subscribe(
-       "/ariac/breakbeam_6_change", 1, &sensor_read::breakbeam_sensor6_callback,this
+       "/ariac/breakbeam_6", 1, &sensor_read::breakbeam_sensor6_callback,this
        );
-
-  
+  breakbeam7_subscriber = node_.subscribe(
+       "/ariac/breakbeam_7", 1, &sensor_read::breakbeam_sensor7_callback,this
+       );
 }
 
 ////////////////////////
 
-void sensor_read::breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected) // If there is an object in proximity.      
-    ROS_WARN("Break beam triggered.");
+void sensor_read::breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[0] = msg->object_detected;
+
+}
+void sensor_read::breakbeam_sensor1_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[1] = msg->object_detected;
 
 }
 void sensor_read::breakbeam_sensor2_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected)
-    human_aisle_one = 1;
+  human_check[2] = msg->object_detected;
 }
 
 void sensor_read::breakbeam_sensor3_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected)
-    human_aisle_two = 1;
+  human_check[3] = msg->object_detected;
 }
 
 void sensor_read::breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected)
-    human_aisle_three = 1;
+  human_check[4] = msg->object_detected;
 }
 
 void sensor_read::breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected)
-    human_aisle_four = 1;
+  human_check[5] = msg->object_detected;
 }
 
 void sensor_read::breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg){
-  if (msg->object_detected)
-    human_hole_one = 1;
+  human_check[6] = msg->object_detected;
 }
 
-int sensor_read::check_human_aisle_one(){
-  return human_aisle_one;
+void sensor_read::breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[7] = msg->object_detected;
 }
 
-int sensor_read::check_human_aisle_two(){
-  return human_aisle_two;
-}
-
-int sensor_read::check_human_aisle_three(){
-  return human_aisle_three;
-}
-
-int sensor_read::check_human_aisle_four(){
-  return human_aisle_four;
-}
-
-int sensor_read::check_human_hole_one(){
-  return human_hole_one;
-}
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {
   if(msg->models.size() > 0) {
     is_faulty1 = true;

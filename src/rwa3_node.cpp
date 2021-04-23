@@ -110,37 +110,6 @@ int main(int argc, char ** argv) {
     bool agv_cleared = false;
     int order_left_at;
 
-    //--3-Check where humans are
-    int human_aisle_one = 0;
-    int human_aisle_two = 0;
-    int human_aisle_three = 0;
-    int human_aisle_four = 0;
-    int human_hole_one = 0;
-    // human_aisle_one = sensors.check_human_aisle_one();
-    // human_aisle_two = sensors.check_human_aisle_two();
-    // human_aisle_three = sensors.check_human_aisle_three();
-    // human_aisle_four = sensors.check_human_aisle_four();
-
-    // ROS_INFO_STREAM(human_aisle_one);
-    // ROS_INFO_STREAM(human_aisle_two);
-    // ROS_INFO_STREAM(human_aisle_three);
-    // ROS_INFO_STREAM(human_aisle_four);
-    // if (human_aisle_one == 1){
-    //     ROS_INFO_STREAM("Human obstacle has been found in aisle one");
-    // } 
-    // if (human_aisle_two == 1){
-    //     ROS_INFO_STREAM("Human obstacle has been found in aisle two");
-    // } 
-    // if (human_aisle_three == 1){
-    //     ROS_INFO_STREAM("Human obstacle has been found in aisle three");
-    // } 
-    // if (human_aisle_four == 1){
-    //     ROS_INFO_STREAM("Human obstacle has been found in aisle four");
-    // } 
-    // if (human_aisle_one == 0 && human_aisle_two == 0 && human_aisle_three == 0 && human_aisle_four == 0){
-    //     ROS_INFO_STREAM("No human obstacles in the facitily");
-    // }
-
     std::string part_loc = "";
     /*! Continue to loop through all of the different products in the order until the order has been completed*/
     for (int i=0; i < list_of_orders.size(); i++)
@@ -247,11 +216,6 @@ int main(int argc, char ** argv) {
 
                 if (part_loc.find("shelf") != std::string::npos) {
 
-                    human_aisle_four = sensors.check_human_aisle_one();
-                    if (human_aisle_four == 1){
-                        ROS_INFO_STREAM("Human in aisle four");
-                        ros::Duration(4.0).sleep();
-                    }
                     gantry.goToPresetLocation(shelves[part_loc][0]);
                     gantry.goToPresetLocation(shelves[part_loc][1]);
                     gantry.goToPresetLocation(shelves[part_loc][2]);

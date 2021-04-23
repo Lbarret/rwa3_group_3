@@ -45,22 +45,15 @@ public:
     void logical_camera_callback(const nist_gear::LogicalCameraImage::ConstPtr &msg, int id);
     void quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
-    void breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor1_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor2_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor3_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg);
-    int check_human_aisle_one();
-    int check_human_aisle_two();
-    int check_human_aisle_three();
-    int check_human_aisle_four();
-    int check_human_hole_one();
-    int human_aisle_one = 0;
-    int human_aisle_two = 0;
-    int human_aisle_three = 0;
-    int human_aisle_four = 0;
-    int human_hole_one = 0;
+    void breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg);
+    std::array<bool,8> human_check = {false,false,false,false,false,false,false,false};
 
     std::string find_part(std::string part_type, int agv);
     // std::vector<std::vector<part>> get_part_info();
@@ -101,12 +94,14 @@ private:
     ros::Subscriber logical_camera_17_subscriber;/*!< subscriber to the topic /logical_camera_17 */
     ros::Subscriber quality_sensor_subscriber_1;
     ros::Subscriber quality_sensor_subscriber_2;
-    ros::Subscriber breakbeam_subscriber;
+    ros::Subscriber breakbeam0_subscriber;
+    ros::Subscriber breakbeam1_subscriber;
     ros::Subscriber breakbeam2_subscriber;
     ros::Subscriber breakbeam3_subscriber;
     ros::Subscriber breakbeam4_subscriber;
     ros::Subscriber breakbeam5_subscriber;
     ros::Subscriber breakbeam6_subscriber;
+    ros::Subscriber breakbeam7_subscriber;
 
 
 
