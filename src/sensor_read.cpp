@@ -133,6 +133,8 @@ void sensor_read::init() {
        "/ariac/breakbeam_6_change", 1, &sensor_read::breakbeam_sensor6_callback,this
        );
 
+  laser_subscriber_1 = node_.subscribe(
+       "/ariac/laser_profile_0", 1, &sensor_read::laser_profile_callback1,this)
   
 }
 
@@ -307,6 +309,26 @@ part sensor_read::get_faulty_pose(std::string agv) {
     }    
     
 }
+
+void sensor_read::laser_profiler_callback(const sensor_msgs::LaserScan::ConstPtr & msg) {
+    // size_t number_of_valid_ranges = std::count_if(
+    // msg->ranges.begin(), msg->ranges.end(), [](const float f) {return std::isfinite(f);});
+    sensor_ping_time = ros::Time::now().toSec();
+    ROS_INFO_STREAM("Laser sensor pinged" << msg->ranges.begin());
+}
+
+bool sensor_read::checkBlackout(double current_time) {
+  
+  if (current_time - sensor_ping_time < 5) {
+      ROS_INFO_THROTTLE(1, "Laser is ON");
+      sensor_blackout = false;
+  }else{
+    sensor_blackout = true;
+  }
+
+  return sensor_blackout;
+}
+
 /**
  * Get all the info for the current part
  * @return info for the current part

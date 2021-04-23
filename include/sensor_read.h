@@ -51,6 +51,7 @@ public:
     void breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void laser_profiler_callback(const sensor_msgs::LaserScan::ConstPtr & msg);
     int check_human_aisle_one();
     int check_human_aisle_two();
     int check_human_aisle_three();
@@ -61,6 +62,7 @@ public:
     int human_aisle_three = 0;
     int human_aisle_four = 0;
     int human_hole_one = 0;
+    double sensor_ping_time;
 
     std::string find_part(std::string part_type, int agv);
     // std::vector<std::vector<part>> get_part_info();
@@ -75,6 +77,8 @@ public:
     void reset_logicam_update(){
         std::fill(std::begin(logicam_update), std::end(logicam_update), 0);
     }
+    bool checkBlackout(double current_time);
+    
 
 
 
@@ -107,6 +111,7 @@ private:
     ros::Subscriber breakbeam4_subscriber;
     ros::Subscriber breakbeam5_subscriber;
     ros::Subscriber breakbeam6_subscriber;
+    ros::Subscriber laser_subscriber_1;
 
 
 
@@ -138,7 +143,7 @@ private:
         {16, {"shelf2a_"}},
         {17, {"shelf2b_"}}
     };
-    bool is_faulty1, is_faulty2;
+    bool is_faulty1, is_faulty2, sensor_blackout;
     part faulty_pose1, faulty_pose2;
 };
 
