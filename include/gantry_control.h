@@ -65,7 +65,7 @@ class GantryControl {
     nist_gear::VacuumGripperState getGripperState(std::string arm_name);
     geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
     void flipPart(anytype for_gantry);
-    
+
     //--preset locations;
     start start_;
     bin bin1_;
@@ -96,12 +96,14 @@ class GantryControl {
     shelf shelf5d_;
     shelf shelf5e_;
     shelf shelf5f_;
+    shelf shelf5g_;
     shelf shelf58a_;
     shelf shelf58b_;
     shelf shelf58c_;
     shelf shelf58d_;
     shelf shelf58e_;
     shelf shelf58f_;
+    shelf shelf58g_;
     shelf shelf811a_;
     shelf shelf811b_;
     shelf shelf811c_;

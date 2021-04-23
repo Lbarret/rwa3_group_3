@@ -153,7 +153,7 @@ void GantryControl::init()
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to shelf 5
-    shelf5a_.gantry = {0, -4.5, 0}; // go to aisle
+    shelf5a_.gantry = {0.5, -4.5, 0}; // go to aisle
     shelf5a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf5a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -173,38 +173,45 @@ void GantryControl::init()
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5f_.gantry = {-11.4, -4.5, 0}; // go to between shelves
+    shelf5f_.gantry = {-11.4 /*change this*/, -4.5, 0}; // go to between shelves
     shelf5f_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf5f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
-    
+
+    shelf5g_.gantry = {-11.4 /*change this*/, -3.5, 0}; // go to between shelves
+    shelf5g_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to between shelves 5 and 8
-    shelf58a_.gantry = {0, -1.5, 0};// go to aisle
-    shelf58a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf58a_.gantry = {0.5, -1.75, 0};// go to aisle
+    shelf58a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58b_.gantry = {-14.5, -1.5, 0};// go to shelf
-    shelf58b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf58b_.gantry = {-14.5, -1.75, 0};// go to shelf
+    shelf58b_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58c_.gantry = {-14.5, -1.5, 0}; //move arm
-    shelf58c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf58c_.gantry = {-14.5, -1.75, 0}; //move arm
+    shelf58c_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     shelf58d_.gantry = {-14.5, -1.25, 0};// move closer for a
     shelf58d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf58d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58e_.gantry = {-15.5, -1.5, 0};// move closer for b
-    shelf58e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf58e_.gantry = {-15.5, -1.25, 0};// move closer for b
+    shelf58e_.left_arm = {-1.7, -PI/4, 1.5, -0.63, -0.1, 0};
     shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58f_.gantry = {-11.4, -1.5, 0}; // go to shelf
-    shelf58f_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf58f_.gantry = {-11.4 /*change this*/, -1.75, 0}; // go to space
+    shelf58f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    shelf58g_.gantry = {-11.4 /*change this*/, -3.5, 0}; // go in space
+    shelf58g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf58g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
     // joint positions to go between shelves 8 and 11
-    shelf811a_.gantry = {0, 1.5, 0};// go to aisle
+    shelf811a_.gantry = {0.5, 1.5, 0};// go to aisle
     shelf811a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf811a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -225,7 +232,7 @@ void GantryControl::init()
     shelf811e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to shelf 11
-    shelf11a_.gantry = {0, 4.5, 0};// go to aisle
+    shelf11a_.gantry = {0.5, 4.5, 0};// go to aisle
     shelf11a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     shelf11a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -435,7 +442,6 @@ bool GantryControl::pickPart(part part)
     }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
-
     part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
     part.pose.orientation.x = currentPose.orientation.x;
     part.pose.orientation.y = currentPose.orientation.y;
@@ -451,18 +457,15 @@ bool GantryControl::pickPart(part part)
         //--Move arm to part
         left_arm_group_.setPoseTarget(abovePartPose);
         left_arm_group_.move();
-        ros::Duration(0.5).sleep();
         left_arm_group_.setPoseTarget(part.pose);
         left_arm_group_.move();
         auto state = getGripperState("left_arm");
-        ros::Duration(1.5).sleep();
         if (state.attached)
         {
             ROS_INFO_STREAM("[Gripper] = object attached");
             //--Move arm to previous position
             left_arm_group_.setPoseTarget(abovePartPose);
             left_arm_group_.move();
-            ros::Duration(0.5).sleep();
             left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
             return true;
@@ -477,14 +480,10 @@ bool GantryControl::pickPart(part part)
             {
                 left_arm_group_.setPoseTarget(abovePartPose);
                 left_arm_group_.move();
-                ros::Duration(0.5).sleep();
-
                 left_arm_group_.setPoseTarget(part.pose);
                 left_arm_group_.move();
                 activateGripper("left_arm");
-                ros::Duration(1.0).sleep();
                 state = getGripperState("left_arm");
-                ros::Duration(0.5).sleep();
                 if (state.attached){
                     break;
                 }
@@ -492,7 +491,6 @@ bool GantryControl::pickPart(part part)
             }
             left_arm_group_.setPoseTarget(abovePartPose);
             left_arm_group_.move();
-            ros::Duration(0.5).sleep();
             left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
         }
