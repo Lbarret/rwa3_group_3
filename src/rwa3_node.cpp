@@ -127,7 +127,7 @@ int main(int argc, char ** argv) {
             {
                 gantry.goToPresetLocation(gantry.start_);
                 /*! If there is a new order, then get the products in that order */
-                if(!new_order_triggered){
+                if(!new_order_triggered && !sensors.blackout){
                     list_of_orders = comp.get_order_list();
                 }
                 if (list_of_orders.size() > 1 && !new_order_triggered){
