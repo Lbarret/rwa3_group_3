@@ -116,6 +116,7 @@ int main(int argc, char ** argv) {
     int position1 = 0;
     int position2 = 0;
     int gap_location = 0;
+    int swapped = -1;
 
     std::string part_loc = "";
     /*! Continue to loop through all of the different products in the order until the order has been completed*/
@@ -127,7 +128,7 @@ int main(int argc, char ** argv) {
             {
                 gantry.goToPresetLocation(gantry.start_);
                 /*! If there is a new order, then get the products in that order */
-                if(!new_order_triggered && !sensors.blackout){
+                if(!new_order_triggered && !sensors.blackout && swapped<k){
                     list_of_orders = comp.get_order_list();
                 }
                 if (list_of_orders.size() > 1 && !new_order_triggered){
@@ -168,6 +169,7 @@ int main(int argc, char ** argv) {
                         auto temp = list_of_orders[i].shipments[j].products[k];
                         list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
                         list_of_orders[i].shipments[j].products[k+1]=temp;
+                        swapped = k+1;
                         k-=1;
                     }
                     else{
