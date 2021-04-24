@@ -45,7 +45,18 @@ public:
     void logical_camera_callback(const nist_gear::LogicalCameraImage::ConstPtr &msg, int id);
     void quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg);
     void quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg);
-    void breakbeam_sensor_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor1_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor2_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor3_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor4_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor5_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor8_callback(const nist_gear::Proximity::ConstPtr &msg);
+    std::array<bool,9> human_check = {false,false,false,false,false,false,false,false,false};
+    std::array<bool,4> human_in_isle = {false,false,false,false};
+
     std::string find_part(std::string part_type, int agv);
     // std::vector<std::vector<part>> get_part_info();
     std::array<std::array<part, 36>, 18> get_part_info();
@@ -56,6 +67,7 @@ public:
     int get_logi_cam();
     std::array<std::array<part, 36>, 18> part_info;
     part found_part;
+    bool blackout = false;
     void reset_logicam_update(){
         std::fill(std::begin(logicam_update), std::end(logicam_update), 0);
     }
@@ -85,8 +97,15 @@ private:
     ros::Subscriber logical_camera_17_subscriber;/*!< subscriber to the topic /logical_camera_17 */
     ros::Subscriber quality_sensor_subscriber_1;
     ros::Subscriber quality_sensor_subscriber_2;
-    ros::Subscriber breakbeam_subscriber;
-
+    ros::Subscriber breakbeam0_subscriber;
+    ros::Subscriber breakbeam1_subscriber;
+    ros::Subscriber breakbeam2_subscriber;
+    ros::Subscriber breakbeam3_subscriber;
+    ros::Subscriber breakbeam4_subscriber;
+    ros::Subscriber breakbeam5_subscriber;
+    ros::Subscriber breakbeam6_subscriber;
+    ros::Subscriber breakbeam7_subscriber;
+    ros::Subscriber breakbeam8_subscriber;
 
     std::string part_location;
     std::array<int, 18> logicam_update = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
