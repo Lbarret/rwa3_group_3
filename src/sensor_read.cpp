@@ -151,6 +151,7 @@ void sensor_read::breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPt
   if(msg->object_detected){
     human_in_isle[0] = true;
   }
+  
 }
 void sensor_read::breakbeam_sensor1_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[1] = msg->object_detected;
@@ -269,10 +270,13 @@ void sensor_read::logical_camera_callback(
       try {
           transformStamped = tfBuffer.lookupTransform("world", "logical_camera_" + std::to_string(id) + "_frame",
                                 ros::Time(0), timeout);
+          blackout = false;
       }
       catch (tf2::TransformException &ex) {
         ROS_WARN("%s",ex.what());
         ros::Duration(1.0).sleep();
+        blackout = true;
+        ROS_INFO_STREAM("BLACKOUT");
       }
 
       if(logicam_update[id]==0) {

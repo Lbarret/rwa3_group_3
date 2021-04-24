@@ -67,6 +67,7 @@ public:
     int get_logi_cam();
     std::array<std::array<part, 36>, 18> part_info;
     part found_part;
+    bool blackout = false;
     void reset_logicam_update(){
         std::fill(std::begin(logicam_update), std::end(logicam_update), 0);
     }

@@ -162,13 +162,19 @@ int main(int argc, char ** argv) {
                 ROS_INFO_STREAM_THROTTLE(10,"part location: " << part_loc);
                 
                 // Check for sensor blackout
-                // if (part_loc.find("shelf") != std::string::npos && ) {
-                //     // auto temp = list_of_orders[i].shipments[j].products[k];
-                //         // list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
-                //         // list_of_orders[i].shipments[j].products[k+1]=temp;
-                //         ROS_INFO_STREAM_THROTTLE(10,"waiting for first part");
-                //         k-=1;
-                // }
+                if (part_loc.find("shelf") != std::string::npos && sensors.blackout) {
+                    ROS_INFO_STREAM("BLACKOUT");
+                    if(k != list_of_orders[i].shipments[j].products.size()-1){
+                        auto temp = list_of_orders[i].shipments[j].products[k];
+                        list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
+                        list_of_orders[i].shipments[j].products[k+1]=temp;
+                        k-=1;
+                    }
+                    else{
+                        k-=1;
+                    }
+                    continue;
+                }
 
                 // if part isn't found, move onto next part but come back to it
                 if (part_loc == "part not found"){
