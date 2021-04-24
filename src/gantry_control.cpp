@@ -113,7 +113,7 @@ void GantryControl::init()
     bin12_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
     // joint positions to go to bin13
-    bin13_.gantry = {2, 2.16, 0.};
+    bin13_.gantry = {2.15, 2.1, 0.};
     bin13_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     bin13_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
@@ -182,27 +182,27 @@ void GantryControl::init()
     shelf5g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to between shelves 5 and 8
-    shelf58a_.gantry = {0.5, -1.75, 0};// go to aisle
+    shelf58a_.gantry = {0.5, -1.9, 0};// go to aisle
     shelf58a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58b_.gantry = {-14.5, -1.75, 0};// go to shelf
+    shelf58b_.gantry = {-14, -1.9, 0};// go to shelf
     shelf58b_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58c_.gantry = {-14.5, -1.75, 0}; //move arm
+    shelf58c_.gantry = {-13, -1.9, 0}; //move arm
     shelf58c_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58d_.gantry = {-14.5, -1.25, 0};// move closer for a
+    shelf58d_.gantry = {-14, -1.4, 0};// move closer for a
     shelf58d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf58d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58e_.gantry = {-15.5, -1.25, 0};// move closer for b
+    shelf58e_.gantry = {-15, -1.4, 0};// move closer for b
     shelf58e_.left_arm = {-1.7, -PI/4, 1.5, -0.63, -0.1, 0};
     shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58f_.gantry = {-11.4 /*change this*/, -1.75, 0}; // go to space
+    shelf58f_.gantry = {-11.4 /*change this*/, -1.9, 0}; // go to space
     shelf58f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -442,7 +442,7 @@ bool GantryControl::pickPart(part part)
     }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
-    part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON + 0.01; //added calibration factor
+    part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON ; //added calibration factor
     part.pose.orientation.x = currentPose.orientation.x;
     part.pose.orientation.y = currentPose.orientation.y;
     part.pose.orientation.z = currentPose.orientation.z;
@@ -466,8 +466,6 @@ bool GantryControl::pickPart(part part)
             //--Move arm to previous position
             left_arm_group_.setPoseTarget(abovePartPose);
             left_arm_group_.move();
-            left_arm_group_.setPoseTarget(currentPose);
-            left_arm_group_.move();
             return true;
         }
         else
@@ -476,7 +474,7 @@ bool GantryControl::pickPart(part part)
             int max_attempts{5};
             int current_attempt{0};
             //--try to pick up the part 5 times
-            while (current_attempt<max_attempts)
+            while (current_attempt<max_attempts && !state.attached)
             {
                 left_arm_group_.setPoseTarget(abovePartPose);
                 left_arm_group_.move();
@@ -484,14 +482,9 @@ bool GantryControl::pickPart(part part)
                 left_arm_group_.move();
                 activateGripper("left_arm");
                 state = getGripperState("left_arm");
-                if (state.attached){
-                    break;
-                }
                 current_attempt++;
             }
             left_arm_group_.setPoseTarget(abovePartPose);
-            left_arm_group_.move();
-            left_arm_group_.setPoseTarget(currentPose);
             left_arm_group_.move();
         }
     }
@@ -767,14 +760,26 @@ bool GantryControl::sendJointPosition(trajectory_msgs::JointTrajectory command_m
  * @param for_gantry
  */
 void GantryControl::flipPart(anytype for_gantry) {
-
-    flippart_.gantry = for_gantry.gantry;
+    goToPresetLocation(start_);
+    flippart_.gantry = start_.gantry;
     flippart_.left_arm = {1.84, -2.73, -1.88, -0.2, 1.63, 0};
     flippart_.right_arm = {1.75, -3.35, -1.4, 0.13, 1.51, 0};
     goToPresetLocation(flippart_);
-    activateGripper("right_arm");
-    deactivateGripper("left_arm");
-    ros::Duration(1.0).sleep();
+    auto state1 = getGripperState("right_arm");
+    while(!state1.enabled){
+        activateGripper("right_arm");
+        state1 = getGripperState("right_arm");
+    }
+    auto state2 = getGripperState("left_arm");
+    while(!state1.attached){
+        state1 = getGripperState("right_arm");
+    }
+    while(state2.enabled){
+        deactivateGripper("left_arm");
+        state2 = getGripperState("left_arm");
+    }
+    goToPresetLocation(start_);
+
     ROS_INFO_STREAM("Flipped the part");
 
 }

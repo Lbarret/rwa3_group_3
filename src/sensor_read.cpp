@@ -139,6 +139,9 @@ void sensor_read::init() {
   breakbeam7_subscriber = node_.subscribe(
        "/ariac/breakbeam_7", 1, &sensor_read::breakbeam_sensor7_callback,this
        );
+  breakbeam8_subscriber = node_.subscribe(
+       "/ariac/breakbeam_8", 1, &sensor_read::breakbeam_sensor8_callback,this
+       );
 }
 
 ////////////////////////
@@ -195,6 +198,10 @@ void sensor_read::breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPt
   if(msg->object_detected){
     human_in_isle[3] = true;
   }
+}
+
+void sensor_read::breakbeam_sensor8_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[8] = msg->object_detected;
 }
 
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {

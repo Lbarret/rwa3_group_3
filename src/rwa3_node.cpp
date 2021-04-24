@@ -115,6 +115,7 @@ int main(int argc, char ** argv) {
     bool in_isle = false;
     int position1 = 0;
     int position2 = 0;
+    int gap_location = 0;
 
     std::string part_loc = "";
     /*! Continue to loop through all of the different products in the order until the order has been completed*/
@@ -154,10 +155,21 @@ int main(int argc, char ** argv) {
                 }
                 sensors.reset_logicam_update();
                 ros::Duration(1.0).sleep();
+
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,0);
                     // //--We go to this bin because a camera above
                    //--this bin found one of the parts in the order
                 ROS_INFO_STREAM_THROTTLE(10,"part location: " << part_loc);
+                
+                // Check for sensor blackout
+                // if (part_loc.find("shelf") != std::string::npos && ) {
+                //     // auto temp = list_of_orders[i].shipments[j].products[k];
+                //         // list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
+                //         // list_of_orders[i].shipments[j].products[k+1]=temp;
+                //         ROS_INFO_STREAM_THROTTLE(10,"waiting for first part");
+                //         k-=1;
+                // }
+
                 // if part isn't found, move onto next part but come back to it
                 if (part_loc == "part not found"){
                 	if(k != list_of_orders[i].shipments[j].products.size()-1){
@@ -187,6 +199,12 @@ int main(int argc, char ** argv) {
                     //--Go pick the part
                     ROS_INFO_STREAM("In bin " << part_loc);
                     gantry.pickPart(found_part);
+                    ros::Duration(.5).sleep();
+                    gantry.goToPresetLocation(bins[part_loc]);
+                    ros::Duration(.5).sleep();
+                    gantry.goToPresetLocation(gantry.start_);
+                    ros::Duration(.5).sleep();
+
 
                     // Flipping Part(if condition satisfies)
                     if(part_in_tray.pose.orientation.x==1) {
@@ -195,9 +213,9 @@ int main(int argc, char ** argv) {
                         part_in_tray.pose.orientation.x = 0;
                         part_in_tray.pose.orientation.w = 1;
                     }
-
-                    // PLacing the part in the agv
                     gantry.goToPresetLocation(gantry.start_);
+                    // PLacing the part in the agv
+                    
                     gantry.placePart(part_in_tray, current_agv);
                     // Check to see if the robot dropped the part at the wrong location
                     while(gantry.part_dropped){
@@ -227,11 +245,13 @@ int main(int argc, char ** argv) {
                         in_isle = sensors.human_in_isle[0];
                         position1 = 0;
                         position2 = 1;
+                        gap_location = 8;
                     }
                     if(part_loc.find("shelf8") != std::string::npos && sensors.human_in_isle[1]){
                         in_isle =sensors.human_in_isle[1];
                         position1 = 2;
                         position2 = 3;
+                        gap_location = 8;
                     }
                     if(part_loc.find("shelf11") != std::string::npos && sensors.human_in_isle[2]){
                         in_isle =sensors.human_in_isle[3];
@@ -245,7 +265,9 @@ int main(int argc, char ** argv) {
                         while(sensors.human_check[position1]){
                             ROS_INFO_STREAM_THROTTLE(5,"waiting for human to move");
                         }
-                        ros::Duration(1.0).sleep();
+                        while(!sensors.human_check[gap_location]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human to get to gap");
+                        }
                         gantry.goToPresetLocation(shelves[part_loc][4]); //go to gap
                         gantry.goToPresetLocation(shelves[part_loc][5]); //go into gap
                         while(!sensors.human_check[position2]){
@@ -254,10 +276,13 @@ int main(int argc, char ** argv) {
                         while(sensors.human_check[position2]){
                             ROS_INFO_STREAM_THROTTLE(5,"waiting for human to move");
                         }
-                        ros::Duration(3.0).sleep(); //create another breakbeam here
+                        while(!sensors.human_check[gap_location]){
+                            ROS_INFO_STREAM_THROTTLE(5,"waiting for human to clear gap");
+                        }
                         gantry.goToPresetLocation(shelves[part_loc][4]);
                         gantry.goToPresetLocation(shelves[part_loc][3]);
                         gantry.pickPart(found_part);
+                        gantry.goToPresetLocation(shelves[part_loc][2]);
                         gantry.goToPresetLocation(shelves[part_loc][4]);
                         gantry.goToPresetLocation(shelves[part_loc][5]);
                         while(!sensors.human_check[position2]){
@@ -276,6 +301,7 @@ int main(int argc, char ** argv) {
                     }
                     
                     gantry.goToPresetLocation(shelves[part_loc][0]);
+                    gantry.goToPresetLocation(gantry.start_);
                     if(part_in_tray.pose.orientation.x==1) {
                         ROS_INFO_STREAM("Part needs to be flipped");
                         gantry.flipPart(shelves[part_loc][1]);
@@ -283,7 +309,6 @@ int main(int argc, char ** argv) {
                         part_in_tray.pose.orientation.w = 1;
                     }
 
-                    gantry.goToPresetLocation(shelves[part_loc][0]);
                     gantry.placePart(part_in_tray, current_agv);
                     while(gantry.part_dropped){
                         sensors.reset_logicam_update();

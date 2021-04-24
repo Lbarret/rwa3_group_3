@@ -156,3 +156,11 @@ sensors:
     pose:
       xyz: [-17, -4.71, 0.879306]
       rpy: [0, 0, '0']
+
+  breakbeam_8:
+    type: break_beam
+    pose:
+      xyz: [-10.75, 2, 0.879306]
+      rpy: [0, 0, '-pi/2']
+
+
