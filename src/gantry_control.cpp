@@ -558,6 +558,26 @@ void GantryControl::placePart(part part, std::string agv)
     part_dropped = false;
     target_pose_in_tray.position.z += (ABOVE_TARGET + 1.5 * model_height[part.type]);
 
+    // tf2::Quaternion q_pitch(0, 0.7071068, 0, 0.7071068);
+    // tf2::Quaternion q_pi(0, 0, 1, 0);
+    // tf2::Quaternion q_init_part(part.pose.orientation.x,
+    //                             part.pose.orientation.y,
+    //                             part.pose.orientation.z,
+    //                             part.pose.orientation.w);
+
+    // tf2::Quaternion q_final_part(target_pose_in_tray.orientation.x,
+    //                             target_pose_in_tray.orientation.y,
+    //                             target_pose_in_tray.orientation.z,
+    //                             target_pose_in_tray.orientation.w);
+
+    // // tf2::Quaternion q_pi_by_2(0, 0, 0.7071068, 0.7071068);
+    // tf2::Quaternion q_rslt = q_init_part.inverse()*q_final_part*q_pi*q_pitch;
+    //     target_pose_in_tray.orientation.x = q_rslt.x();
+    //     target_pose_in_tray.orientation.y = q_rslt.y();
+    //     target_pose_in_tray.orientation.z = q_rslt.z();
+    //     target_pose_in_tray.orientation.w = q_rslt.w();
+
+
     auto state_left = getGripperState("left_arm");
     auto state_right = getGripperState("right_arm");
     ROS_INFO_STREAM("left:" << state_left.attached << "right: " << state_right.attached);
@@ -781,5 +801,6 @@ void GantryControl::flipPart(anytype for_gantry) {
     goToPresetLocation(start_);
 
     ROS_INFO_STREAM("Flipped the part");
+    flip_trig = true;
 
 }

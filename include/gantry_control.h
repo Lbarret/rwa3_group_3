@@ -117,6 +117,7 @@ class GantryControl {
     conveyor conveyor_;
     conveyor conveyor_bin1_;
     anytype flippart_;
+    bool flip_trig;
 
 
 

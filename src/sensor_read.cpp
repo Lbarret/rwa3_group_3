@@ -359,7 +359,7 @@ std::string sensor_read::find_part(std::string part_type, int agv){
           ROS_INFO_STREAM("FOUND");
           // check all bins seen by each camera
           for(auto bin: camera_locations[i]) {
-            ROS_INFO_STREAM(bin);
+            // ROS_INFO_STREAM(bin);
             std::vector<float> bin_pose = bin_locations[bin];
             ROS_INFO_STREAM("x = "<<part_info[i][j].pose.position.x);
             ROS_INFO_STREAM("y = "<<part_info[i][j].pose.position.y);
@@ -374,6 +374,7 @@ std::string sensor_read::find_part(std::string part_type, int agv){
                 ROS_INFO_STREAM("seg check-1");
                 part_info[i][j].is_picked = true;
                 ROS_INFO_STREAM("seg check-2");
+                ROS_INFO_STREAM(bin);
                 return bin;
               }
           }
