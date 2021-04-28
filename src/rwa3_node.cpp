@@ -136,6 +136,8 @@ int main(int argc, char ** argv) {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
                 gantry.goToPresetLocation(gantry.start_);
+                sensors.reset_logicam_update();
+                ros::Duration(2.0).sleep();
                 // If there is a new order, then get the products in that order */
                 if(!new_order_triggered && !sensors.blackout && swapped<k){
                     list_of_orders = comp.get_order_list();
@@ -145,7 +147,50 @@ int main(int argc, char ** argv) {
                     // Check to see if current AGV is needed for the next shipments
                     for (int m = 0; m<list_of_orders[1].shipments.size(); m++){
                         if (list_of_orders[1].shipments[m].agv_id == current_agv){
-                            ROS_INFO_STREAM("Clear AGV");
+                            
+                            if(current_agv=="agv2") {
+                                for(int part = 0; part< k; part++){
+                                    part_loc = sensors.find_part(sensors.part_info[13][part].type,2);
+                                    found_part = sensors.found_part;                                    
+                                    gantry.goToPresetLocation(gantry.agv2_);
+                                    if(found_part.pose.position.z>.75){
+                                        found_part.pose.position.z -= model_height[found_part.type];
+                                    }
+                                    ros::Duration(1.0).sleep();
+                                    gantry.pickPart(found_part);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.agv2_);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.start_);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.clear_bins[part]);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.deactivateGripper("left_arm");
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.start_);
+                                }
+                                
+                            }
+                            else {
+                                for(int part = 0; part< k; i++){
+                                    part_loc = sensors.find_part(sensors.part_info[12][part].type,1);
+                                    found_part = sensors.found_part;
+                                    
+                                    gantry.goToPresetLocation(gantry.agv1_);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.pickPart(found_part);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.agv1_);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.start_);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.clear_bins[part]);
+                                    ros::Duration(1.0).sleep();
+                                    gantry.deactivateGripper("left_arm");
+                                    ros::Duration(1.0).sleep();
+                                    gantry.goToPresetLocation(gantry.start_);
+                                }
+                            }
                             agv_cleared = true;
                         }
                     }
@@ -163,8 +208,7 @@ int main(int argc, char ** argv) {
                     ROS_INFO_STREAM("pick back up");
                     continue;
                 }
-                sensors.reset_logicam_update();
-                ros::Duration(2.0).sleep();
+                
 
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,0);
                 //--We go to this bin because a camera above
@@ -386,13 +430,7 @@ int main(int argc, char ** argv) {
                         sensors.reset_faulty();
                         faulty_p = sensors.get_faulty_pose(current_agv);
                         faulty_p.type = part_in_tray.type;
-                        if(gantry.flip_trig) {
-                            gantry.flip_trig = false;
-                            faulty_p.pose.position.z -=.045;
-                        } else {
-                            faulty_p.pose.position.z +=.015;
-                        }
-                        
+                                                
                         ROS_INFO_STREAM(faulty_p.pose.position.x);
                         ROS_INFO_STREAM(faulty_p.pose.position.y);
                         ROS_INFO_STREAM(faulty_p.pose.position.z);
@@ -427,12 +465,7 @@ int main(int argc, char ** argv) {
                                 break;
                             }
                         }
-                        if(gantry.flip_trig) {
-                            gantry.flip_trig = false;
-                            faulty_p.pose.position.z -=.045;
-                        } else {
-                            faulty_p.pose.position.z +=.015;
-                        }
+                        
                         ROS_INFO_STREAM(faulty_p.pose.position.x);
                         ROS_INFO_STREAM(faulty_p.pose.position.y);
                         ROS_INFO_STREAM(faulty_p.pose.position.z);

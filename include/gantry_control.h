@@ -140,8 +140,12 @@ class GantryControl {
     shelf shelf11e_;
     conveyor conveyor_;
     conveyor conveyor_bin1_;
+    conveyor clear_bin1_;
+    conveyor clear_bin2_;
+    conveyor clear_bin3_;
     anytype flippart_;
     bool flip_trig;
+    std::vector<conveyor> clear_bins;
 
 
 

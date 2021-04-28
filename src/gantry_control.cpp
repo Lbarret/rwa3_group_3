@@ -360,6 +360,20 @@ void GantryControl::init()
     right_arm_agv2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
     right_arm_agv2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
 
+    clear_bin1_.gantry = {2, -1.3, 0.};
+    clear_bin1_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin1_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bin2_.gantry = {3, -1.3, 0.};
+    clear_bin2_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin2_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bin3_.gantry = {4, -1.3, 0.};
+    clear_bin3_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin3_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bins = {clear_bin1_, clear_bin2_, clear_bin3_};
+
 
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
@@ -545,8 +559,11 @@ bool GantryControl::pickPart(part part)
         state = getGripperState("left_arm");
     }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
-
+    if(part.type == "pulley_part_red" && part.pose.position.z >.74){
+        part.pose.position.z -= model_height[part.type];
+    }
     part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON ; //added calibration factor
+    
     part.pose.orientation.x = currentPose.orientation.x;
     part.pose.orientation.y = currentPose.orientation.y;
     part.pose.orientation.z = currentPose.orientation.z;
@@ -923,6 +940,7 @@ void GantryControl::flipPart(anytype for_gantry) {
     }
     auto state2 = getGripperState("left_arm");
     while(!state1.attached){
+        ros::Duration timeout(.5);
         state1 = getGripperState("right_arm");
     }
     while(state2.enabled){

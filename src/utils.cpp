@@ -25,9 +25,9 @@ std::unordered_map<std::string, double> model_height = {
  * Create a list for locations of each of the bins and shelves in the environment
  */
 std::unordered_map<std::string, std::vector<float>> bin_locations = {
-        {"bin1_", {2.2,1.62,4.0,1.02}},
-        {"bin2_", {3.27,1.62,3.87,1.02}},
-        {"bin3_", {4.21,1.62,4.81,1.02}},
+        {"bin1_", {2,2,3,1}},
+        {"bin2_", {3,2,4,1}},
+        {"bin3_", {4,1.62,5,1.02}},
         {"bin4_", {5.15,1.62,5.75,1.02}},
         {"bin5_", {2.33,2.46,2.93,1.86}},
         {"bin6_", {3.27,2.46,3.87,1.86}},
