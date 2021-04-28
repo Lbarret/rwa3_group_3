@@ -90,6 +90,10 @@ int main(int argc, char ** argv) {
     };
 
     std::unordered_map<std::string, std::vector<shelf>> shelves = {
+        {"shelf1a_", {gantry.shelf1a_, gantry.shelf1b_, gantry.shelf1c_, gantry.shelf1d_, gantry.shelf1f_, gantry.shelf1g_}},
+        {"shelf1b_", {gantry.shelf1a_, gantry.shelf1b_, gantry.shelf1c_, gantry.shelf1e_, gantry.shelf1f_, gantry.shelf1g_}},
+        {"shelf2a_", {gantry.shelf2a_, gantry.shelf2b_, gantry.shelf2c_, gantry.shelf2d_, gantry.shelf2f_, gantry.shelf2g_}},
+        {"shelf2b_", {gantry.shelf2a_, gantry.shelf2b_, gantry.shelf2c_, gantry.shelf2e_, gantry.shelf2f_, gantry.shelf2g_}},
         {"shelf5a_", {gantry.shelf5a_, gantry.shelf5b_, gantry.shelf5c_, gantry.shelf5d_, gantry.shelf5f_, gantry.shelf5g_}},
         {"shelf5b_", {gantry.shelf5a_, gantry.shelf5b_, gantry.shelf5c_, gantry.shelf5e_, gantry.shelf5f_, gantry.shelf5g_}},
         {"shelf8a_", {gantry.shelf58a_, gantry.shelf58b_, gantry.shelf58c_, gantry.shelf58d_, gantry.shelf58f_, gantry.shelf58g_}},
@@ -259,7 +263,7 @@ int main(int argc, char ** argv) {
                         in_isle = sensors.human_in_isle[0];
                         position1 = 0;
                         position2 = 1;
-                        gap_location = 8;
+                        gap_location = 10;
                     }
                     if(part_loc.find("shelf8") != std::string::npos && sensors.human_in_isle[1]){
                         in_isle =sensors.human_in_isle[1];
@@ -271,6 +275,7 @@ int main(int argc, char ** argv) {
                         in_isle =sensors.human_in_isle[3];
                         position1 = 4;
                         position2 = 5;
+                        gap_location = 9;
                     }
                     if(in_isle){
                         while(!sensors.human_check[position1]){

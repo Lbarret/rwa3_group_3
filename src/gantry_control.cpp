@@ -152,6 +152,64 @@ void GantryControl::init()
     agv2_faulty.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    // joint positions to go to shelf 1
+    shelf1a_.gantry = {0.5, -5.8, 0}; // go to aisle
+    shelf1a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf1a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1b_.gantry = {4.5, -5.8, 0}; // go to shelf
+    shelf1b_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf1b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1c_.gantry = {4, -5.5, 0};// move close to self
+    shelf1c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf1c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1d_.gantry = {3.5, -5, 0};// move closer for a
+    shelf1d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf1d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1e_.gantry = {5, -5, 0};// move closer for b
+    shelf1e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf1e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1f_.gantry = {4, -5.5, 0}; // Go to near shelf with part
+    shelf1f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf1f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf1g_.gantry = {4, -5.5, 0}; // Go to near shelf with part
+    shelf1g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf1g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    // joint positions to go to shelf 2
+    shelf2a_.gantry = {0.6, 6.5, -PI}; // go to aisle
+    shelf2a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf2a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2b_.gantry = {4, 5.8, 0}; // go to shelf
+    shelf2b_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf2b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2c_.gantry = {4, 6.5, -PI};// move close to self
+    shelf2c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf2c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2d_.gantry = {4, 5,-PI};// move closer for a
+    shelf2d_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
+    shelf2d_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2e_.gantry = {5.5, 5, -PI};// move closer for b
+    shelf2e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
+    shelf2e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2f_.gantry = {4, 6.5,-PI}; // Go to near shelf with part
+    shelf2f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf2f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+    shelf2g_.gantry = {4, 6.5,-PI}; // Go to near shelf with part
+    shelf2g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+    shelf2g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
     // joint positions to go to shelf 5
     shelf5a_.gantry = {0.5, -5.8, 0}; // go to aisle
     shelf5a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};

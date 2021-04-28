@@ -54,7 +54,10 @@ public:
     void breakbeam_sensor6_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPtr &msg);
     void breakbeam_sensor8_callback(const nist_gear::Proximity::ConstPtr &msg);
-    std::array<bool,9> human_check = {false,false,false,false,false,false,false,false,false};
+    void breakbeam_sensor9_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor10_callback(const nist_gear::Proximity::ConstPtr &msg);
+    void breakbeam_sensor11_callback(const nist_gear::Proximity::ConstPtr &msg);
+    std::array<bool,12> human_check = {false,false,false,false,false,false,false,false,false, false, false, false};
     std::array<bool,4> human_in_isle = {false,false,false,false};
 
     std::string find_part(std::string part_type, int agv);
@@ -106,6 +109,9 @@ private:
     ros::Subscriber breakbeam6_subscriber;
     ros::Subscriber breakbeam7_subscriber;
     ros::Subscriber breakbeam8_subscriber;
+    ros::Subscriber breakbeam9_subscriber;
+    ros::Subscriber breakbeam10_subscriber;
+    ros::Subscriber breakbeam11_subscriber;
 
     std::string part_location;
     std::array<int, 18> logicam_update = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
