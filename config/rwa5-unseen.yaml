@@ -42,7 +42,7 @@ orders:
           xyz: [0.0, 0.1, 0]
           rpy: ['pi', 0, 0]
       product_1:
-        type: gasket_part_green
+        type: piston_rod_part_red
         pose:
           xyz: [-0.1, -0.2, 0]
           rpy: [0, 0, '-pi/4']
@@ -78,7 +78,7 @@ models_over_shelves:
 
 sensor_blackout:
   product_count: 1
-  duration: 25
+  duration: 1
 
 faulty_products:
   - pulley_part_blue_1

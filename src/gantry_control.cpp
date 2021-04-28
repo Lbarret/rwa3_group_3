@@ -331,92 +331,101 @@ void GantryControl::init()
 
 ////////////////////////////
 geometry_msgs::Pose GantryControl::getTargetWorldPose(geometry_msgs::Pose target,
-                                                      std::string agv)
-{
-    
-    static tf2_ros::StaticTransformBroadcaster br;
-    geometry_msgs::TransformStamped transformStamped;
-
+                                                      std::string agv, bool flipped){
     std::string kit_tray;
     if (agv.compare("agv1") == 0)
         kit_tray = "kit_tray_1";
     else
         kit_tray = "kit_tray_2";
-    transformStamped.header.stamp = ros::Time::now();
-    transformStamped.header.frame_id = kit_tray;
-    transformStamped.child_frame_id = "target_frame";
-    transformStamped.transform.translation.x = target.position.x;
-    transformStamped.transform.translation.y = target.position.y;
-    transformStamped.transform.translation.z = target.position.z;
-    transformStamped.transform.rotation.x = target.orientation.x;
-    transformStamped.transform.rotation.y = target.orientation.y;
-    transformStamped.transform.rotation.z = target.orientation.z;
-    transformStamped.transform.rotation.w = target.orientation.w;
+    tf2::Quaternion q_part_orientation(
+        target.orientation.x,
+        target.orientation.y,
+        target.orientation.z,
+        target.orientation.w);
+    double part_roll, part_pitch, part_yaw;
+    tf2::Matrix3x3(q_part_orientation).getRPY(part_roll, part_pitch, part_yaw);
+    ROS_INFO_STREAM("[pickPart] Part pose in tray frame (rpy): "
+                    << "[" << part_roll
+                    << " " << part_pitch
+                    << " " << part_yaw << "]");
 
-    
-    for (int i{0}; i < 15; ++i)
-        br.sendTransform(transformStamped);
+    tf2::Quaternion adjusted_yaw;
+    // multiply yaw by -1
+    // Create this quaternion from roll/pitch/yaw (in radians)
+    ROS_INFO_STREAM(target.orientation.x);
+    if(abs(target.orientation.x) >.9 && !flipped){
+        adjusted_yaw.setRPY(0, part_pitch,  -part_yaw);
+        ROS_INFO_STREAM("TRUE");
+    }
+    else if(abs(target.orientation.x) >.9 && flipped){
+        adjusted_yaw.setRPY(0, part_pitch, -part_yaw);
+        ROS_INFO_STREAM("FALSE");
+    }
+    else{
+        adjusted_yaw.setRPY(part_roll, part_pitch,  -part_yaw);
+    }
+    adjusted_yaw.normalize();
+
 
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener tfListener(tfBuffer);
-    // ros::Rate rate(10);
-    ros::Duration timeout(5.0);
+    static tf2_ros::StaticTransformBroadcaster tfBroadcaster;
+    geometry_msgs::TransformStamped tfMessage;
 
+    tfMessage.header.frame_id = kit_tray;
+    tfMessage.header.stamp = ros::Time::now();
+    tfMessage.child_frame_id = "target_frame";
+    tfMessage.transform.translation.x = target.position.x;
+    tfMessage.transform.translation.y = target.position.y;
+    tfMessage.transform.translation.z = target.position.z;
+    tfMessage.transform.rotation.x = adjusted_yaw.x();
+    tfMessage.transform.rotation.y = adjusted_yaw.y();
+    tfMessage.transform.rotation.z = adjusted_yaw.z();
+    tfMessage.transform.rotation.w = adjusted_yaw.w();
+
+    // try to broadcast target_frame a few times to make sure
+    for (int i = 0; i < 10; ++i)
+    {
+        tfBroadcaster.sendTransform(tfMessage);
+    }
+
+    // tf lookup fails occasionally, this automatically retries the lookup
+    unsigned MAX_ATTEMPTS = 5;
+    unsigned attempts = 0;
+    ros::Duration timeout(5);
     geometry_msgs::TransformStamped world_target_tf;
     geometry_msgs::TransformStamped ee_target_tf;
-    for (int i = 0; i < 10; i++)
+
+    // ROS_WARN_STREAM("[GantryControl][getTargetWorldPose] Pause for 5s");
+    bool found1 = false;
+
+    while (attempts < MAX_ATTEMPTS && !found1)
     {
         try
         {
-            world_target_tf = tfBuffer.lookupTransform("world", "target_frame",
-                                                       ros::Time(0), timeout);
-            // ROS_WARN_STREAM("target in world frame: " << world_target_tf.transform.rotation.x <<" "<<world_target_tf.transform.rotation.y<<" "<<world_target_tf.transform.rotation.z<<" "<<world_target_tf.transform.rotation.w);
+            world_target_tf = tfBuffer.lookupTransform(
+                "world",
+                "target_frame",
+                ros::Time(0),
+                timeout);
+            found1 = true;
 
+            ee_target_tf = tfBuffer.lookupTransform(
+                "target_frame",
+                "left_ee_link",  // change this if you are using the right arm
+                ros::Time(0),
+                timeout);
         }
         catch (tf2::TransformException &ex)
         {
             ROS_WARN("%s", ex.what());
             ros::Duration(1.0).sleep();
+            found1 = false;
+            attempts++;
             continue;
         }
+        attempts++;
     }
-
-    for (int i = 0; i < 10; i++)
-    {
-        try
-        {
-            ee_target_tf = tfBuffer.lookupTransform("world", "left_ee_link",
-                                                    ros::Time(0), timeout);
-            // ROS_WARN_STREAM("left_ee_link in target frame: " << ee_target_tf.transform.rotation.x <<" "<<ee_target_tf.transform.rotation.y<<" "<<ee_target_tf.transform.rotation.z<<" "<<ee_target_tf.transform.rotation.w);
-
-        }
-        catch (tf2::TransformException &ex)
-        {
-            ROS_WARN("%s", ex.what());
-            ros::Duration(1.0).sleep();
-            continue;
-        }
-    }
-
-/**
- *ee_target_tf and  world_target_tf are expressed in the same frame: "world"
- We want to find the relative rotation, q_r, to go from ee_target_tf to world_target_tf
- q_r = world_target_tf*ee_target_tf_inverse
- * 
- */
-    tf2::Quaternion ee_target_tf_inverse(
-        ee_target_tf.transform.rotation.x,
-        ee_target_tf.transform.rotation.y,
-        ee_target_tf.transform.rotation.z,
-        -ee_target_tf.transform.rotation.w);
-
-    tf2::Quaternion part_in_tray(world_target_tf.transform.rotation.x,
-                                 world_target_tf.transform.rotation.y,
-                                 world_target_tf.transform.rotation.z,
-                                 world_target_tf.transform.rotation.w);
-
-    tf2::Quaternion qr = part_in_tray * ee_target_tf_inverse;
-    qr.normalize();
 
     geometry_msgs::Pose world_target{target};
     world_target.position.x = world_target_tf.transform.translation.x;
@@ -427,32 +436,103 @@ geometry_msgs::Pose GantryControl::getTargetWorldPose(geometry_msgs::Pose target
     world_target.orientation.z = ee_target_tf.transform.rotation.z;
     world_target.orientation.w = ee_target_tf.transform.rotation.w;
 
-    // ros::Duration(10).sleep();
+    ROS_WARN_STREAM("[GantryControl][getTargetWorldPose] world_target =" << world_target);
+
     return world_target;
 }
 
 ////////////////////////////
-bool GantryControl::pickPart(part part)
+bool GantryControl::pickPart(part part, int camera)
 {
+    auto current_pose = left_arm_group_.getCurrentPose().pose;
     //--Activate gripper
+    left_arm_group_.setMaxVelocityScalingFactor(1);
+
     auto state = getGripperState("left_arm");
     while(!state.enabled){
         activateGripper("left_arm");
         state = getGripperState("left_arm");
     }
-    geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
 
-    part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON ; //added calibration factor
-    part.pose.orientation.x = currentPose.orientation.x;
-    part.pose.orientation.y = currentPose.orientation.y;
-    part.pose.orientation.z = currentPose.orientation.z;
-    part.pose.orientation.w = currentPose.orientation.w;
-    ROS_INFO_STREAM("["<< part.type<<"]= " << part.pose.position.x << ", " << part.pose.position.y << "," << part.pose.position.z << "," << part.pose.orientation.x << "," << part.pose.orientation.y << "," << part.pose.orientation.z << "," << part.pose.orientation.w);
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
+
+    unsigned MAX_ATTEMPTS = 10;
+    unsigned attempts = 0;
+    ros::Duration timeout(0.1);
+    geometry_msgs::TransformStamped world_part_tf;
+    geometry_msgs::TransformStamped camera_ee_tf;
+
+    ROS_INFO_STREAM("TF Listener started");
+    std::string part_in_camera_frame_1 = "logical_camera_" + std::to_string(camera) + "_" + part.type + "_" + std::to_string(attempts+1) + "_frame";
+    bool found = false;
+    while (attempts < MAX_ATTEMPTS && !found)
+    {
+        part_in_camera_frame_1 = "logical_camera_" + std::to_string(camera) + "_" + part.type + "_" + std::to_string(attempts+1) + "_frame";
+        try
+        {
+            world_part_tf = tfBuffer.lookupTransform(
+                "world",
+                part_in_camera_frame_1,
+                ros::Time(0),
+                timeout);
+            ROS_INFO_STREAM(attempts);
+            found = true;
+        }
+        catch (tf2::TransformException &ex)
+        {
+            ROS_WARN("%s", ex.what());
+            ros::Duration(1.0).sleep();
+            attempts++;
+            found = false;
+            continue;
+        }
+
+        try
+        {
+            camera_ee_tf = tfBuffer.lookupTransform(
+                part_in_camera_frame_1,
+                "left_ee_link",  // change this if you are using the right arm
+                ros::Time(0),
+                timeout);
+            found = true;
+        }
+        catch (tf2::TransformException &ex)
+        {
+            ROS_WARN("%s", ex.what());
+            ros::Duration(1.0).sleep();
+            attempts++;
+            continue;
+            found = false;
+        }
+        attempts++;
+    }
+    ROS_INFO_STREAM("TF Listener ended");
+
+    if (part.type.size() == 0)
+    {
+        ROS_INFO_STREAM("Part name is not present");
+        return false;
+    }
+
+    // build the target pose to move the arm to
+    part.pose.position.x = world_part_tf.transform.translation.x;
+    part.pose.position.y = world_part_tf.transform.translation.y;
+    part.pose.position.z = world_part_tf.transform.translation.z +
+                           model_height.at(part.type) +
+                           GRIPPER_HEIGHT - EPSILON;;
+    part.pose.orientation.x = camera_ee_tf.transform.rotation.x;
+    part.pose.orientation.y = camera_ee_tf.transform.rotation.y;
+    part.pose.orientation.z = camera_ee_tf.transform.rotation.z;
+    part.pose.orientation.w = camera_ee_tf.transform.rotation.w;
+
     geometry_msgs::Pose abovePartPose = part.pose;
     abovePartPose.position.z = part.pose.position.z + .1;
-    
-    if (state.enabled)
-    {
+
+    // ROS_WARN_STREAM("[GantryControl][pickPart] pickup pose (world frame) =" << part.pose);
+
+    state = getGripperState("left_arm");
+    if (state.enabled){
         ROS_INFO_STREAM("[Gripper] = enabled");
         //--Move arm to part
         left_arm_group_.setPoseTarget(abovePartPose);
@@ -487,6 +567,8 @@ bool GantryControl::pickPart(part part)
             left_arm_group_.setPoseTarget(abovePartPose);
             left_arm_group_.move();
         }
+        left_arm_group_.setPoseTarget(abovePartPose);
+        left_arm_group_.move();
     }
     else
     {
@@ -549,34 +631,14 @@ bool GantryControl::pickPartConveyor(part part)
 
 
 ////////////////////////////
-void GantryControl::placePart(part part, std::string agv)
+void GantryControl::placePart(part part, std::string agv, bool flipped)
 {
-    auto target_pose_in_tray = getTargetWorldPose(part.pose, agv);
+    auto target_pose_in_tray = getTargetWorldPose(part.pose, agv, flipped);
 
     ros::Duration(2.0).sleep();
     //--TODO: Consider agv1 too
     part_dropped = false;
     target_pose_in_tray.position.z += (ABOVE_TARGET + 1.5 * model_height[part.type]);
-
-    // tf2::Quaternion q_pitch(0, 0.7071068, 0, 0.7071068);
-    // tf2::Quaternion q_pi(0, 0, 1, 0);
-    // tf2::Quaternion q_init_part(part.pose.orientation.x,
-    //                             part.pose.orientation.y,
-    //                             part.pose.orientation.z,
-    //                             part.pose.orientation.w);
-
-    // tf2::Quaternion q_final_part(target_pose_in_tray.orientation.x,
-    //                             target_pose_in_tray.orientation.y,
-    //                             target_pose_in_tray.orientation.z,
-    //                             target_pose_in_tray.orientation.w);
-
-    // // tf2::Quaternion q_pi_by_2(0, 0, 0.7071068, 0.7071068);
-    // tf2::Quaternion q_rslt = q_init_part.inverse()*q_final_part*q_pi*q_pitch;
-    //     target_pose_in_tray.orientation.x = q_rslt.x();
-    //     target_pose_in_tray.orientation.y = q_rslt.y();
-    //     target_pose_in_tray.orientation.z = q_rslt.z();
-    //     target_pose_in_tray.orientation.w = q_rslt.w();
-
 
     auto state_left = getGripperState("left_arm");
     auto state_right = getGripperState("right_arm");
@@ -587,12 +649,14 @@ void GantryControl::placePart(part part, std::string agv)
         if (agv == "agv2")
             goToPresetLocation(agv2_);
         left_arm_group_.setPoseTarget(target_pose_in_tray);
+        left_arm_group_.setMaxVelocityScalingFactor(0.1);
         left_arm_group_.move();
         state_left = getGripperState("left_arm");
         if(!state_left.attached){
             part_dropped = true;
         }
         deactivateGripper("left_arm");
+        ros::Duration(.5).sleep();
     } else if(state_right.attached) {
         if (agv == "agv1")
             goToPresetLocation(right_arm_agv1_);
@@ -804,3 +868,4 @@ void GantryControl::flipPart(anytype for_gantry) {
     flip_trig = true;
 
 }
+

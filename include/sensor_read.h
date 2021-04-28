@@ -63,6 +63,7 @@ public:
     void reset_faulty();
     bool get_is_faulty(std::string agv);
     part get_faulty_pose(std::string agv);
+    int found_camera =0;
 
     int get_logi_cam();
     std::array<std::array<part, 36>, 18> part_info;

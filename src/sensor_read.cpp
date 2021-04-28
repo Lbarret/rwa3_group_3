@@ -370,6 +370,7 @@ std::string sensor_read::find_part(std::string part_type, int agv){
               || camera_locations[i].size() ==1){
                 logi_cam_id = i;
                 ROS_INFO_STREAM("found the bin");
+                found_camera = i;
                 found_part = part_info[i][j];
                 ROS_INFO_STREAM("seg check-1");
                 part_info[i][j].is_picked = true;

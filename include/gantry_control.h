@@ -51,8 +51,8 @@ class GantryControl {
 //    bool moveGantry(std::string waypoints);
 
 //    bool pickPart(part part, std::string arm_name);
-    bool pickPart(part part);
-    void placePart(part part, std::string agv);
+    bool pickPart(part part, int camera);
+    void placePart(part part, std::string agv, bool flipped);
     bool pickPartConveyor(part part);
     bool part_dropped = false;
     
@@ -63,7 +63,7 @@ class GantryControl {
     void activateGripper(std::string gripper_id);
     void deactivateGripper(std::string gripper_id);
     nist_gear::VacuumGripperState getGripperState(std::string arm_name);
-    geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
+    geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv, bool flipped);
     void flipPart(anytype for_gantry);
 
     //--preset locations;
