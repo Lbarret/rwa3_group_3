@@ -804,3 +804,61 @@ void GantryControl::flipPart(anytype for_gantry) {
     flip_trig = true;
 
 }
+/**
+ * Finding the position of the required shelf in world frame
+ * @param shelf_id
+ */
+double GantryControl::shelfPosition(std::string shelf_id) {
+    tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
+    ros::Duration timeout(5.0);
+    geometry_msgs::TransformStamped transformStamped;
+
+    try {
+        transformStamped = tfBuffer.lookupTransform("world", shelf_id, ros::Time(0), timeout);
+    }
+    catch (tf2::TransformException &ex) {
+        ROS_WARN("%s", ex.what());
+        ros::Duration(1.0).sleep();
+    }
+    return double(abs(transformStamped.transform.translation.x));
+}
+/**
+ * Finding the distance between the shelves to determine the gaps
+ * @param shelf1
+ * @param shelf2
+ */
+double GantryControl::distance_bw_shelves(std::string shelf1, std::string shelf2) {
+    double s1, s2;
+    s1 = shelfPosition(shelf1);
+    s2 = shelfPosition(shelf2);
+    return double(abs(s1-s2));
+}
+/**
+ * Determing the gaps required for obstacle avoidance
+ */
+std::vector<std::string> GantryControl::determineGaps() {
+    ROS_INFO_STREAM("Determing the gaps");
+    std::string temp;
+    int row_no = 0;
+    std::string temp_shelf1;
+    std::string temp_shelf2;
+
+    for(int row = 3; row <= 11; row = row + 3) {
+        for(int shelf = row; shelf < (row + 3)-1; shelf++){
+            temp_shelf1 = "shelf"+std::to_string(shelf)+"_frame";
+            temp_shelf2 = "shelf"+std::to_string(shelf+1)+"_frame";
+
+            if(distance_bw_shelves(temp_shelf1, temp_shelf2) >= gapThreshold[0] 
+               && distance_bw_shelves(temp_shelf1, temp_shelf2) <= gapThreshold[1]) {
+                   gap.push_back(row_name[row_no] + std::to_string((shelf+1) % 3));
+            }
+        }
+        row_no++;
+    }
+    
+    for(auto val:gap)
+        ROS_INFO_STREAM(val);
+    
+    return gap;
+}

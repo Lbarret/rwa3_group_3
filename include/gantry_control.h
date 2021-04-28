@@ -65,6 +65,14 @@ class GantryControl {
     nist_gear::VacuumGripperState getGripperState(std::string arm_name);
     geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
     void flipPart(anytype for_gantry);
+    std::vector<std::string> determineGaps();
+    double shelfPosition(std::string shelf_id);
+    double distance_bw_shelves(std::string shelf1, std::string shelf2);
+
+    // Variables for gaps
+    std::vector<std::string> gap;
+    std::vector<double> gapThreshold = {6.299163, 6.299173};
+    std::vector<std::string> row_name = {"left_row","middle_row", "right_row"};
 
     //--preset locations;
     start start_;
