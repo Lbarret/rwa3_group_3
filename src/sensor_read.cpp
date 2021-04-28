@@ -142,6 +142,15 @@ void sensor_read::init() {
   breakbeam8_subscriber = node_.subscribe(
        "/ariac/breakbeam_8", 1, &sensor_read::breakbeam_sensor8_callback,this
        );
+  breakbeam9_subscriber = node_.subscribe(
+       "/ariac/breakbeam_9", 1, &sensor_read::breakbeam_sensor9_callback,this
+       );
+  breakbeam10_subscriber = node_.subscribe(
+       "/ariac/breakbeam_10", 1, &sensor_read::breakbeam_sensor10_callback,this
+       );
+  breakbeam11_subscriber = node_.subscribe(
+       "/ariac/breakbeam_11", 1, &sensor_read::breakbeam_sensor11_callback,this
+       );
 }
 
 ////////////////////////
@@ -203,6 +212,18 @@ void sensor_read::breakbeam_sensor7_callback(const nist_gear::Proximity::ConstPt
 
 void sensor_read::breakbeam_sensor8_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[8] = msg->object_detected;
+}
+
+void sensor_read::breakbeam_sensor9_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[9] = msg->object_detected;
+}
+
+void sensor_read::breakbeam_sensor10_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[10] = msg->object_detected;
+}
+
+void sensor_read::breakbeam_sensor11_callback(const nist_gear::Proximity::ConstPtr &msg){
+  human_check[11] = msg->object_detected;
 }
 
 void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCameraImage::ConstPtr &msg) {
@@ -359,7 +380,7 @@ std::string sensor_read::find_part(std::string part_type, int agv){
           ROS_INFO_STREAM("FOUND");
           // check all bins seen by each camera
           for(auto bin: camera_locations[i]) {
-            ROS_INFO_STREAM(bin);
+            // ROS_INFO_STREAM(bin);
             std::vector<float> bin_pose = bin_locations[bin];
             ROS_INFO_STREAM("x = "<<part_info[i][j].pose.position.x);
             ROS_INFO_STREAM("y = "<<part_info[i][j].pose.position.y);
@@ -374,6 +395,7 @@ std::string sensor_read::find_part(std::string part_type, int agv){
                 ROS_INFO_STREAM("seg check-1");
                 part_info[i][j].is_picked = true;
                 ROS_INFO_STREAM("seg check-2");
+                ROS_INFO_STREAM(bin);
                 return bin;
               }
           }

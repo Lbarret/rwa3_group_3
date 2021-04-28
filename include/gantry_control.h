@@ -65,6 +65,14 @@ class GantryControl {
     nist_gear::VacuumGripperState getGripperState(std::string arm_name);
     geometry_msgs::Pose getTargetWorldPose(geometry_msgs::Pose target, std::string agv);
     void flipPart(anytype for_gantry);
+    std::vector<std::string> determineGaps();
+    double shelfPosition(std::string shelf_id);
+
+    // Variables for gaps
+    std::vector<std::string> gap;
+    std::vector<double> gapThreshold = {6.299163, 6.299173};
+    std::vector<std::string> row_name = {"left_row_","middle_row_", "right_row_"};
+    std::vector<double> preset_x_gap;
 
     //--preset locations;
     start start_;
@@ -90,6 +98,20 @@ class GantryControl {
     agv agv2_faulty;
     agv right_arm_agv1_;
     agv right_arm_agv2_;
+    shelf shelf1a_;
+    shelf shelf1b_;
+    shelf shelf1c_;
+    shelf shelf1d_;
+    shelf shelf1e_;
+    shelf shelf1f_;
+    shelf shelf1g_;
+    shelf shelf2a_;
+    shelf shelf2b_;
+    shelf shelf2c_;
+    shelf shelf2d_;
+    shelf shelf2e_;
+    shelf shelf2f_;
+    shelf shelf2g_;
     shelf shelf5a_;
     shelf shelf5b_;
     shelf shelf5c_;
@@ -109,6 +131,8 @@ class GantryControl {
     shelf shelf811c_;
     shelf shelf811d_;
     shelf shelf811e_;
+    shelf shelf811f_;
+    shelf shelf811g_;
     shelf shelf11a_;
     shelf shelf11b_;
     shelf shelf11c_;
@@ -117,6 +141,7 @@ class GantryControl {
     conveyor conveyor_;
     conveyor conveyor_bin1_;
     anytype flippart_;
+    bool flip_trig;
 
 
 
