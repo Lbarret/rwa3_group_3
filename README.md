@@ -29,11 +29,11 @@ Agility challenges include:
 
    - `git clone https://github.com/Lbarret/rwa3_group_3`
 
-3. Build the workspace:
+3. Build the ARIAC workspace:
 
    - `catkin build`
 
-4. Source the workspace:
+4. Source the ARIAC workspace:
 
    - `cd ~/ariac_ws`
    
