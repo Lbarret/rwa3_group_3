@@ -164,7 +164,7 @@ int main(int argc, char ** argv) {
                     continue;
                 }
                 sensors.reset_logicam_update();
-                ros::Duration(1.0).sleep();
+                ros::Duration(2.0).sleep();
 
                 part_loc = sensors.find_part(list_of_orders[i].shipments[j].products[k].type,0);
                 //--We go to this bin because a camera above
@@ -190,14 +190,12 @@ int main(int argc, char ** argv) {
                 // if part isn't found, move onto next part but come back to it
                 if (part_loc == "part not found"){
                 	if(k != list_of_orders[i].shipments[j].products.size()-1){
-                		// auto temp = list_of_orders[i].shipments[j].products[k];
-                		// list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
-                		// list_of_orders[i].shipments[j].products[k+1]=temp;
-                        ROS_INFO_STREAM_THROTTLE(10,"waiting for first part");
+                		auto temp = list_of_orders[i].shipments[j].products[k];
+                		list_of_orders[i].shipments[j].products[k] = list_of_orders[i].shipments[j].products[k+1];
+                		list_of_orders[i].shipments[j].products[k+1]=temp;
                 		k-=1;
                 	}
                 	else{
-                		k-=1;
                 	}
                 	continue;
                 }
@@ -350,14 +348,15 @@ int main(int argc, char ** argv) {
                 }
 
                 if(part_loc == "beltm_" || part_loc == "beltf_"){
-                    for(int repeat=0;repeat < 3; repeat++) {
-                        gantry.goToPresetLocation(gantry.conveyor_);
-                        gantry.pickPartConveyor(found_part);
-                        gantry.goToPresetLocation(gantry.conveyor_bin1_);
-                        gantry.deactivateGripper("left_arm");
-                        ros::Duration(2.0).sleep();
-                    }
-                    sensors.init();
+                
+                    gantry.goToPresetLocation(gantry.conveyor_);
+                    gantry.pickPartConveyor(found_part);
+                    gantry.goToPresetLocation(gantry.conveyor_bin1_);
+                    gantry.deactivateGripper("left_arm");
+                    ros::Duration(2.0).sleep();
+                    
+                    sensors.reset_logicam_update();
+                    
                     ros::Duration(2.0).sleep();
                     k--;
                     continue;

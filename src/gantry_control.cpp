@@ -344,7 +344,7 @@ void GantryControl::init()
     shelf11e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
 
-    conveyor_.gantry = {.15, -2, PI / 2};//
+    conveyor_.gantry = {.15, 0, PI / 2};//
     conveyor_.left_arm = {0.0, -PI / 4, PI / 2, -3*PI / 4, PI / 2, 0};
     conveyor_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -634,7 +634,9 @@ bool GantryControl::pickPartConveyor(part part)
         auto state = getGripperState("left_arm");
         ros::Duration(1.5).sleep();
         while (!state.attached){
+            ros::Duration(1.0).sleep();
             state = getGripperState("left_arm");
+            ros::Duration(1.0).sleep();
             if (state.attached)
             {
                 ROS_INFO_STREAM("[Gripper] = object attached");
