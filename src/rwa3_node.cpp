@@ -350,10 +350,14 @@ int main(int argc, char ** argv) {
                 }
 
                 if(part_loc == "beltm_" || part_loc == "beltf_"){
-                    gantry.goToPresetLocation(gantry.conveyor_);
-                    gantry.pickPartConveyor(found_part);
-                    gantry.goToPresetLocation(gantry.conveyor_bin1_);
-                    gantry.deactivateGripper("left_arm");
+                    for(int repeat=0;repeat < 3; repeat++) {
+                        gantry.goToPresetLocation(gantry.conveyor_);
+                        gantry.pickPartConveyor(found_part);
+                        gantry.goToPresetLocation(gantry.conveyor_bin1_);
+                        gantry.deactivateGripper("left_arm");
+                        ros::Duration(2.0).sleep();
+                    }
+                    sensors.init();
                     ros::Duration(2.0).sleep();
                     k--;
                     continue;
