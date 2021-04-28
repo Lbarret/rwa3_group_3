@@ -5,7 +5,7 @@
 #include <std_srvs/Trigger.h>
 
 /** \file sensor_read.cpp
- * Code for rwa4 which details all the functions needed for sensing different things throughout filling an ARIAC order
+ * Code which details all the functions needed for sensing different things throughout filling an ARIAC order
  */
 ////////////////////////
 sensor_read::sensor_read(ros::NodeHandle & node)
@@ -14,8 +14,11 @@ sensor_read::sensor_read(ros::NodeHandle & node)
 }
 
 ////////////////////////
+
+
 /**
- * Initialize the logical cameras over each of the bins
+ * @brief Initialize the cameras over each of the bins
+ * 
  */
 void sensor_read::init() {
 
@@ -154,7 +157,9 @@ void sensor_read::init() {
 }
 
 ////////////////////////
-
+/**
+ * Call the cameras over each of the bins
+ */
 void sensor_read::breakbeam_sensor0_callback(const nist_gear::Proximity::ConstPtr &msg){
   human_check[0] = msg->object_detected;
   if(msg->object_detected){
@@ -249,6 +254,7 @@ void sensor_read::quality_control_sensor_callback1(const nist_gear::LogicalCamer
 }
 
 ////////////////////////
+
 void sensor_read::quality_control_sensor_callback2(const nist_gear::LogicalCameraImage::ConstPtr &msg){
   if(msg->models.size() > 0) {
     is_faulty2 = true;

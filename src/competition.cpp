@@ -3,7 +3,9 @@
 
 #include <std_srvs/Trigger.h>
 
-
+/** \file competition.cpp
+ * Code for starting up the ARIAC competition
+ */
 ////////////////////////
 Competition::Competition(ros::NodeHandle & node): current_score_(0)
 {
@@ -11,6 +13,9 @@ Competition::Competition(ros::NodeHandle & node): current_score_(0)
 }
 
 ////////////////////////
+/**
+ * Initialize the competition, by subscribing to multiple topics
+ */
 void Competition::init() {
   // Subscribe to the '/ariac/current_score' topic.
   double time_called = ros::Time::now().toSec();

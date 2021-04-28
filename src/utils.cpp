@@ -1,4 +1,8 @@
 #include "utils.h"
+/** \file utils.cpp
+ * Code which provides dimension information for the parts as well as location information for the shelves and bins
+ */
+
 
 std::unordered_map<std::string, double> model_height = {
         {"piston_rod_part_red", 0.015}, // modified because it sinks into the surface a bit
@@ -17,7 +21,9 @@ std::unordered_map<std::string, double> model_height = {
         {"disk_part_green", 0.023},
         {"disk_part_blue", 0.023}
 };
-
+/**
+ * Create a list for locations of each of the bins and shelves in the environment
+ */
 std::unordered_map<std::string, std::vector<float>> bin_locations = {
         {"bin1_", {2.2,1.62,4.0,1.02}},
         {"bin2_", {3.27,1.62,3.87,1.02}},

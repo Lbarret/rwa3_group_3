@@ -29,6 +29,9 @@ GantryControl::GantryControl(ros::NodeHandle &node) : node_("/ariac/gantry"),
 }
 
 ////////////////////////////
+/**
+ * Initialize the robot and provide different locations to which it should go depending on the situation
+ */
 void GantryControl::init()
 {
     ROS_INFO_STREAM("[GantryControl::init] init... ");
@@ -418,6 +421,14 @@ void GantryControl::init()
 
 
 ////////////////////////////
+/**
+ * Find world pose of part by converting from previous pose
+ * @param target location of the part
+ * @param agv The agv to which the part is supposed to go
+ * @return New location of part in world frame
+ */
+
+
 geometry_msgs::Pose GantryControl::getTargetWorldPose(geometry_msgs::Pose target,
                                                       std::string agv)
 {
@@ -520,6 +531,11 @@ geometry_msgs::Pose GantryControl::getTargetWorldPose(geometry_msgs::Pose target
 }
 
 ////////////////////////////
+/**
+ * How the gantry should go about picking the part
+ * @param part The part that is meant to be picked
+ * @return when the part has been picked
+ */
 bool GantryControl::pickPart(part part)
 {
     //--Activate gripper
@@ -582,7 +598,11 @@ bool GantryControl::pickPart(part part)
     }
     return false;
 }
-
+/**
+ * How the gantry should go about picking parts off of the conveyor
+ * @param part Which part should be picked off of conveyor
+ * @return Part has been picked off of conveyor
+ */
 bool GantryControl::pickPartConveyor(part part)
 {
     //--Activate gripper
@@ -637,6 +657,11 @@ bool GantryControl::pickPartConveyor(part part)
 
 
 ////////////////////////////
+/**
+ * How the gantry should place parts
+ * @param part which part should be picked
+ * @param agv which agv the part should be placed into
+ */
 void GantryControl::placePart(part part, std::string agv)
 {
     auto target_pose_in_tray = getTargetWorldPose(part.pose, agv);
@@ -698,6 +723,10 @@ void GantryControl::placePart(part part, std::string agv)
 }
 
 ////////////////////////////
+/**
+ * Give a list of preset locations to which the gantry should move throughout the run
+ * @param location A location to which the gantry should move towards
+ */
 void GantryControl::goToPresetLocation(PresetLocation location)
 {
     //--gantry
@@ -728,6 +757,10 @@ void GantryControl::goToPresetLocation(PresetLocation location)
 }
 
 ////////////////////////////
+/**
+ * Activate the gripper, allowing it to pick up the part
+ * @param arm_name Which arm should pick up the part
+ */
 void GantryControl::activateGripper(std::string arm_name)
 {
     nist_gear::VacuumGripperControl srv;
@@ -745,6 +778,10 @@ void GantryControl::activateGripper(std::string arm_name)
 }
 
 ////////////////////////////
+/**
+ * Deactivate the gripper, allowing it to drop the part
+ * @param arm_name Which arm needs to drop the part
+ */
 void GantryControl::deactivateGripper(std::string arm_name)
 {
     nist_gear::VacuumGripperControl srv;
@@ -762,6 +799,10 @@ void GantryControl::deactivateGripper(std::string arm_name)
 }
 
 ////////////////////////////
+/**
+ * Check if gripper is holding a part or not
+ * @param arm_name Which arm is being checked to see if it is holding a part or not
+ */
 nist_gear::VacuumGripperState GantryControl::getGripperState(std::string arm_name)
 {
     if (arm_name == "left_arm")

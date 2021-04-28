@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /** \file rwa3_node.cpp
- * Code for rwa4 which helps the robot navigate the ARIAC world and complete the agility challenges
+ * Code which controls the robot throughout the ARIAC competition, determining which actions the robot will take in order to complete the order
  */
 #include <algorithm>
 #include <vector>
@@ -128,7 +128,7 @@ int main(int argc, char ** argv) {
     std::vector<std::string> gaps;
 
     std::string part_loc = "";
-    /*! Continue to loop through all of the different products in the order until the order has been completed*/
+    // Continue to loop through all of the different products in the order until the order has been completed*/
     for (int i=0; i < list_of_orders.size(); i++)
     {
         for (int j=0; j < list_of_orders[i].shipments.size(); j++)
@@ -136,7 +136,7 @@ int main(int argc, char ** argv) {
             for (int k=0; k < list_of_orders[i].shipments[j].products.size(); k++)
             {
                 gantry.goToPresetLocation(gantry.start_);
-                /*! If there is a new order, then get the products in that order */
+                // If there is a new order, then get the products in that order */
                 if(!new_order_triggered && !sensors.blackout && swapped<k){
                     list_of_orders = comp.get_order_list();
                 }
@@ -201,7 +201,7 @@ int main(int argc, char ** argv) {
                 	}
                 	continue;
                 }
-                /*! If part has been found, find exactly where that part is and go to find that part */
+                // If part has been found, find exactly where that part is and go to find that part */
 
                 found_part = sensors.found_part;
     			part_in_tray.type = list_of_orders[i].shipments[j].products[k].type;
@@ -360,7 +360,7 @@ int main(int argc, char ** argv) {
                 }
 
 
-                /*! Check to see if the part is faulty */
+                // Check to see if the part is faulty */
 			    ros::Duration(2.0).sleep();
                 blackout = sensors.blackout;
                 if((k == list_of_orders[i].shipments[j].products.size()) && blackout) {
@@ -454,7 +454,7 @@ int main(int argc, char ** argv) {
                 gantry.flip_trig = false;
 
             }
-            /*! If agv is done, then send the agv */
+            // If agv is done, then send the agv */
             if(current_agv == "agv1"){
             	agv_control.sendAGV(list_of_orders[i].shipments[j].shipment_type, "kit_tray_1");
 

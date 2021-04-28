@@ -1,5 +1,7 @@
 #include "agv_control.h"
-
+/** \file agv_control.cpp
+ * Code for controlling the AGV and determining when the order is complete and when the AGV should be sent
+ */
 AGVControl::AGVControl(ros::NodeHandle &node)
 {
     agv1_client =
