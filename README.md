@@ -41,8 +41,8 @@ Agility challenges include:
 
 5. In one terminal, run the launch file:
 
-   - `roslaunch rwa3_group3 rwa3.launch`
+   - `roslaunch rwa3_group_3 rwa3.launch load_moveit:=true`
 
 6. In another terminal, run the program:
 
-   - `rosrun rwa3_group3 rwa3_node`
+   - `rosrun rwa3_group_3 rwa3_node`
