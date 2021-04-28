@@ -67,12 +67,12 @@ class GantryControl {
     void flipPart(anytype for_gantry);
     std::vector<std::string> determineGaps();
     double shelfPosition(std::string shelf_id);
-    double distance_bw_shelves(std::string shelf1, std::string shelf2);
 
     // Variables for gaps
     std::vector<std::string> gap;
     std::vector<double> gapThreshold = {6.299163, 6.299173};
-    std::vector<std::string> row_name = {"left_row","middle_row", "right_row"};
+    std::vector<std::string> row_name = {"left_row_","middle_row_", "right_row_"};
+    std::vector<double> preset_x_gap;
 
     //--preset locations;
     start start_;
@@ -117,6 +117,8 @@ class GantryControl {
     shelf shelf811c_;
     shelf shelf811d_;
     shelf shelf811e_;
+    shelf shelf811f_;
+    shelf shelf811g_;
     shelf shelf11a_;
     shelf shelf11b_;
     shelf shelf11c_;

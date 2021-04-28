@@ -153,15 +153,15 @@ void GantryControl::init()
     agv2_faulty.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to shelf 5
-    shelf5a_.gantry = {0.5, -4.5, 0}; // go to aisle
-    shelf5a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5a_.gantry = {0.5, -5.8, 0}; // go to aisle
+    shelf5a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf5a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5b_.gantry = {-14.5, -4.5, 0}; // go to shelf
-    shelf5b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5b_.gantry = {-14.5, -5.8, 0}; // go to shelf
+    shelf5b_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf5b_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5c_.gantry = {-14.5, -4.5, 0};// move arm
+    shelf5c_.gantry = {-14.5, -5.8, 0};// move close to self
     shelf5c_.left_arm = {-1.7, -PI/4, 1.5, -0.5, -0.1, 0};
     shelf5c_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
@@ -173,12 +173,12 @@ void GantryControl::init()
     shelf5e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf5e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5f_.gantry = {-11.4 /*change this*/, -4.5, 0}; // go to between shelves
-    shelf5f_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5f_.gantry = {-14, -5.8, 0}; // Go to near shelf with part
+    shelf5f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf5f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf5g_.gantry = {-11.4 /*change this*/, -3.5, 0}; // go to between shelves
-    shelf5g_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf5g_.gantry = {-14, -5.8, 0}; // Go to near shelf with part
+    shelf5g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf5g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
     // joint positions to go to between shelves 5 and 8
@@ -201,19 +201,30 @@ void GantryControl::init()
     shelf58e_.gantry = {-15, -1.4, 0};// move closer for b
     shelf58e_.left_arm = {-1.7, -PI/4, 1.5, -0.63, -0.1, 0};
     shelf58e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    if(preset_x_gap[0] < preset_x_gap[1]) {
+        shelf58f_.gantry = {preset_x_gap[0] , -1.9, 0}; // go to space
+        shelf58f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58f_.gantry = {-11.4 /*change this*/, -1.9, 0}; // go to space
-    shelf58f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
-    shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+        shelf58g_.gantry = {preset_x_gap[0], -3.5, 0}; // go in space
+        shelf58g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf58g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    } else {
+        shelf58f_.gantry = {preset_x_gap[1] , -1.9, 0}; // go to space
+        shelf58f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf58f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
-    shelf58g_.gantry = {-11.4 /*change this*/, -3.5, 0}; // go in space
-    shelf58g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
-    shelf58g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+        shelf58g_.gantry = {preset_x_gap[1], -3.5, 0}; // go in space
+        shelf58g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf58g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
 
+    }
+    
     // joint positions to go between shelves 8 and 11
     shelf811a_.gantry = {0.5, 1.5, 0};// go to aisle
-    shelf811a_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
+    shelf811a_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
     shelf811a_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
 
     shelf811b_.gantry = {-14.5, 1.5, 0};// go to shelf
     shelf811b_.left_arm = {0.0, -PI/4, PI/2, -PI/4, PI/2, 0};
@@ -230,6 +241,25 @@ void GantryControl::init()
     shelf811e_.gantry = {-15.5, 0.5, 0};// move closer for b
     shelf811e_.left_arm = {-1.7, -PI/4, 1.6, -0.63, -0.1, 0};
     shelf811e_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    if(preset_x_gap[1] < preset_x_gap[2]) {
+        shelf811f_.gantry = {preset_x_gap[1], -1.9, 0}; // go to space
+        shelf811f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf811f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+        shelf811g_.gantry = {preset_x_gap[1], -3.5, 0}; // go in space
+        shelf811g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf811g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    } else {
+        shelf811f_.gantry = {preset_x_gap[2], -1.9, 0}; // go to space
+        shelf811f_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf811f_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+
+        shelf811g_.gantry = {preset_x_gap[2], -3.5, 0}; // go in space
+        shelf811g_.left_arm = {-1.7, -PI/4, 2, -0.5, -0.1, 0};
+        shelf811g_.right_arm = {PI, -PI/4, PI/2, -PI/4, PI/2, 0};
+    }
+    
+
 
     // joint positions to go to shelf 11
     shelf11a_.gantry = {0.5, 4.5, 0};// go to aisle
@@ -821,21 +851,10 @@ double GantryControl::shelfPosition(std::string shelf_id) {
         ROS_WARN("%s", ex.what());
         ros::Duration(1.0).sleep();
     }
-    return double(abs(transformStamped.transform.translation.x));
+    return double(transformStamped.transform.translation.x);
 }
 /**
- * Finding the distance between the shelves to determine the gaps
- * @param shelf1
- * @param shelf2
- */
-double GantryControl::distance_bw_shelves(std::string shelf1, std::string shelf2) {
-    double s1, s2;
-    s1 = shelfPosition(shelf1);
-    s2 = shelfPosition(shelf2);
-    return double(abs(s1-s2));
-}
-/**
- * Determing the gaps required for obstacle avoidance
+ * Determining the gaps required for obstacle avoidance
  */
 std::vector<std::string> GantryControl::determineGaps() {
     ROS_INFO_STREAM("Determing the gaps");
@@ -843,21 +862,30 @@ std::vector<std::string> GantryControl::determineGaps() {
     int row_no = 0;
     std::string temp_shelf1;
     std::string temp_shelf2;
+    double s1, s2, distance_bw_shelves;
+    double x_pos;
 
     for(int row = 3; row <= 11; row = row + 3) {
         for(int shelf = row; shelf < (row + 3)-1; shelf++){
             temp_shelf1 = "shelf"+std::to_string(shelf)+"_frame";
             temp_shelf2 = "shelf"+std::to_string(shelf+1)+"_frame";
+            s1 = shelfPosition(temp_shelf1);
+            s2 = shelfPosition(temp_shelf2);
+            distance_bw_shelves = double(abs(abs(s1)-abs(s2)));
 
-            if(distance_bw_shelves(temp_shelf1, temp_shelf2) >= gapThreshold[0] 
-               && distance_bw_shelves(temp_shelf1, temp_shelf2) <= gapThreshold[1]) {
+            if(distance_bw_shelves >= gapThreshold[0] 
+               && distance_bw_shelves <= gapThreshold[1]) {
                    gap.push_back(row_name[row_no] + std::to_string((shelf+1) % 3));
+                   preset_x_gap.push_back(double(s2 + 1.1));
             }
         }
         row_no++;
     }
     
     for(auto val:gap)
+        ROS_INFO_STREAM(val);
+    
+    for(auto val:preset_x_gap)
         ROS_INFO_STREAM(val);
     
     return gap;

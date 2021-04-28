@@ -65,6 +65,8 @@ int main(int argc, char ** argv) {
     sensors.init();
 
     GantryControl gantry(node);
+    gantry.determineGaps();
+    ros::Duration(3.0).sleep();
     gantry.init();
     gantry.goToPresetLocation(gantry.start_);
 
@@ -92,8 +94,8 @@ int main(int argc, char ** argv) {
         {"shelf5b_", {gantry.shelf5a_, gantry.shelf5b_, gantry.shelf5c_, gantry.shelf5e_, gantry.shelf5f_, gantry.shelf5g_}},
         {"shelf8a_", {gantry.shelf58a_, gantry.shelf58b_, gantry.shelf58c_, gantry.shelf58d_, gantry.shelf58f_, gantry.shelf58g_}},
         {"shelf8b_", {gantry.shelf58a_, gantry.shelf58b_, gantry.shelf58c_, gantry.shelf58e_, gantry.shelf58f_, gantry.shelf58g_}},
-        {"shelf11a_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811d_, gantry.shelf5f_}},
-        {"shelf11b_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811e_, gantry.shelf5f_}},
+        {"shelf11a_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811d_, gantry.shelf811f_, gantry.shelf811g_}},
+        {"shelf11b_", {gantry.shelf811a_, gantry.shelf811b_, gantry.shelf811c_, gantry.shelf811e_, gantry.shelf811f_, gantry.shelf811g_}},
     };
 
     //--1-Read order
@@ -119,6 +121,7 @@ int main(int argc, char ** argv) {
     int position2 = 0;
     int gap_location = 0;
     int swapped = -1;
+    std::vector<std::string> gaps;
 
     std::string part_loc = "";
     /*! Continue to loop through all of the different products in the order until the order has been completed*/
