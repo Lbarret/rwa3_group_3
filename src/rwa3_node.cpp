@@ -121,6 +121,7 @@ int main(int argc, char ** argv) {
     int order_left_at;
 
     bool in_isle = false;
+    bool need_flip = false;
     int position1 = 0;
     int position2 = 0;
     int gap_location = 0;
@@ -141,6 +142,7 @@ int main(int argc, char ** argv) {
                 // If there is a new order, then get the products in that order */
                 if(!new_order_triggered && !sensors.blackout && swapped<k){
                     list_of_orders = comp.get_order_list();
+
                 }
                 if (list_of_orders.size() > 1 && !new_order_triggered){
                     new_order_triggered = true;
@@ -153,8 +155,12 @@ int main(int argc, char ** argv) {
                                     part_loc = sensors.find_part(sensors.part_info[13][part].type,2);
                                     found_part = sensors.found_part;                                    
                                     gantry.goToPresetLocation(gantry.agv2_);
-                                    if(found_part.pose.position.z>.75){
+                                    if(found_part.pose.position.z>.75+model_height[found_part.type]/2){
                                         found_part.pose.position.z -= model_height[found_part.type];
+                                        need_flip = true;
+                                    }
+                                    else{
+                                        need_flip = false;
                                     }
                                     ros::Duration(1.0).sleep();
                                     gantry.pickPart(found_part);
@@ -163,9 +169,19 @@ int main(int argc, char ** argv) {
                                     ros::Duration(1.0).sleep();
                                     gantry.goToPresetLocation(gantry.start_);
                                     ros::Duration(1.0).sleep();
-                                    gantry.goToPresetLocation(gantry.clear_bins[part]);
-                                    ros::Duration(1.0).sleep();
-                                    gantry.deactivateGripper("left_arm");
+                                    if(need_flip) {
+                                        ROS_INFO_STREAM("Part needs to be flipped");
+                                        gantry.flipPart(bins[part_loc]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.goToPresetLocation(gantry.clear_bins_right[part]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.deactivateGripper("right_arm");
+                                    }
+                                    else{
+                                        gantry.goToPresetLocation(gantry.clear_bins[part]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.deactivateGripper("left_arm");
+                                    }
                                     ros::Duration(1.0).sleep();
                                     gantry.goToPresetLocation(gantry.start_);
                                 }
@@ -173,10 +189,16 @@ int main(int argc, char ** argv) {
                             }
                             else {
                                 for(int part = 0; part< k; i++){
-                                    part_loc = sensors.find_part(sensors.part_info[12][part].type,1);
-                                    found_part = sensors.found_part;
-                                    
+                                    part_loc = sensors.find_part(sensors.part_info[12][part].type,2);
+                                    found_part = sensors.found_part;                                    
                                     gantry.goToPresetLocation(gantry.agv1_);
+                                    if(found_part.pose.position.z>.75+model_height[found_part.type]/2){
+                                        found_part.pose.position.z -= model_height[found_part.type];
+                                        need_flip = true;
+                                    }
+                                    else{
+                                        need_flip = false;
+                                    }
                                     ros::Duration(1.0).sleep();
                                     gantry.pickPart(found_part);
                                     ros::Duration(1.0).sleep();
@@ -184,9 +206,19 @@ int main(int argc, char ** argv) {
                                     ros::Duration(1.0).sleep();
                                     gantry.goToPresetLocation(gantry.start_);
                                     ros::Duration(1.0).sleep();
-                                    gantry.goToPresetLocation(gantry.clear_bins[part]);
-                                    ros::Duration(1.0).sleep();
-                                    gantry.deactivateGripper("left_arm");
+                                    if(need_flip) {
+                                        ROS_INFO_STREAM("Part needs to be flipped");
+                                        gantry.flipPart(bins[part_loc]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.goToPresetLocation(gantry.clear_bins_right[part]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.deactivateGripper("right_arm");
+                                    }
+                                    else{
+                                        gantry.goToPresetLocation(gantry.clear_bins[part]);
+                                        ros::Duration(1.0).sleep();
+                                        gantry.deactivateGripper("left_arm");
+                                    }
                                     ros::Duration(1.0).sleep();
                                     gantry.goToPresetLocation(gantry.start_);
                                 }
@@ -436,6 +468,9 @@ int main(int argc, char ** argv) {
                         ROS_INFO_STREAM(faulty_p.pose.position.z);
                         if(current_agv=="agv2") {
                             gantry.goToPresetLocation(gantry.agv2_);
+                            if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
+                                        faulty_p.pose.position.z -= model_height[faulty_p.type];
+                                    }
                             gantry.pickPart(faulty_p);
                             gantry.goToPresetLocation(gantry.agv2_);
                             gantry.goToPresetLocation(gantry.agv2_faulty);
@@ -443,6 +478,9 @@ int main(int argc, char ** argv) {
                         }
                         else {
                             gantry.goToPresetLocation(gantry.agv1_);
+                            if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
+                                        faulty_p.pose.position.z -= model_height[faulty_p.type];
+                                    }
                             gantry.pickPart(faulty_p);
                             gantry.goToPresetLocation(gantry.agv1_);
                             gantry.goToPresetLocation(gantry.agv1_faulty);
@@ -471,6 +509,9 @@ int main(int argc, char ** argv) {
                         ROS_INFO_STREAM(faulty_p.pose.position.z);
                         if(current_agv=="agv2") {
                             gantry.goToPresetLocation(gantry.agv2_);
+                            if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
+                                        faulty_p.pose.position.z -= model_height[faulty_p.type];
+                                    }
                             gantry.pickPart(faulty_p);
                             gantry.goToPresetLocation(gantry.agv2_);
                             gantry.goToPresetLocation(gantry.agv2_faulty);
@@ -478,6 +519,9 @@ int main(int argc, char ** argv) {
                         }
                         else {
                             gantry.goToPresetLocation(gantry.agv1_);
+                            if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
+                                        faulty_p.pose.position.z -= model_height[faulty_p.type];
+                                    }
                             gantry.pickPart(faulty_p);
                             gantry.goToPresetLocation(gantry.agv1_);
                             gantry.goToPresetLocation(gantry.agv1_faulty);

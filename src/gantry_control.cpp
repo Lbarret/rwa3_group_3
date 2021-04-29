@@ -374,6 +374,20 @@ void GantryControl::init()
 
     clear_bins = {clear_bin1_, clear_bin2_, clear_bin3_};
 
+    clear_bin1_right_.gantry = {2, -1.3, PI};
+    clear_bin1_right_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin1_right_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bin2_right_.gantry = {3, -1.3, PI};
+    clear_bin2_right_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin2_right_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bin3_right_.gantry = {4, -1.3, PI};
+    clear_bin3_right_.left_arm = {0.0, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+    clear_bin3_right_.right_arm = {PI, -PI / 4, PI / 2, -PI / 4, PI / 2, 0};
+
+    clear_bins_right = {clear_bin1_right_, clear_bin2_right_, clear_bin3_right_};
+
 
     //--Raw pointers are frequently used to refer to the planning group for improved performance.
     //--To start, we will create a pointer that references the current robot’s state.
@@ -559,9 +573,6 @@ bool GantryControl::pickPart(part part)
         state = getGripperState("left_arm");
     }
     geometry_msgs::Pose currentPose = left_arm_group_.getCurrentPose().pose;
-    if(part.type == "pulley_part_red" && part.pose.position.z >.74){
-        part.pose.position.z -= model_height[part.type];
-    }
     part.pose.position.z = part.pose.position.z + model_height[part.type] + GRIPPER_HEIGHT - EPSILON ; //added calibration factor
     
     part.pose.orientation.x = currentPose.orientation.x;

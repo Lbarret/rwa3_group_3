@@ -143,9 +143,14 @@ class GantryControl {
     conveyor clear_bin1_;
     conveyor clear_bin2_;
     conveyor clear_bin3_;
+    conveyor clear_bin1_right_;
+    conveyor clear_bin2_right_;
+    conveyor clear_bin3_right_;
     anytype flippart_;
     bool flip_trig;
     std::vector<conveyor> clear_bins;
+    std::vector<conveyor> clear_bins_right; 
+
 
 
 
