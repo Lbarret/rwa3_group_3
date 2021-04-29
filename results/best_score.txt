@@ -1,25 +1,14 @@
 Score breakdown:
 <game_score>
-	Total game score: [19]
-	Total process time: [453.965]
+	Total game score: [31]
+	Total process time: [618.167]
 	Arms collision?: [0]
 <order_score order_0>
-	Total order score: [19]
-	Completion score: [19]
-	Time taken: [448.466]
+	Total order score: [10]
+	Completion score: [10]
+	Time taken: [612.93]
 	Complete: [true]
 	Priority: [1]
-<shipment_score >
-	Completion score: [9]
-	Complete: [true]
-	Submitted: [true]
-	Product type presence score: [3]
-	Product color presence score: [3]
-	All products bonus: [3]
-	Product pose score: [0]
-	Delivered to correct agv: [true]
-</shipment_score>
-
 <shipment_score >
 	Completion score: [10]
 	Complete: [true]
@@ -33,8 +22,28 @@ Score breakdown:
 
 </order_score>
 
+<order_score order_1>
+	Total order score: [21]
+	Completion score: [7]
+	Time taken: [161.976]
+	Complete: [true]
+	Priority: [3]
+<shipment_score >
+	Completion score: [7]
+	Complete: [true]
+	Submitted: [true]
+	Product type presence score: [2]
+	Product color presence score: [2]
+	All products bonus: [2]
+	Product pose score: [1]
+	Delivered to correct agv: [true]
+</shipment_score>
+
+</order_score>
+
 </game_score>
 
-[ INFO] [1619236493.247788181, 458.977000000]: "order_id","completion_score","priority","time","is_complete","shipments_requested","shipments_submitted","shipments_completed","shipments_wrong_agv"
-"order_0",19,1,448.466,1,2,2,2,0
+[ INFO] [1619659688.672899291, 623.169000000]: "order_id","completion_score","priority","time","is_complete","shipments_requested","shipments_submitted","shipments_completed","shipments_wrong_agv"
+"order_0",10,1,612.93,1,1,1,1,0
+"order_1",7,3,161.976,1,1,1,1,0
 

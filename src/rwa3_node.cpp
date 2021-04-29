@@ -361,8 +361,10 @@ int main(int argc, char ** argv) {
                         while(!sensors.human_check[gap_location]){
                             ROS_INFO_STREAM_THROTTLE(5,"waiting for human to get to gap");
                         }
-                        gantry.goToPresetLocation(shelves[part_loc][4]); //go to gap
-                        gantry.goToPresetLocation(shelves[part_loc][5]); //go into gap
+                        gantry.goToPresetLocation(shelves[part_loc][4]);
+                        ros::Duration(1.0).sleep(); //go to gap
+                        gantry.goToPresetLocation(shelves[part_loc][5]);
+                        ros::Duration(1.0).sleep(); //go into gap
                         while(!sensors.human_check[position2]){
                             ROS_INFO_STREAM_THROTTLE(5,"waiting for human");
                         }
@@ -387,10 +389,15 @@ int main(int argc, char ** argv) {
                     else{
                         
                         gantry.goToPresetLocation(shelves[part_loc][4]);
+                        ros::Duration(1).sleep();
                         gantry.goToPresetLocation(shelves[part_loc][3]);
+                        ros::Duration(1).sleep();
                         gantry.pickPart(found_part);
+                        ros::Duration(1).sleep();
                         gantry.goToPresetLocation(shelves[part_loc][3]);
+                        ros::Duration(1).sleep();
                         gantry.goToPresetLocation(shelves[part_loc][4]);
+                        ros::Duration(1).sleep();
                     }
                     
                     gantry.goToPresetLocation(shelves[part_loc][0]);
@@ -472,8 +479,11 @@ int main(int argc, char ** argv) {
                                         faulty_p.pose.position.z -= model_height[faulty_p.type];
                                     }
                             gantry.pickPart(faulty_p);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv2_);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv2_faulty);
+                            ros::Duration(1).sleep();
                             gantry.deactivateGripper("left_arm");
                         }
                         else {
@@ -482,8 +492,11 @@ int main(int argc, char ** argv) {
                                         faulty_p.pose.position.z -= model_height[faulty_p.type];
                                     }
                             gantry.pickPart(faulty_p);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv1_);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv1_faulty);
+                            ros::Duration(1).sleep();
                             gantry.deactivateGripper("left_arm");
                         }
                         k--;
@@ -512,9 +525,13 @@ int main(int argc, char ** argv) {
                             if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
                                         faulty_p.pose.position.z -= model_height[faulty_p.type];
                                     }
+                            ros::Duration(1).sleep();        
                             gantry.pickPart(faulty_p);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv2_);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv2_faulty);
+                            ros::Duration(1).sleep();
                             gantry.deactivateGripper("left_arm");
                         }
                         else {
@@ -522,9 +539,13 @@ int main(int argc, char ** argv) {
                             if(faulty_p.pose.position.z>.75+model_height[faulty_p.type]/2){
                                         faulty_p.pose.position.z -= model_height[faulty_p.type];
                                     }
+                            ros::Duration(1).sleep();
                             gantry.pickPart(faulty_p);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv1_);
+                            ros::Duration(1).sleep();
                             gantry.goToPresetLocation(gantry.agv1_faulty);
+                            ros::Duration(1).sleep();
                             gantry.deactivateGripper("left_arm");
                         }
                         k--;
@@ -543,6 +564,7 @@ int main(int argc, char ** argv) {
             	agv_control.sendAGV(list_of_orders[i].shipments[j].shipment_type, "kit_tray_2");
             }
             gantry.goToPresetLocation(gantry.start_);
+            ros::Duration(5.0).sleep();
         }
 		    
     }
